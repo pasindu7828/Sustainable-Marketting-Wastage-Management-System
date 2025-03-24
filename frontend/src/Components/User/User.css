@@ -1,0 +1,79 @@
+/* AddUser.css */
+.appointment-container {
+    padding: 20px;
+    background-color: #f4f4f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 800px;
+  }
+  
+  .appointment-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .appointment-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .appointment-table th {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    text-align: left;
+  }
+  
+  .appointment-table td strong {
+    color: #333;
+  }
+  
+  .actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .update-link {
+    text-decoration: none;
+    padding: 8px 16px;
+    background-color: #ff9800;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+  
+  .update-link:hover {
+    background-color: #e68900;
+  }
+  
+  .delete-button {
+    padding: 8px 16px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+  
+  .delete-button:hover {
+    background-color: #d32f2f;
+  }
+  
+  .delete-button:active {
+    background-color: #b71c1c;
+  }
+  
+  /* Error message style */
+  .error {
+    color: #f44336;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+  
