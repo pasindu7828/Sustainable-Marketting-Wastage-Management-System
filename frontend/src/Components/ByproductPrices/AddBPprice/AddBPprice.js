@@ -7,13 +7,13 @@ import { useNavigate } from 'react-router-dom';
 function AddBPprice(props) {
   const {_id,bp1,bp2,bp3,bp4,bp5} = props.bpprice;
 
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   const deleteHandler = async()=>{
     await axios.delete(`http://localhost:5000/ByproductPrices/${_id}`)
     .then(res=>res.data)
-    .then(()=>history("/"))
-    .then(()=>history("/BPPriceDetails"))
+    .then(()=>navigate("/"))
+    .then(()=>navigate("/BPPriceDetails"))
   }
   return (
     <div>

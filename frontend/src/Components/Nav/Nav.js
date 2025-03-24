@@ -5,8 +5,8 @@ function Nav() {
   return (
     <div>
        <nav>
-        <Link to="/mainhome">Home</Link>
-        <Link to="/addByproduct">Add Byproduct Prices</Link>
+        <Link to="/FinanceHome">Home</Link>
+        <Link to="/addByproduct">Add Prices For Farmer Product</Link>
         <Link to="/BPPriceDetails">Price Details</Link>
       </nav>
     </div>
