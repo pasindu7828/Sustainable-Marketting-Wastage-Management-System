@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Nav from '../../Nav/Nav';
+import TNav from '../../Nav/TNav';
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
@@ -63,7 +63,7 @@ function DisplayProductDetails() {
 
   return (
     <div>
-      <Nav/>
+      <TNav/>
       <h1 style={{ textAlign: 'center' }}>Product Details Dispaly Page</h1>
       
       <StyledTableContainer component={Paper}>
