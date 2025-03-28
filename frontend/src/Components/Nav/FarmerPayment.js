@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button, IconButton, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 
-function Nav() {
+function FarmerPayment() {
   return (
     <AppBar position="static" elevation={6} sx={{ background: 'linear-gradient(45deg, #fbc02d, #ffeb3b)' }}>
       <Toolbar>
@@ -12,7 +11,7 @@ function Nav() {
           <MenuIcon />
         </IconButton>
         <Typography variant="h5" sx={{ flexGrow: 1, fontWeight: 'bold', letterSpacing: 1.5, fontFamily: 'Roboto, sans-serif', color: 'black' }}>
-          Byproduct Prices Management
+          Farmer Payment System
         </Typography>
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Button 
@@ -26,19 +25,18 @@ function Nav() {
           <Button 
             color="inherit" 
             component={Link} 
-            to="/addByproduct" 
+            to="/addFarmerPayment" 
             sx={{ fontWeight: 'bold', color: 'black', transition: '0.3s', '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' } }}
           >
-            Add Prices For Farmer Product
+            Add Payments
           </Button>
           <Button 
             color="inherit" 
             component={Link} 
-            to="/BPPriceDetails" 
+            to="/displayFarmerPayment" 
             sx={{ fontWeight: 'bold', color: 'black', transition: '0.3s', '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' } }}
           >
-            Price Details
-
+            Payment Details
           </Button>
         </Box>
       </Toolbar>
@@ -46,4 +44,4 @@ function Nav() {
   );
 }
 
-export default Nav;
+export default FarmerPayment;
