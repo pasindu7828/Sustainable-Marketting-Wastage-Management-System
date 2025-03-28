@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import { TextField, Button, Container, Typography, Paper, Grid } from '@mui/material';
+import { TextField, Button, Container, Typography, Paper, Grid, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import TNav from '../../Nav/TNav';
 
 function AddProduct() {
@@ -17,8 +17,12 @@ function AddProduct() {
   const [errors, setErrors] = useState({});
   const [currentDate, setCurrentDate] = useState("");
 
+  const productNames = [
+    "apple", "orange", "banana", "grapes", "watermelon", 
+    "mango", "woodapple", "pineapple", "papaya", "guava"
+  ];
+
   useEffect(() => {
-    // Get the system date when the component loads
     const today = new Date().toLocaleDateString();
     setCurrentDate(today);
   }, []);
@@ -38,13 +42,17 @@ function AddProduct() {
       newErrors.pid = "Product ID must contain only numbers.";
     }
 
-    if (!/^[A-Za-z ]+$/.test(inputs.pname)) {
-      newErrors.pname = "Product Name must contain only letters.";
+    if (!inputs.pname) {
+      newErrors.pname = "Please select a product name.";
     }
 
     if (!/^(\d{12}|\d{10}V)$/.test(inputs.fid)) {
       newErrors.fid = "Farmer ID must be 10 digits or 9 digits followed by 'V'.";
     }
+    if (!/^[A-Za-z ]+$/.test(inputs.fname)) {
+      newErrors.fname = "farmer Name must contain only letters.";
+    }
+
 
     if (!/^[0-9]{10}$/.test(inputs.fnumber)) {
       newErrors.fnumber = "Farmer Number must be exactly 10 digits.";
@@ -103,18 +111,26 @@ function AddProduct() {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                label="Product Name"
-                type="text"
-                name="pname"
-                value={inputs.pname}
-                onChange={handleChange}
-                fullWidth
-                required
-                variant="outlined"
-                error={!!errors.pname}
-                helperText={errors.pname}
-              />
+              <FormControl fullWidth variant="outlined" required error={!!errors.pname}>
+                <InputLabel>Product Name</InputLabel>
+                <Select
+                  name="pname"
+                  value={inputs.pname}
+                  onChange={handleChange}
+                  label="Product Name"
+                >
+                  {productNames.map((name) => (
+                    <MenuItem key={name} value={name}>
+                      {name.charAt(0).toUpperCase() + name.slice(1)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              {errors.pname && (
+                <Typography variant="body2" color="error">
+                  {errors.pname}
+                </Typography>
+              )}
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -140,6 +156,8 @@ function AddProduct() {
                 fullWidth
                 required
                 variant="outlined"
+                error={!!errors.fname}
+                helperText={errors.fname}
               />
             </Grid>
             <Grid item xs={12}>
@@ -167,7 +185,7 @@ function AddProduct() {
                 required
                 variant="outlined"
                 InputProps={{
-                  inputProps: { min: 0 },  // Enforce a minimum value of 0
+                  inputProps: { min: 0 },
                 }}
                 error={!!errors.quantity}
                 helperText={errors.quantity}
