@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { TextField, Button, Container, Typography, Paper, Grid } from '@mui/material';
-import Nav from '../../Nav/Nav';
+import TNav from '../../Nav/TNav';
 
 function AddProduct() {
   const navigate = useNavigate();
@@ -78,7 +78,7 @@ function AddProduct() {
 
   return (
     <Container maxWidth="sm">
-      <Nav />
+      <TNav />
       <Paper elevation={3} style={{ padding: 20, marginTop: 30, borderRadius: 10 }}>
         <Typography variant="h4" align="center" gutterBottom>
           Add Product
