@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button, IconButton, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
@@ -37,6 +38,7 @@ function Nav() {
             sx={{ fontWeight: 'bold', color: 'black', transition: '0.3s', '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' } }}
           >
             Price Details
+
           </Button>
         </Box>
       </Toolbar>
