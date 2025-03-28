@@ -49,7 +49,7 @@ const addFarmerPrice = async(req,res,next)=>{
 };
 
 //Get by id
-
+/**
 const getById = async(req,res,next)=>{
 
     const FPid = req.params.FPid;
@@ -71,6 +71,36 @@ const getById = async(req,res,next)=>{
     return res.status(200).json({ FproductPrice });
 
 }
+    */
+const getById = async (req, res, next) => {
+    const { pname } = req.params; // Get product name from request parameters
+
+    let farmerPrices;
+
+    try {
+        // Fetch the first document (assuming there's only one)
+        farmerPrices = await User.findOne();
+    } catch (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+
+    // If no data is found
+    if (!farmerPrices) {
+        return res.status(404).json({ message: "Farmer price data not found" });
+    }
+
+    // Construct the key dynamically (e.g., "fpApple" for "Apple")
+    const priceKey = `fp${pname}`;
+
+    // Check if the field exists in the document
+    if (!(priceKey in farmerPrices)) {
+        return res.status(404).json({ message: `Price for ${pname} not found` });
+    }
+
+    // Return the corresponding price
+    return res.status(200).json({ price: farmerPrices[priceKey] });
+};
 
 //Update bill details
 

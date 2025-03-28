@@ -120,7 +120,7 @@ function MainHomePage() {
         <Button 
           variant="contained" 
           color="error" 
-          onClick={() => navigate('/addFarmerPayment')}
+          onClick={() => navigate('/farmersList')}
           sx={{
             fontSize: '1.2rem', 
             padding: '12px 24px', 

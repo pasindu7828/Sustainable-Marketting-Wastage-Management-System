@@ -3,7 +3,14 @@ import { AppBar, Toolbar, Typography, Button, IconButton, Box } from '@mui/mater
 import { Link } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 
+
+
 function FarmerPayment() {
+
+  
+  
+    
+  
   return (
     <AppBar position="static" elevation={6} sx={{ background: 'linear-gradient(45deg, #fbc02d, #ffeb3b)' }}>
       <Toolbar>
