@@ -58,7 +58,7 @@ function App() {
       <React.Fragment>
        
        <Routes>
-       <Route path="/" element={<HomeInventoryMain />}/> 
+       <Route path="/" element={<MainHomePage />}/> 
        <Route path="/HomeInventoryMain" element={<HomeInventoryMain/>}/>
        <Route path="/addproductdetails" element={<AddProduct/>}/>
        <Route path="/DisplayProductDetails" element={<DisplayProductDetails/>}/>
