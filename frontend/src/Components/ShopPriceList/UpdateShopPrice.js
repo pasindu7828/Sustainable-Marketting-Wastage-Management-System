@@ -1,118 +1,125 @@
-import React,{useEffect,useState} from 'react'
-import axios from 'axios'
-import { useParams } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
-
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { TextField, Button, Container, Typography, Paper, Grid } from "@mui/material";
 
 function UpdateShopPrice() {
+    const [inputs, setInputs] = useState({
+        spApple: "",
+        spOrange: "",
+        spBanana: "",
+        spGraphes: "",
+        spWatermelon: "",
+        spMango: "",
+        spWoodapple: "",
+        spPineapple: "",
+        spPapaya: "",
+        spGoava: "",
+    });
 
-    const [inputs, setInputs] = useState({});
-    const history = useNavigate();
-    const {id} = useParams();
+    const [currentDate, setCurrentDate] = useState("");
+    const navigate = useNavigate();
+    const { id } = useParams();
 
-    console.log("Incoming ID",id);
-    
-    useEffect(()=>{
-        const fetchHandler = async ()=>{
-            await axios
-            .get(`http://localhost:5000/ShopPrices/${id}`)
-            .then((res)=>res.data)
-            .then((data) =>setInputs(data.SproductPrice));
+    // Get the current system date
+    useEffect(() => {
+        const today = new Date().toLocaleDateString();
+        setCurrentDate(today);
+    }, []);
+
+    // Fetch data for the given ID when the component mounts
+    useEffect(() => {
+        const fetchHandler = async () => {
+            try {
+                const res = await axios.get(`http://localhost:5000/ShopPrices/${id}`);
+                if (res.data && res.data.SproductPrice) {
+                    const { _id, _v, ...filteredData } = res.data.SproductPrice;
+                    setInputs(filteredData);
+                }
+            } catch (error) {
+                console.error("Error fetching shop prices:", error);
+            }
         };
         fetchHandler();
-    },[id]);
+    }, [id]);
 
-    console.log("Inputs data",inputs);
-    
+    // Handle input change
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        if (parseFloat(value) < 0) return; // Prevent negative numbers
 
-    const sendRequest = async ()=>{
-        await axios
-        .put(`http://localhost:5000/ShopPrices/${id}`,{
-            spApple:Number (inputs.spApple),
-            spOrange:Number (inputs.spOrange),
-            spBanana:Number (inputs.spBanana),
-            spGraphes:Number (inputs.spGraphes),
-            spWatermelon:Number (inputs.spWatermelon),
-            spMango:Number (inputs.spMango),
-            spWoodapple:Number (inputs.spWoodapple),
-            spPineapple:Number (inputs.spPineapple),
-            spPapaya:Number (inputs.spPapaya),
-            spGoava:Number (inputs.spGoava),
-        })
-        .then((res) => res.data);
-    };
-
-    const handleChange = (e) =>{
-        setInputs((prevState)=>({
+        setInputs((prevState) => ({
             ...prevState,
-            [e.target.name]:e.target.value,
+            [name]: value,
         }));
     };
 
-    const handleSubmit = (e)=>{
-        e.preventDefault();
-        console.log(inputs);
-        sendRequest().then(()=>history("/displayShopPrice"));
+    // Send PUT request to update the shop price details
+    const sendRequest = async () => {
+        try {
+            await axios.put(`http://localhost:5000/ShopPrices/${id}`, {
+                ...inputs,
+                updatedDate: new Date().toISOString().split("T")[0], // Store updated date
+            });
+        } catch (error) {
+            console.error("Error updating shop prices:", error);
+        }
     };
 
-  return (
-    <div>
-      <h1>Update User</h1>
-      <form onSubmit={handleSubmit}>
-        <label>Enter Apple Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="spApple" onChange={handleChange} value={inputs?.spApple} required></input>
-        <br/><br/>
-        
-        <label>Enter Orange Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="spOrange" onChange={handleChange} value={inputs?.spOrange} required></input>
-        <br/><br/>
-      
-        <label>Enter Banana Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="spBanana" onChange={handleChange} value={inputs?.spBanana} required></input>
-        <br/><br/>
-       
-        <label>Enter Graphs Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="spGraphes" onChange={handleChange} value={inputs?.spGraphes} required></input>
-        <br/><br/>
-       
-        <label>Enter Watermelon Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="spWatermelon" onChange={handleChange} value={inputs?.spWatermelon} required></input>
-        <br/><br/>
-      
-        <label>Enter Mango Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="spMango" onChange={handleChange} value={inputs?.spMango} required></input>
-        <br/><br/>
-       
-        <label>Enter WoodApple Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="spWoodapple" onChange={handleChange} value={inputs?.spWoodapple} required></input>
-        <br/><br/>
-        
-        <label>Enter PineApple Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="spPineapple" onChange={handleChange} value={inputs?.spPineapple} required></input>
-        <br/><br/>
-        
-        <label>Enter Papaya Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="spPapaya" onChange={handleChange} value={inputs?.spPapaya} required></input>
-        <br/><br/>
-        
-        <label>Enter Goava Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="spGoava" onChange={handleChange} value={inputs?.spGoava} required></input>
-        <br/><br/>
-        
-        <button>Submit</button>
-      </form>
-    </div>
-  )
+    // Handle form submission
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        sendRequest().then(() => navigate("/displayShopPrice"));
+    };
+
+    return (
+        <Container maxWidth="sm">
+            <Paper elevation={3} style={{ padding: 20, marginTop: 30, borderRadius: 10 }}>
+                <Typography variant="h4" align="center" gutterBottom>
+                    Update Shop Price
+                </Typography>
+                <Typography variant="subtitle1" align="center" color="textSecondary" gutterBottom>
+                    System Date: {currentDate}
+                </Typography>
+                <form onSubmit={handleSubmit}>
+                    <Grid container spacing={2}>
+                        {/* Explicitly Define Fields */}
+                        {[
+                            { name: "spApple", label: "Apple" },
+                            { name: "spOrange", label: "Orange" },
+                            { name: "spBanana", label: "Banana" },
+                            { name: "spGraphes", label: "Graphes" },
+                            { name: "spWatermelon", label: "Watermelon" },
+                            { name: "spMango", label: "Mango" },
+                            { name: "spWoodapple", label: "Woodapple" },
+                            { name: "spPineapple", label: "Pineapple" },
+                            { name: "spPapaya", label: "Papaya" },
+                            { name: "spGoava", label: "Goava" },
+                        ].map((field) => (
+                            <Grid item xs={12} key={field.name}>
+                                <TextField
+                                    label={`Enter ${field.label} Price`}
+                                    type="number"
+                                    name={field.name}
+                                    value={inputs[field.name] || ""}
+                                    onChange={handleChange}
+                                    fullWidth
+                                    required
+                                    variant="outlined"
+                                    InputProps={{
+                                        inputProps: { min: 0 }, // Prevent negative values
+                                    }}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
+                    <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: 20 }}>
+                        Submit
+                    </Button>
+                </form>
+            </Paper>
+        </Container>
+    );
 }
 
-export default UpdateShopPrice
+export default UpdateShopPrice;

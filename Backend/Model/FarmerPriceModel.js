@@ -44,7 +44,9 @@ const userSchema = new Schema({
     }
     
 
-});
+},
+{ timestamps: true } 
+);
 
 module.exports=mongoose.model(
     "FarmerPriceModel",//file name

@@ -1,109 +1,164 @@
-import React,{useEffect,useState} from 'react'
-import axios from 'axios'
-import { useParams } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams, useNavigate } from "react-router-dom";
+import { TextField, Button, Container, Typography, Paper, Grid } from "@mui/material";
 
 function UpdateFarmerPayment() {
+    const [inputs, setInputs] = useState({
+        fid: "",
+        fname: "",
+        pname: "",
+        quantity: "",
+        billno: "",
+        date: "",
+        amount: "",
+        femail: "",
+        fnumber: "",
+    });
 
-    const [inputs, setInputs] = useState({});
-    const history = useNavigate();
-    const {id} = useParams();
+    const [errors, setErrors] = useState({
+        femail: "",
+        fid: "",
+        quantity: "",
+        billno: "",
+        amount: "",
+        fnumber: "",
+    });
 
-    console.log("Incoming ID",id);
-    
-    useEffect(()=>{
-        const fetchHandler = async ()=>{
-            await axios
-            .get(`http://localhost:5000/Farmers/${id}`)
-            .then((res)=>res.data)
-            .then((data) =>setInputs(data.farmer));
+    const navigate = useNavigate();
+    const { id } = useParams();
+
+    useEffect(() => {
+        const fetchHandler = async () => {
+            try {
+                const res = await axios.get(`http://localhost:5000/Farmers/${id}`);
+                if (res.data && res.data.farmer) {
+                    setInputs(res.data.farmer);
+                }
+            } catch (error) {
+                console.error("Error fetching farmer payment details:", error);
+            }
         };
         fetchHandler();
-    },[id]);
+    }, [id]);
 
-    console.log("Inputs data",inputs);
-
-    const sendRequest = async ()=>{
-        await axios
-        .put(`http://localhost:5000/Farmers/${id}`,{
-            fid:Number (inputs.fid),
-            fname:Number (inputs.fname),
-            pname:Number (inputs.pname),
-            quantity:Number (inputs.quantity),
-            billno:Number (inputs.billno),
-            date:Number (inputs.date),
-            amount:Number (inputs.amount),
-            femail:Number (inputs.femail),
-            fnumber:Number (inputs.fnumber),
-        })
-        .then((res) => res.data);
-    };
-
-    const handleChange = (e) =>{
-        setInputs((prevState)=>({
+    const handleChange = (e) => {
+        setInputs((prevState) => ({
             ...prevState,
-            [e.target.name]:e.target.value,
+            [e.target.name]: e.target.value,
         }));
     };
 
-    const handleSubmit = (e)=>{
-        e.preventDefault();
-        console.log(inputs);
-        sendRequest().then(()=>history("/displayFarmerPayment"));
+    const validateForm = () => {
+        let tempErrors = {};
+        let isValid = true;
+
+        // Check if email is valid
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (inputs.femail && !emailPattern.test(inputs.femail)) {
+            tempErrors.femail = "Please enter a valid email address.";
+            isValid = false;
+        }
+
+        // Validate fid (should be a number)
+        if (inputs.fid && isNaN(inputs.fid)) {
+            tempErrors.fid = "Please enter a valid NIC number.";
+            isValid = false;
+        }
+
+        // Validate quantity (should be a number)
+        if (inputs.quantity && isNaN(inputs.quantity)) {
+            tempErrors.quantity = "Please enter a valid quantity.";
+            isValid = false;
+        }
+
+        // Validate billno (should be a number)
+        if (inputs.billno && isNaN(inputs.billno)) {
+            tempErrors.billno = "Please enter a valid bill number.";
+            isValid = false;
+        }
+
+        // Validate amount (should be a number)
+        if (inputs.amount && isNaN(inputs.amount)) {
+            tempErrors.amount = "Please enter a valid amount.";
+            isValid = false;
+        }
+
+        // Validate fnumber (should be a valid phone number)
+        const phonePattern = /^[0-9]{10}$/;
+        if (inputs.fnumber && !phonePattern.test(inputs.fnumber)) {
+            tempErrors.fnumber = "Please enter a valid 10-digit phone number.";
+            isValid = false;
+        }
+
+        setErrors(tempErrors);
+        return isValid;
     };
 
-  return (
-    <div>
-      <h1>Update Farmer Payment Details</h1>
-      <form onSubmit={handleSubmit}>
-        <label>Enter NIC : </label>
-        <br/>
-        <input type="text" name="fid" onChange={handleChange} value={inputs?.fid} required></input>
-        <br/><br/>
-        
-        <label>Enter Farmer Name: </label>
-        <br/>
-        <input type="text" name="fname" onChange={handleChange} value={inputs?.fname} required></input>
-        <br/><br/>
-      
-        <label>Enter Product Names : </label>
-        <br/>
-        <input type="text" name="pname" onChange={handleChange} value={inputs?.pname} required></input>
-        <br/><br/>
-       
-        <label>Enter Quantity: </label>
-        <br/>
-        <input type="text" name="quantity" onChange={handleChange} value={inputs?.quantity} required></input>
-        <br/><br/>
-       
-        <label>Enter Bill Number : </label>
-        <br/>
-        <input type="text" name="billno" onChange={handleChange} value={inputs?.billno} required></input>
-        <br/><br/>
-      
-        <label>Enter Date : </label>
-        <br/>
-        <input type="text" name="date" onChange={handleChange} value={inputs?.date} required></input>
-        <br/><br/>
-       
-        <label>Enter Amount: </label>
-        <br/>
-        <input type="text" name="amount" onChange={handleChange} value={inputs?.amount} required></input>
-        <br/><br/>
-        
-        <label>Enter Email: </label>
-        <br/>
-        <input type="text" name="femail" onChange={handleChange} value={inputs?.femail} required></input>
-        <br/><br/>
-        
-        <label>Enter Contact Number: </label>
-        <br/>
-        <input type="text" name="fnumber" onChange={handleChange} value={inputs?.fnumber} required></input>
-        <br/><br/>
-        <button>Submit</button>
-      </form>
-    </div>
-  )
+    const sendRequest = async () => {
+        try {
+            const res = await axios.put(`http://localhost:5000/Farmers/${id}`, inputs);
+            console.log("API response:", res);  // Log response for debugging
+        } catch (error) {
+            console.error("Error updating farmer payment details:", error);
+        }
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log('inputs', inputs);
+        if (validateForm()) {
+            sendRequest().then(() => {
+                // Navigate only after the successful API request
+                navigate("/displayFarmerPayment");
+            });
+        } else {
+            console.log("Form validation failed. Check fields.");
+        }
+    };
+
+    return (
+        <Container  maxWidth={false} disableGutters>
+            <Paper elevation={3} style={{ padding: 20, marginTop: 30, borderRadius: 10 }}>
+                <Typography variant="h4" align="center" gutterBottom>
+                    Update Farmer Payment
+                </Typography>
+                <form onSubmit={handleSubmit}>
+                    <Grid container spacing={2}>
+                        {[
+                            { name: "fid", label: "NIC" },
+                            { name: "fname", label: "Farmer Name" },
+                            { name: "pname", label: "Product Names" },
+                            { name: "quantity", label: "Quantity" },
+                            { name: "billno", label: "Bill Number" },
+                            { name: "date", label: "Date" },
+                            { name: "amount", label: "Amount" },
+                            { name: "femail", label: "Email" },
+                            { name: "fnumber", label: "Contact Number" },
+                        ].map((field) => (
+                            <Grid item xs={12} key={field.name}>
+                                <TextField
+                                    label={`Enter ${field.label}`}
+                                    type="text"
+                                    name={field.name}
+                                    value={inputs[field.name] || ""}
+                                    onChange={handleChange}
+                                    fullWidth
+                                    required
+                                    variant="outlined"
+                                    error={Boolean(errors[field.name])}
+                                    helperText={errors[field.name]}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
+                    <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: 20 }}>
+                        Submit
+                    </Button>
+                </form>
+            </Paper>
+        </Container>
+    );
 }
 
-export default UpdateFarmerPayment
+export default UpdateFarmerPayment;

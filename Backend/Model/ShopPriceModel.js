@@ -44,7 +44,9 @@ const userSchema = new Schema({
     }
     
 
-});
+},
+{ timestamps: true } // Enable timestamps for createdAt and updatedAt
+);
 
 module.exports=mongoose.model(
     "ShopPriceModel",//file name

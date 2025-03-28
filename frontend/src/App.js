@@ -31,7 +31,7 @@ function App() {
     <div>
       <React.Fragment>
         <Routes>
-          <Route path="/" element={<MainHomePage/>}/>
+          
           <Route path="/FinanceHome" element={<MainHomePage/>}/>
           <Route path="/addByproduct" element={<AddBpp/>}/>
           <Route path="/BPPriceDetails" element={<ShowBPprice/>}/>
@@ -48,6 +48,8 @@ function App() {
           <Route path="/addFarmerPayment" element={<AddFarmerPayment/>}/>
           <Route path="/displayFarmerPayment" element={<DisplayFarmerPayment/>}/>
           <Route path="/displayFarmerPayment/:id" element={<UpdateFarmerPayment/>}/>
+          <Route path="/" element={<MainHomePage/>}/>
+          
 
         </Routes>
       </React.Fragment>

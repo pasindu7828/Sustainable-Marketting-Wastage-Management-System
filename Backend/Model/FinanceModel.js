@@ -40,7 +40,9 @@ const userSchema = new Schema({
     }
     
 
-});
+},
+{ timestamps: true } // Enable timestamps for createdAt and updatedAt
+);
 
 module.exports=mongoose.model(
     "FinanceModel",//file name

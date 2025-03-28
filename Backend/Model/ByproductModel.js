@@ -23,7 +23,10 @@ const userSchema = new Schema({
         required:true,
     }
     
-});
+},
+{ timestamps: true } // Enable timestamps for createdAt and updatedAt
+
+);
 
 module.exports=mongoose.model(
     "ByproductModel",//file name

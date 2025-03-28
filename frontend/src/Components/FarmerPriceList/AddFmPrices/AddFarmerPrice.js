@@ -1,112 +1,98 @@
-import React, { useState } from 'react'
-import FarmerPricesNav from '../../Nav/FarmerPricesNav'
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { TextField, Button, Container, Typography, Paper, Grid } from '@mui/material';
+import FarmerPricesNav from '../../Nav/FarmerPricesNav';
 
 function AddFarmerPrice() {
-
-    const history = useNavigate();
-    const [inputs,setInputs] = useState({
-        fpApple:"",
-        fpOrange:"",
-        fpBanana:"",
-        fpGraphes:"",
-        fpWatermelon:"",
-        fpMango:"",
-        fpWoodapple:"",
-        fpPineapple:"",
-        fpPapaya:"",
-        fpGoava:"",
+    const navigate = useNavigate();
+    const [inputs, setInputs] = useState({
+        fpApple: "", fpOrange: "", fpBanana: "", fpGraphes: "", fpWatermelon: "",
+        fpMango: "", fpWoodapple: "", fpPineapple: "", fpPapaya: "", fpGoava: "",
+        addedDate: ""
     });
+    const [currentDate, setCurrentDate] = useState("");
 
-    const handleChange = (e) =>{
-        setInputs((prevState)=>({
+    useEffect(() => {
+        // Get the system date when the component loads
+        const today = new Date().toLocaleDateString();
+        setCurrentDate(today);
+    }, []);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        // If the value is a negative number, reset to an empty string
+        if (parseFloat(value) < 0) {
+            return;
+        }
+
+        setInputs(prevState => ({
             ...prevState,
-            [e.target.name]:e.target.value,
+            [name]: value,
         }));
     };
 
-    const handleSubmit = (e)=>{
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(inputs);
-        sendRequest().then(()=>history('/displayFarmerPrice'))
-    }
+        try {
+            const today = new Date().toISOString().split('T')[0];  // Saving current date to the backend
+            await axios.post("http://localhost:5000/FarmerPrices", {
+                fpApple: Number(inputs.fpApple),
+                fpOrange: Number(inputs.fpOrange),
+                fpBanana: Number(inputs.fpBanana),
+                fpGraphes: Number(inputs.fpGraphes),
+                fpWatermelon: Number(inputs.fpWatermelon),
+                fpMango: Number(inputs.fpMango),
+                fpWoodapple: Number(inputs.fpWoodapple),
+                fpPineapple: Number(inputs.fpPineapple),
+                fpPapaya: Number(inputs.fpPapaya),
+                fpGoava: Number(inputs.fpGoava),
+                addedDate: today,
+            });
+            navigate('/displayFarmerPrice');
+        } catch (error) {
+            console.error("Error submitting data:", error);
+        }
+    };
 
-    const sendRequest = async()=>{
-      await axios.post("http://localhost:5000/FarmerPrices",{
-        fpApple:Number (inputs.fpApple),
-        fpOrange:Number (inputs.fpOrange),
-        fpBanana:Number (inputs.fpBanana),
-        fpGraphes:Number (inputs.fpGraphes),
-        fpWatermelon:Number (inputs.fpWatermelon),
-        fpMango:Number (inputs.fpMango),
-        fpWoodapple:Number (inputs.fpWoodapple),
-        fpPineapple:Number (inputs.fpPineapple),
-        fpPapaya:Number (inputs.fpPapaya),
-        fpGoava:Number (inputs.fpGoava),
-      }).then(res=>res.data);
-    }
-
-  return (
-    <div>
-      <FarmerPricesNav/>
-      <h1>Add Prices</h1>
-      <form onSubmit={handleSubmit}>
-        <label>Enter Apple Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="fpApple" onChange={handleChange} value={inputs.fpApple} required></input>
-        <br/><br/>
-        
-        <label>Enter Orange Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="fpOrange" onChange={handleChange} value={inputs.fpOrange} required></input>
-        <br/><br/>
-      
-        <label>Enter Banana Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="fpBanana" onChange={handleChange} value={inputs.fpBanana} required></input>
-        <br/><br/>
-       
-        <label>Enter Graphs Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="fpGraphes" onChange={handleChange} value={inputs.fpGraphes} required></input>
-        <br/><br/>
-       
-        <label>Enter Watermelon Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="fpWatermelon" onChange={handleChange} value={inputs.fpWatermelon} required></input>
-        <br/><br/>
-      
-        <label>Enter Mango Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="fpMango" onChange={handleChange} value={inputs.fpMango} required></input>
-        <br/><br/>
-       
-        <label>Enter WoodApple Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="fpWoodapple" onChange={handleChange} value={inputs.fpWoodapple} required></input>
-        <br/><br/>
-        
-        <label>Enter PineApple Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="fpPineapple" onChange={handleChange} value={inputs.fpPineapple} required></input>
-        <br/><br/>
-        
-        <label>Enter Papaya Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="fpPapaya" onChange={handleChange} value={inputs.fpPapaya} required></input>
-        <br/><br/>
-        
-        <label>Enter Goava Price (1 kg) : </label>
-        <br/>
-        <input type="text" name="fpGoava" onChange={handleChange} value={inputs.fpGoava} required></input>
-        <br/><br/>
-        
-        <button>Submit</button>
-      </form>
-    
-    </div>
-  )
+    return (
+        <Container maxWidth="sm">
+            <FarmerPricesNav />
+            <Paper elevation={3} style={{ padding: 20, marginTop: 30, borderRadius: 10 }}>
+                <Typography variant="h4" align="center" gutterBottom>
+                    Add Farmer Prices
+                </Typography>
+                <Typography variant="subtitle1" align="center" color="textSecondary" gutterBottom>
+                    System Date: {currentDate}
+                </Typography>
+                <form onSubmit={handleSubmit}>
+                    <Grid container spacing={2}>
+                        {Object.keys(inputs).filter(key => key !== "addedDate").map((key) => (
+                            <Grid item xs={12} key={key}>
+                                <TextField
+                                    label={`Enter ${key.replace('fp', '')} Price (1 kg)`}
+                                    type="number"
+                                    name={key}
+                                    value={inputs[key]}
+                                    onChange={handleChange}
+                                    fullWidth
+                                    required
+                                    variant="outlined"
+                                    InputProps={{
+                                        inputProps: { min: 0 }  // Enforce a minimum value of 0
+                                    }}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
+                    <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: 20 }}>
+                        Submit
+                    </Button>
+                </form>
+            </Paper>
+        </Container>
+    );
 }
 
-export default AddFarmerPrice
+export default AddFarmerPrice;
