@@ -25,6 +25,8 @@ const inventorySchema = new Schema ({
     
     
 
+},{
+    timestamps:true,
 });
 
 

@@ -27,6 +27,8 @@ const inventorySchema = new Schema ({
         required:true,//Validate
     }
 
+},{
+    timestamps:true,
 });
 
 
