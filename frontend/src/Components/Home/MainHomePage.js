@@ -62,7 +62,7 @@ function MainHomePage() {
         <Button 
           variant="contained" 
           color="secondary" 
-          onClick={() => navigate('/addFarmerPrice')}
+          onClick={() => navigate('/displayFarmerPrice')}
           sx={{
             fontSize: '1.2rem', 
             padding: '12px 24px', 
@@ -91,7 +91,7 @@ function MainHomePage() {
         <Button 
           variant="contained" 
           color="success" 
-          onClick={() => navigate('/addShopPrice')}
+          onClick={() => navigate('/displayShopPrice')}
           sx={{
             fontSize: '1.2rem', 
             padding: '12px 24px', 

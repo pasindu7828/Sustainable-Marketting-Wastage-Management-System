@@ -22,14 +22,7 @@ function FarmerPricesNav() {
           >
             Home
           </Button>
-          <Button 
-            color="inherit" 
-            component={Link} 
-            to="/addFarmerPrice" 
-            sx={{ fontWeight: 'bold', color: 'black', transition: '0.3s', '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' } }}
-          >
-            Add Product Prices
-          </Button>
+          
           <Button 
             color="inherit" 
             component={Link} 

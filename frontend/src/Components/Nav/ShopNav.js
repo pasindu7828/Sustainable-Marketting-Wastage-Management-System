@@ -33,21 +33,7 @@ function ShopNav() {
           >
             Home
           </Button>
-          <Button
-            component={Link}
-            to="/AddShopProductDetails"
-            sx={{
-              color: 'black',
-              fontWeight: 'bold',
-              textTransform: 'none',
-              '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                borderRadius: '8px',
-              },
-            }}
-          >
-            Add Shop Product Details
-          </Button>
+          
           <Button
             component={Link}
             to="/DisplayShopProductDetails"

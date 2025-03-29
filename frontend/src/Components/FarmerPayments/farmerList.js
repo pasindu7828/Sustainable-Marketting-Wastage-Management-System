@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-const URL = "http://Localhost:5000/Inventorys";
+const URL = "http://localhost:5000/Inventorys";
 
-const fetchHandler = async () =>{
+const fetchHandler = async () => {
   return await axios.get(URL).then((res) => res.data);
 };
 
@@ -23,48 +22,50 @@ const StyledTableHead = styled(TableHead)({
 });
 
 const StyledTableCell = styled(TableCell)({
-  textAlign: 'center',  // Centers content horizontally
-  verticalAlign: 'middle',  // Centers content vertically
+  textAlign: 'center',
+  verticalAlign: 'middle',
   fontWeight: 'bold',
   color: 'black',
 });
+
 const StyledTableCell2 = styled(TableCell)({
-  textAlign: 'center',  // Centers content horizontally
-  verticalAlign: 'middle',  // Centers content vertically
+  textAlign: 'center',
+  verticalAlign: 'middle',
   color: 'black',
 });
-const StyledButton = styled(Button)({
-  borderRadius: '20px',
-  padding: '8px 20px',
-  margin: '10px',
-  fontWeight: 'bold'
-});
 
-
+// Removed StyledButton because we need to apply dynamic styles directly
 function FarmerList() {
-
   const navigate = useNavigate();
- 
-  const buttonHandler = (id) =>{
-    navigate('/addFarmerPayment', { state: { id } })
-  }
-  const [Inventorys, setUsers] = useState();
-  useEffect(()=> {
-    fetchHandler().then((data) => setUsers(data.Inventorys));
-  },[])
+  const [Inventorys, setUsers] = useState([]);
+  const [clickedButtons, setClickedButtons] = useState({});
 
+  useEffect(() => {
+    fetchHandler().then((data) => setUsers(data.Inventorys));
+  }, []);
+
+  const buttonHandler = (id) => {
+    console.log("Clicked ID:", id);
+
+    // Updating state correctly
+    setClickedButtons((prevState) => {
+      const newState = { ...prevState, [id]: true }; 
+      console.log("Updated clickedButtons state:", newState);
+      return newState;
+    });
+
+    navigate('/addFarmerPayment', { state: { id } });
+  };
 
   return (
     <div>
-      
-      <h1 style={{ textAlign: 'center' }}>Product Details Dispaly Page</h1>
+      <h1 style={{ textAlign: 'center' }}>Product Details Display Page</h1>
       
       <StyledTableContainer component={Paper}>
         <Table>
           <StyledTableHead>
             <TableRow>
-
-            <StyledTableCell>Date</StyledTableCell>
+              <StyledTableCell>Date</StyledTableCell>
               <StyledTableCell>Product ID</StyledTableCell>
               <StyledTableCell>Product Name</StyledTableCell>
               <StyledTableCell>Farmer ID</StyledTableCell>
@@ -75,43 +76,32 @@ function FarmerList() {
             </TableRow>
           </StyledTableHead>
           <TableBody>
-
-        {Inventorys && Inventorys.map((user,i) => (
-          <TableRow key={i}
-            style={{ backgroundColor: i % 2 === 0 ? '#f2f2f2' : 'white',
-                        color:"black"
-               }}>
-
+            {Inventorys && Inventorys.map((user, i) => (
+              <TableRow key={user._id} style={{ backgroundColor: i % 2 === 0 ? '#f2f2f2' : 'white', color: "black" }}>
                 <StyledTableCell>{new Date(user.createdAt).toLocaleDateString()}</StyledTableCell>
-                <StyledTableCell2>
-                    {user.pid}
-                </StyledTableCell2>
-                <StyledTableCell2>
-                  {user.pname}
-                </StyledTableCell2>
-                <StyledTableCell2>
-                {user.fid}
-                </StyledTableCell2>
-                <StyledTableCell2>
-                {user.fname}
-                </StyledTableCell2>
-                <StyledTableCell2>
-                {user.fnumber}
-                </StyledTableCell2>
-                <StyledTableCell2>
-                {user.quantity}
-                </StyledTableCell2>
-            
+                <StyledTableCell2>{user.pid}</StyledTableCell2>
+                <StyledTableCell2>{user.pname}</StyledTableCell2>
+                <StyledTableCell2>{user.fid}</StyledTableCell2>
+                <StyledTableCell2>{user.fname}</StyledTableCell2>
+                <StyledTableCell2>{user.fnumber}</StyledTableCell2>
+                <StyledTableCell2>{user.quantity}</StyledTableCell2>
                 <StyledTableCell>
                   <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <StyledButton
+                    <Button
                       variant="contained"
-                      color="secondary"
                       onClick={() => buttonHandler(user._id)}
+                      sx={{
+                        backgroundColor: clickedButtons[user._id] ? '#4CAF50' : 'red',
+                        color: 'white',
+                        borderRadius: '20px',
+                        padding: '8px 20px',
+                        margin: '10px',
+                        fontWeight: 'bold',
+                        '&:hover': { backgroundColor: clickedButtons[user._id] ? '#388E3C' : 'darkred' }
+                      }}
                     >
-                      Isuue Bill
-                    </StyledButton>
-                    
+                      {clickedButtons[user._id] ? "Issued" : "Issue Bill"}
+                    </Button>
                   </div>
                 </StyledTableCell>
               </TableRow>
@@ -122,4 +112,5 @@ function FarmerList() {
     </div>
   );
 }
+
 export default FarmerList;

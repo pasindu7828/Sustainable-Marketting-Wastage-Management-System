@@ -47,6 +47,7 @@ import AddFarmerPayment from "./Components/FarmerPayments/AddFarmerPayment";
 import DisplayFarmerPayment from "./Components/FarmerPayments/DisplayFarmerPayment";
 import UpdateFarmerPayment from "./Components/FarmerPayments/UpdateFarmerPayment";
 import FarmerList from "./Components/FarmerPayments/farmerList";
+import TotalFarmerPayments from "./Components/Calculations/TotalFarmerPayments";
 
 function App() {
 
@@ -91,6 +92,8 @@ function App() {
           <Route path="/displayFarmerPayment" element={<DisplayFarmerPayment/>}/>
           <Route path="/displayFarmerPayment/:id" element={<UpdateFarmerPayment/>}/>
           <Route path="/" element={<MainHomePage/>}/>
+
+          <Route path="/totalFarmerPayments" element={<TotalFarmerPayments/>}/>
 
        </Routes>
 

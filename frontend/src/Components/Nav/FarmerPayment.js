@@ -32,7 +32,7 @@ function FarmerPayment() {
           <Button 
             color="inherit" 
             component={Link} 
-            to="/addFarmerPayment" 
+            to="/farmersList" 
             sx={{ fontWeight: 'bold', color: 'black', transition: '0.3s', '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' } }}
           >
             Add Payments
