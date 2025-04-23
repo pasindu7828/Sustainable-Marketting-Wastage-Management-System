@@ -22,7 +22,14 @@ const userSchema = new Schema({
     address: {
         type: String,
         required: true,
+    },
+    role: {
+        type: String,
+        enum: ['user', 'admin', 'staff', 'manager', 'supervisor'],
+        default: 'user'
     }
+}, {
+    timestamps: true
 });
 
 module.exports = mongoose.model("User", userSchema);

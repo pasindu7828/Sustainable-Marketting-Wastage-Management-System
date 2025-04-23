@@ -23,13 +23,26 @@ const staffSchema = new Schema({
         type: String,
         required: true,
     },
-    role: {
+    position: {
         type: String,
-        required: true,  // e.g., 'admin', 'manager', 'employee'
+        required: true,
+    },
+    department: {
+        type: String,
+        required: true,
+    },
+    joinDate: {
+        type: Date,
+        default: Date.now,
+    },
+    salary: {
+        type: Number,
+        required: true,
     },
     status: {
         type: String,
-        required: true,  // e.g., 'active', 'inactive'
+        enum: ['active', 'inactive'],
+        default: 'active'
     }
 });
 

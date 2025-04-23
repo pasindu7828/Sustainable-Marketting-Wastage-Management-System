@@ -1,27 +1,30 @@
 import React from 'react';
-import './Navbar.css';
+import { AppBar, Toolbar, Button, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { styled } from '@mui/material/styles';
+
+const StyledLink = styled(Link)({
+  textDecoration: 'none',
+  color: 'white',
+});
 
 function Navbar() {
   return (
-    <nav className="navbar">
-      <div className="navbar-container">
-        <ul className="navbar-menu">
-          <li className="navbar-item">
-            <Link to="/mainhome" className="navbar-link">Home</Link>
-          </li>
-          <li className="navbar-item">
-            <Link to="/adduser" className="navbar-link">Add User</Link>
-          </li>
-
-          <li className="navbar-item">
-            <Link to="/userdetails" className="navbar-link patients-link">
-              User Detail
-            </Link>
-          </li>
-        </ul>
-      </div>
-    </nav>
+    <AppBar position="static">
+      <Toolbar>
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <Button color="inherit">
+            <StyledLink to="/mainhome">Home</StyledLink>
+          </Button>
+          <Button color="inherit">
+            <StyledLink to="/adduser">Add User</StyledLink>
+          </Button>
+          <Button color="inherit">
+            <StyledLink to="/userdetails">User Detail</StyledLink>
+          </Button>
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 }
 

@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'; // Importing axios for making HTTP requests
+import axios from 'axios';
 import { useParams, useNavigate } from 'react-router';
-import './UpdateUser.css'; // Updated CSS file for the User
+import {
+  Container,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Snackbar,
+  Alert
+} from '@mui/material';
 
 function UpdateUser() {
   const [inputs, setInputs] = useState({
@@ -11,9 +20,9 @@ function UpdateUser() {
     phone: '',
     address: '',
   });
-
-  const navigate = useNavigate(); // Hook to navigate between pages
-  const { id } = useParams(); // Extracting user ID from the URL
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const navigate = useNavigate();
+  const { id } = useParams();
 
   useEffect(() => {
     const fetchHandler = async () => {
@@ -57,76 +66,110 @@ function UpdateUser() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await sendRequest();
-
-    // Show alert message after successful update
-    alert("User update is successful");
-
-    navigate('/userdetails'); // Redirect to user dashboard after update
+    setOpenSnackbar(true);
+    setTimeout(() => {
+      navigate('/userdetails');
+    }, 2000);
   };
 
   return (
-    <div className="update-container">
-      <h1>Update User</h1>
-      <form onSubmit={handleSubmit} className="update-form">
+    <Container component="main" maxWidth="sm">
+      <Box
+        sx={{
+          marginTop: 8,
+          marginBottom: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}
+      >
+        <Paper
+          elevation={3}
+          sx={{
+            p: 4,
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}
+        >
+          <Typography component="h1" variant="h5" gutterBottom>
+            Update User
+          </Typography>
 
-        <div className="form-group">
-          <label>Full Name</label>
-          <input
-            type="text"
-            name="fullName"
-            onChange={handleChange}
-            value={inputs.fullName || ''}
-            required
-          />
-        </div>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="fullName"
+              label="Full Name"
+              value={inputs.fullName}
+              onChange={handleChange}
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="email"
+              label="Email"
+              type="email"
+              value={inputs.email}
+              onChange={handleChange}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              value={inputs.password}
+              onChange={handleChange}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="phone"
+              label="Phone"
+              value={inputs.phone}
+              onChange={handleChange}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="address"
+              label="Address"
+              multiline
+              rows={4}
+              value={inputs.address}
+              onChange={handleChange}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Update
+            </Button>
+          </Box>
+        </Paper>
+      </Box>
 
-        <div className="form-group">
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            onChange={handleChange}
-            value={inputs.email || ''}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            onChange={handleChange}
-            value={inputs.password || ''}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Phone</label>
-          <input
-            type="text"
-            name="phone"
-            onChange={handleChange}
-            value={inputs.phone || ''}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Address</label>
-          <input
-            type="text"
-            name="address"
-            onChange={handleChange}
-            value={inputs.address || ''}
-            required
-          />
-        </div>
-
-        <button type="submit" className="submit-btn">Update</button>
-      </form>
-    </div>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={2000}
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          User updated successfully!
+        </Alert>
+      </Snackbar>
+    </Container>
   );
 }
 

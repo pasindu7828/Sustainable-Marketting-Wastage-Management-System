@@ -1,126 +1,195 @@
 import React, { useState } from 'react';
-import './AddUser.css'; // Make sure the path is correct
-
-import Nav from '../Nav/Nav'; // Importing the navigation component
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import {
+    Container,
+    Box,
+    Typography,
+    TextField,
+    Button,
+    Paper,
+    Alert,
+    Link
+} from '@mui/material';
 
-function AddUser() {
-  const navigate = useNavigate(); // Hook for programmatic navigation
-
-  // State to manage form inputs
-  const [inputs, setInputs] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    phone: '',
-    address: '',
-  });
-
-  // State to manage validation errors
-  const [errors, setErrors] = useState({
-    email: '',
-    phone: '',
-    password: '',
-  });
-
-  // Handles changes to form inputs
-  const handleChange = (e) => {
-    setInputs((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  // Function to validate input fields
-  const validate = () => {
-    let valid = true;
-    const newErrors = {};
-
-    // Email validation
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(inputs.email)) {
-      newErrors.email = "Please enter a valid email address.";
-      valid = false;
-    }
-
-    // Phone number validation (should be exactly 10 digits)
-    const phoneRegex = /^[0-9]{10}$/;
-    if (!phoneRegex.test(inputs.phone)) {
-      newErrors.phone = "Please enter a valid 10-digit phone number.";
-      valid = false;
-    }
-
-    // Password validation (minimum 6 characters)
-    if (inputs.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters.";
-      valid = false;
-    }
-
-    setErrors(newErrors); // Updating state with validation errors
-    return valid; // Returning whether the form is valid
-  };
-
-  // Function to handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validate()) {
-      return; 
-    }
-
-    try {
-      await sendRequest(); // Send user data to the backend
-      alert('User added successfully!');
-
-      // Navigate to the users page or any other page after successful submission
-      navigate('/userdetails');
-    } catch (error) {
-      console.error('Error adding user:', error);
-      alert('An error occurred. Please try again.');
-    }
-  };
-
-  // Function to send the user data to the backend
-  const sendRequest = async () => {
-    await axios.post('http://localhost:5000/users', {
-      fullName: inputs.fullName,
-      email: inputs.email,
-      password: inputs.password,
-      phone: inputs.phone,
-      address: inputs.address,
+const AddUser = () => {
+    const [formData, setFormData] = useState({
+        fullName: '',
+        email: '',
+        password: '',
+        phone: '',
+        address: '',
+        role: 'user' // Default role
     });
-  };
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const navigate = useNavigate();
 
-  return (
-    <div>
-      <Nav /> {/* Navigation component */}
-      <div className="container">
-        <h1>Add User</h1>
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
 
-        <form onSubmit={handleSubmit}>
-          <label>Full Name</label>
-          <input type="text" name="fullName" onChange={handleChange} value={inputs.fullName} required />
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setSuccess('');
 
-          <label>Email</label>
-          <input type="email" name="email" onChange={handleChange} value={inputs.email} required />
-          {errors.email && <p className="error">{errors.email}</p>} {/* Display email validation error */}
+        // Set role to admin if email is admin@example.com
+        const dataToSubmit = {
+            ...formData,
+            role: formData.email === 'admin@example.com' ? 'admin' : 'user'
+        };
 
-          <label>Password</label>
-          <input type="password" name="password" onChange={handleChange} value={inputs.password} required />
-          {errors.password && <p className="error">{errors.password}</p>} {/* Display password validation error */}
+        try {
+            const response = await axios.post('http://localhost:5000/users/register', dataToSubmit);
+            setSuccess('Registration successful!');
+            
+            // Store user data and token
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('user', JSON.stringify(response.data.user));
+            
+            setFormData({
+                fullName: '',
+                email: '',
+                password: '',
+                phone: '',
+                address: '',
+                role: 'user'
+            });
 
-          <label>Phone</label>
-          <input type="text" name="phone" onChange={handleChange} value={inputs.phone} required />
-          {errors.phone && <p className="error">{errors.phone}</p>} {/* Display phone validation error */}
+            if (dataToSubmit.role === 'admin') {
+                navigate('/admin');
+            } else {
+                navigate('/dashboard');
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || 'Registration failed. Please try again.');
+        }
+    };
 
-          <label>Address</label>
-          <input type="text" name="address" onChange={handleChange} value={inputs.address} required />
+    return (
+        <Container component="main" maxWidth="sm">
+            <Box
+                sx={{
+                    marginTop: 8,
+                    marginBottom: 8,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center'
+                }}
+            >
+                <Paper
+                    elevation={3}
+                    sx={{
+                        p: 4,
+                        width: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center'
+                    }}
+                >
+                    <Typography component="h1" variant="h5" gutterBottom>
+                        Create Account
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                        Join our sustainable community
+                    </Typography>
 
-          <button type="submit">Submit</button>
-        </form>
-      </div>
-    </div>
-  );
-}
+                    {error && (
+                        <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
+                            {error}
+                        </Alert>
+                    )}
+                    {success && (
+                        <Alert severity="success" sx={{ width: '100%', mb: 2 }}>
+                            {success}
+                        </Alert>
+                    )}
+
+                    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="fullName"
+                            label="Full Name"
+                            name="fullName"
+                            autoComplete="name"
+                            value={formData.fullName}
+                            onChange={handleChange}
+                            autoFocus
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email Address"
+                            name="email"
+                            autoComplete="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            autoComplete="new-password"
+                            value={formData.password}
+                            onChange={handleChange}
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="phone"
+                            label="Phone Number"
+                            type="tel"
+                            id="phone"
+                            autoComplete="tel"
+                            value={formData.phone}
+                            onChange={handleChange}
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="address"
+                            label="Address"
+                            id="address"
+                            multiline
+                            rows={4}
+                            value={formData.address}
+                            onChange={handleChange}
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                        >
+                            Create Account
+                        </Button>
+                        <Box sx={{ textAlign: 'center' }}>
+                            <Typography variant="body2">
+                                Already have an account?{' '}
+                                <Link href="/login" variant="body2">
+                                    Sign in
+                                </Link>
+                            </Typography>
+                        </Box>
+                    </Box>
+                </Paper>
+            </Box>
+        </Container>
+    );
+};
 
 export default AddUser;

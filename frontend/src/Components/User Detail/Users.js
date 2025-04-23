@@ -1,36 +1,68 @@
-import React, { useState, useEffect } from 'react'; 
-import Nav from "../Nav/Nav"; 
-import axios from "axios"; // Importing axios for making HTTP requests
-import User from '../User/User'; // Import the User component (renamed from Appointment)
+import React, { useState, useEffect } from 'react';
+import Nav from "../Nav/Nav";
+import axios from "axios";
+import User from '../User/User';
+import {
+  Container,
+  Typography,
+  Box,
+  CircularProgress,
+  Grid
+} from '@mui/material';
 
-const URL = "http://localhost:5000/users"; // API endpoint to fetch user data
+const URL = "http://localhost:5000/users";
 
-// Function to fetch user data from the backend
 const fetchHandler = async () => {
-  return await axios.get(URL).then((res) => res.data); // Sending GET request and returning the response data
+  return await axios.get(URL).then((res) => res.data);
 };
 
 function Users() {
-  // State hook to store the fetched users
-  const [users, setUsers] = useState(); 
+  const [users, setUsers] = useState();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Using useEffect to fetch data when the component mounts
   useEffect(() => {
-    fetchHandler().then((data) => setUsers(data.users)); 
-  }, []); // Empty dependency array ensures the effect runs only once on mount
+    fetchHandler()
+      .then((data) => {
+        setUsers(data.users);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError("Failed to fetch users");
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <div>
-      <Nav /> {/* Navigation component */}
-      <div>
-        {/* Conditional rendering: check if users are available, then map through them */}
-        {users && users.map((user, i) => ( 
-          <div key={i}> 
-            {/* Rendering User component and passing the user data as props */}
-            <User user={user} /> 
-          </div>
-        ))}
-      </div>
+      <Nav />
+      <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+        <Typography variant="h4" component="h1" gutterBottom sx={{ mb: 4 }}>
+          User Details
+        </Typography>
+
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Typography color="error" sx={{ textAlign: 'center' }}>
+            {error}
+          </Typography>
+        ) : users?.length === 0 ? (
+          <Typography sx={{ textAlign: 'center' }}>
+            No users found
+          </Typography>
+        ) : (
+          <Grid container spacing={2}>
+            {users?.map((user, i) => (
+              <Grid item xs={12} key={i}>
+                <User user={user} />
+              </Grid>
+            ))}
+          </Grid>
+        )}
+      </Container>
     </div>
   );
 }

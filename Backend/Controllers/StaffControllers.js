@@ -1,88 +1,113 @@
 const Staff = require("../Model/StaffModel.js");  // Assuming the model is now called StaffModel.js
 
-// Get all staff members
-const getAllStaff = async (req, res, next) => {
-    let staff;
-
+// Get all staff members (admin only)
+const getAllStaff = async (req, res) => {
     try {
-        staff = await Staff.find(); // Fetch all staff from the database
+        const staff = await Staff.find();
+        res.status(200).json({ staff });
     } catch (err) {
-        console.log(err);
+        res.status(500).json({ message: "Error fetching staff members" });
     }
-
-    // If no staff found, return a 404 response
-    if (!staff) {
-        return res.status(404).json({ message: "Staff not found" });
-    }
-
-    // Return the list of staff with a 200 status
-    return res.status(200).json({ staff });
 };
 
-// Add a new staff member
-const addStaff = async (req, res, next) => {
-    const { fullName, email, password, phone, address, role, status } = req.body;
+// Add new staff member (admin only)
+const addStaff = async (req, res) => {
+    const { fullName, email, password, phone, address, position, department, salary } = req.body;
 
     try {
-        // Check if the email already exists
-        const existingStaff = await Staff.findOne({ email });
-        if (existingStaff) {
-            return res.status(400).json({ message: "Email already exists" });
+        // Validate required fields
+        if (!fullName || !email || !password || !phone || !address || !position || !department || !salary) {
+            return res.status(400).json({ message: "All fields are required" });
         }
 
-        // Create a new staff object
-        const staff = new Staff({ fullName, email, password, phone, address, role, status });
-        await staff.save();  // Save the staff to the database
+        // Check if email already exists
+        const existingStaff = await Staff.findOne({ email });
+        if (existingStaff) {
+            return res.status(400).json({ message: "Email already registered" });
+        }
 
-        // Return the newly created staff with a 201 status
-        return res.status(201).json({ staff });
+        // Create new staff member
+        const staff = new Staff({
+            fullName,
+            email,
+            password,
+            phone,
+            address,
+            position,
+            department,
+            salary
+        });
 
+        await staff.save();
+
+        res.status(201).json({
+            success: true,
+            message: "Staff member added successfully",
+            staff: {
+                id: staff._id,
+                fullName: staff.fullName,
+                email: staff.email,
+                position: staff.position,
+                department: staff.department
+            }
+        });
     } catch (err) {
-        console.log(err);
-        return res.status(500).json({ message: "Error while adding staff" });
+        res.status(500).json({ message: "Error adding staff member" });
     }
 };
 
-// Get a staff member by ID
+// Get staff member by ID (admin only)
 const getStaffById = async (req, res) => {
     try {
-        const staff = await Staff.findById(req.params.id); // Find the staff by ID
-        if (!staff) return res.status(404).json({ message: 'Staff not found' }); // If not found, return 404
-        res.status(200).json({ staff }); // Return the found staff
+        const staff = await Staff.findById(req.params.id);
+        if (!staff) {
+            return res.status(404).json({ message: "Staff member not found" });
+        }
+        res.status(200).json({ staff });
     } catch (err) {
-        res.status(500).json({ message: err.message }); // Handle server errors
+        res.status(500).json({ message: "Error fetching staff member" });
     }
 };
 
-// Update an existing staff member by ID
+// Update staff member (admin only)
 const updateStaff = async (req, res) => {
     try {
-        const updatedStaff = await Staff.findByIdAndUpdate(req.params.id, req.body, { new: true }); // Update the staff
-        if (!updatedStaff) return res.status(404).json({ message: 'Staff not found' }); // If not found, return 404
-        res.status(200).json(updatedStaff); // Return the updated staff
+        const updatedStaff = await Staff.findByIdAndUpdate(
+            req.params.id,
+            { $set: req.body },
+            { new: true }
+        );
+
+        if (!updatedStaff) {
+            return res.status(404).json({ message: "Staff member not found" });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Staff member updated successfully",
+            staff: updatedStaff
+        });
     } catch (err) {
-        res.status(400).json({ message: err.message }); // Handle update errors
+        res.status(500).json({ message: "Error updating staff member" });
     }
 };
 
-// Delete a staff member by ID
-const deleteStaff = async (req, res, next) => {
-    const id = req.params.id;
-    let staff;
-
+// Delete staff member (admin only)
+const deleteStaff = async (req, res) => {
     try {
-        staff = await Staff.findByIdAndDelete(id); // Find and delete the staff by ID
+        const staff = await Staff.findByIdAndDelete(req.params.id);
+        
+        if (!staff) {
+            return res.status(404).json({ message: "Staff member not found" });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Staff member deleted successfully"
+        });
     } catch (err) {
-        console.log(err);
+        res.status(500).json({ message: "Error deleting staff member" });
     }
-
-    // If the staff does not exist, return a 404 response
-    if (!staff) {
-        return res.status(404).json({ message: "Staff not found" });
-    }
-
-    // Return the deleted staff with a 200 status
-    return res.status(200).json({ staff });
 };
 
 // Export all functions
