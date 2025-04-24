@@ -57,9 +57,9 @@ function UpdateUser() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setInputs((prevState) => ({
-      ...prevState,
-      [name]: value,
+    setInputs(prev => ({
+      ...prev,
+      [name]: value
     }));
   };
 

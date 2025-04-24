@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import Home from './Components/Home/Home';
+import Home from './Components/Home/home';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import Users from './Components/User Detail/Users';
 import AddUser from './Components/AddUser/AddUser';

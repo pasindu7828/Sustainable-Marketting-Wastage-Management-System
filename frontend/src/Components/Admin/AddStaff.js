@@ -23,7 +23,10 @@ const AddStaff = ({ onClose, onStaffAdded }) => {
         password: '',
         phone: '',
         address: '',
-        role: 'staff'
+        position: 'staff',
+        department: 'general',
+        salary: 0,
+        status: 'active'
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -47,11 +50,16 @@ const AddStaff = ({ onClose, onStaffAdded }) => {
                 throw new Error('Authentication required');
             }
 
+            // Set up axios defaults
+            axios.defaults.baseURL = 'http://localhost:5000';
             axios.defaults.headers.common['token'] = token;
-            const response = await axios.post('http://localhost:5000/users/register', formData);
+
+            console.log('Submitting staff data:', formData);
+            const response = await axios.post('/staff/add', formData);
+            console.log('Server response:', response.data);
             
             if (response.data.success) {
-                onStaffAdded(response.data.user);
+                onStaffAdded(response.data.staff);
                 onClose();
             } else {
                 throw new Error(response.data.message || 'Failed to add staff member');
@@ -148,19 +156,39 @@ const AddStaff = ({ onClose, onStaffAdded }) => {
                         />
                         
                         <FormControl fullWidth>
-                            <InputLabel>Role</InputLabel>
+                            <InputLabel>Position</InputLabel>
                             <Select
-                                name="role"
-                                value={formData.role}
+                                name="position"
+                                value={formData.position}
                                 onChange={handleChange}
                                 required
-                                label="Role"
+                                label="Position"
                             >
                                 <MenuItem value="staff">Staff</MenuItem>
                                 <MenuItem value="manager">Manager</MenuItem>
                                 <MenuItem value="supervisor">Supervisor</MenuItem>
                             </Select>
                         </FormControl>
+
+                        <TextField
+                            fullWidth
+                            label="Department"
+                            name="department"
+                            value={formData.department}
+                            onChange={handleChange}
+                            required
+                        />
+
+                        <TextField
+                            fullWidth
+                            label="Salary"
+                            name="salary"
+                            type="number"
+                            value={formData.salary}
+                            onChange={handleChange}
+                            required
+                            inputProps={{ min: 0 }}
+                        />
                     </Stack>
                 </DialogContent>
                 

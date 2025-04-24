@@ -55,7 +55,9 @@ const Login = () => {
         setLoading(true);
 
         try {
+            console.log('Attempting login with:', { email: formData.email });
             const response = await axios.post('/users/login', formData);
+            console.log('Login response:', response.data);
             
             if (response.data.token && response.data.user) {
                 localStorage.setItem('token', response.data.token);
@@ -72,7 +74,15 @@ const Login = () => {
             }
         } catch (err) {
             console.error('Login error:', err);
-            setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+            if (err.response?.data?.message) {
+                setError(err.response.data.message);
+            } else if (err.response?.status === 401) {
+                setError('Invalid email or password');
+            } else if (!err.response) {
+                setError('Network error. Please check your connection.');
+            } else {
+                setError('Login failed. Please check your credentials.');
+            }
         } finally {
             setLoading(false);
         }

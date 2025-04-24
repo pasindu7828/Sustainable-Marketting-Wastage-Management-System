@@ -238,19 +238,26 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     try {
+        console.log('Login attempt:', { email });
+
         // Validate input
         if (!email || !password) {
+            console.log('Missing email or password');
             return res.status(400).json({ message: "Email and password are required" });
         }
 
         // Find user by email
         const user = await User.findOne({ email });
+        console.log('User found:', user ? { id: user._id, email: user.email, role: user.role } : 'No user found');
+        
         if (!user) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
 
         // Compare password with hashed password
         const isPasswordValid = await bcrypt.compare(password, user.password);
+        console.log('Password validation:', isPasswordValid ? 'success' : 'failed');
+        
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
@@ -261,6 +268,8 @@ const loginUser = async (req, res) => {
             'your-secret-key', // In production, use environment variable
             { expiresIn: '24h' }
         );
+
+        console.log('Login successful:', { userId: user._id, role: user.role });
 
         // Return user data and token
         return res.status(200).json({
@@ -276,7 +285,7 @@ const loginUser = async (req, res) => {
         });
 
     } catch (err) {
-        console.log(err);
+        console.error('Login error:', err);
         return res.status(500).json({ message: "Error during login" });
     }
 };

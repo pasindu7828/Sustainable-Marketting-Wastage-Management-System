@@ -1,4 +1,5 @@
 const Staff = require("../Model/StaffModel.js");  // Assuming the model is now called StaffModel.js
+const bcrypt = require('bcryptjs');
 
 // Get all staff members (admin only)
 const getAllStaff = async (req, res) => {
@@ -17,7 +18,19 @@ const addStaff = async (req, res) => {
     try {
         // Validate required fields
         if (!fullName || !email || !password || !phone || !address || !position || !department || !salary) {
-            return res.status(400).json({ message: "All fields are required" });
+            return res.status(400).json({ 
+                message: "All fields are required",
+                missingFields: {
+                    fullName: !fullName,
+                    email: !email,
+                    password: !password,
+                    phone: !phone,
+                    address: !address,
+                    position: !position,
+                    department: !department,
+                    salary: !salary
+                }
+            });
         }
 
         // Check if email already exists
@@ -26,16 +39,20 @@ const addStaff = async (req, res) => {
             return res.status(400).json({ message: "Email already registered" });
         }
 
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         // Create new staff member
         const staff = new Staff({
             fullName,
             email,
-            password,
+            password: hashedPassword,
             phone,
             address,
             position,
             department,
-            salary
+            salary,
+            status: 'active'
         });
 
         await staff.save();
@@ -48,11 +65,22 @@ const addStaff = async (req, res) => {
                 fullName: staff.fullName,
                 email: staff.email,
                 position: staff.position,
-                department: staff.department
+                department: staff.department,
+                status: staff.status
             }
         });
     } catch (err) {
-        res.status(500).json({ message: "Error adding staff member" });
+        console.error('Error adding staff member:', err);
+        if (err.name === 'ValidationError') {
+            return res.status(400).json({
+                message: "Validation Error",
+                errors: Object.values(err.errors).map(error => error.message)
+            });
+        }
+        res.status(500).json({ 
+            message: "Error adding staff member",
+            error: err.message
+        });
     }
 };
 
