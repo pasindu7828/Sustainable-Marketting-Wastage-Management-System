@@ -21,9 +21,6 @@ import AddShopProductDetails from "./Components/ShopProductDetails/AddShopProduc
 import DisplayShopProductDetails from "./Components/ShopProductDetails/DisplayShopProductDetails";
 import UpdateShopProductDetails from "./Components/ShopProductDetails/UpdateShopProductDetails";
 
-
-
-
 //By Product Price List
 import AddBpp from "./Components/ByproductPrices/AddByPP/AddBpp";
 import ShowBPprice from "./Components/ByproductPrices/BPpriceDetails/ShowBPprice";
@@ -41,13 +38,20 @@ import UpdateFarmerPrice from "./Components/FarmerPriceList/UpdateFmPrice/Update
 import AddShopPrices from "./Components/ShopPriceList/AddShopPrices";
 import DisplayShopPrices from "./Components/ShopPriceList/DisplayShopPrices";
 import UpdateShopPrice from "./Components/ShopPriceList/UpdateShopPrice";
+import TotalShopPrices from "./Components/ShopPriceList/totalShopPrices";
 
 //import Farmer Payment Details
 import AddFarmerPayment from "./Components/FarmerPayments/AddFarmerPayment";
 import DisplayFarmerPayment from "./Components/FarmerPayments/DisplayFarmerPayment";
 import UpdateFarmerPayment from "./Components/FarmerPayments/UpdateFarmerPayment";
 import FarmerList from "./Components/FarmerPayments/farmerList";
+
+//calculation pages
 import TotalFarmerPayments from "./Components/Calculations/TotalFarmerPayments";
+import SummaryTotalShopPrices from "./Components/Calculations/SummaryTotalShopPrices";
+
+//Admin Dash Board
+import MainDashboard from "./Components/MainDashboard";
 
 function App() {
 
@@ -59,7 +63,7 @@ function App() {
       <React.Fragment>
        
        <Routes>
-       <Route path="/" element={<MainHomePage />}/> 
+       <Route path="/" element={<MainDashboard />}/> 
        <Route path="/HomeInventoryMain" element={<HomeInventoryMain/>}/>
        <Route path="/addproductdetails" element={<AddProduct/>}/>
        <Route path="/DisplayProductDetails" element={<DisplayProductDetails/>}/>
@@ -72,6 +76,7 @@ function App() {
 
        <Route path="/AddShopProductDetails" element={<AddShopProductDetails/>}/>
        <Route path="/DisplayShopProductDetails" element={<DisplayShopProductDetails/>}/>
+       <Route path="/TotalShopPrices" element={<TotalShopPrices/>}/>
        <Route path="/DisplayShopProductDetails/:id" element={<UpdateShopProductDetails/>}/>
 
          <Route path="/FinanceHome" element={<MainHomePage/>}/>
@@ -91,9 +96,12 @@ function App() {
           <Route path="/addFarmerPayment" element={<AddFarmerPayment/>}/>
           <Route path="/displayFarmerPayment" element={<DisplayFarmerPayment/>}/>
           <Route path="/displayFarmerPayment/:id" element={<UpdateFarmerPayment/>}/>
-          <Route path="/" element={<MainHomePage/>}/>
 
           <Route path="/totalFarmerPayments" element={<TotalFarmerPayments/>}/>
+          <Route path="/summaryShopPrices" element={<SummaryTotalShopPrices/>}/>
+          <Route path="/adminPage" element={<MainDashboard/>}/>
+
+          
 
        </Routes>
 

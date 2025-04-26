@@ -3,6 +3,11 @@ import axios from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { Bar, Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend, Title } from 'chart.js';
+
+// Register necessary Chart.js components
+ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend, Title);
 
 const URL = "http://localhost:5000/Farmers";
 
@@ -48,9 +53,36 @@ function TotalFarmerPayments() {
     });
   }, []);
 
+  // Prepare data for the bar chart
+  const barData = {
+    labels: Object.keys(totals),
+    datasets: [
+      {
+        label: 'Total Payment Amount',
+        data: Object.values(totals),
+        backgroundColor: '#4CAF50', // Bar color
+        borderColor: '#388E3C', // Border color
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  // Prepare data for the pie chart
+  const pieData = {
+    labels: Object.keys(totals),
+    datasets: [
+      {
+        data: Object.values(totals),
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4CAF50', '#FF7F50'], // Customize colors
+      },
+    ],
+  };
+
   return (
     <div>
       <h1 style={{ textAlign: 'center' }}>Total Amount per Date</h1>
+      
+      {/* Table with Payments */}
       <StyledTableContainer component={Paper}>
         <Table>
           <StyledTableHead>
@@ -70,6 +102,17 @@ function TotalFarmerPayments() {
         </Table>
       </StyledTableContainer>
 
+      {/* Smaller Bar Chart */}
+      <div style={{ width: '40%', margin: '20px auto' }}>
+        <Bar data={barData} />
+      </div>
+
+      {/* Smaller Pie Chart */}
+      <div style={{ width: '30%', margin: '20px auto' }}>
+        <Pie data={pieData} />
+      </div>
+
+      {/* Back Button */}
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
         <Button variant="contained" color="primary" onClick={() => navigate('/')}>
           Back to Farmer Payments

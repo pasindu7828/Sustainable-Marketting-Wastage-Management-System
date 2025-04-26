@@ -20,7 +20,6 @@ function UpdateShopPrice() {
     const [currentDate, setCurrentDate] = useState("");
     const navigate = useNavigate();
     const { id } = useParams();
-
     // Get the current system date
     useEffect(() => {
         const today = new Date().toLocaleDateString();
