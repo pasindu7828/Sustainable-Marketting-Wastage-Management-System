@@ -125,13 +125,7 @@ function DisplayFmPrices() {
                     <Link to={`/displayFarmerPrice/${farmerproductprices._id}`} style={{ textDecoration: 'none' }}>
                       <StyledButton variant="contained" color="primary">Update</StyledButton>
                     </Link>
-                    <StyledButton
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => deleteHandler(farmerproductprices._id)}
-                    >
-                      Delete
-                    </StyledButton>
+                    
                   </div>
                 </StyledTableCell>
               </TableRow>
