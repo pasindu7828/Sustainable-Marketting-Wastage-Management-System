@@ -1,143 +1,162 @@
 import React from 'react';
-import { Button, Box, Typography } from '@mui/material';
+import { Button, Box, Typography, Container, Grid, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { styled } from '@mui/material/styles';
+
+const FeatureCard = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(4),
+  borderRadius: '16px',
+  textAlign: 'center',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  transition: 'transform 0.3s, box-shadow 0.3s',
+  '&:hover': {
+    transform: 'translateY(-8px)',
+    boxShadow: theme.shadows[8],
+  },
+}));
+
+const GradientButton = styled(Button)(({ theme }) => ({
+  background: `linear-gradient(45deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+  color: 'white',
+  padding: '12px 24px',
+  borderRadius: '12px',
+  fontWeight: 'bold',
+  boxShadow: 'none',
+  '&:hover': {
+    boxShadow: theme.shadows[4],
+  },
+}));
 
 function MainHomePage() {
   const navigate = useNavigate();
 
+  const features = [
+    {
+      title: 'By Product Prices',
+      description: 'Manage and update by-product pricing information',
+      icon: 'https://cdn-icons-png.flaticon.com/512/8291/8291727.png',
+      action: () => navigate('/addByproduct'),
+      color: 'primary',
+    },
+    {
+      title: 'Farmer Product Price List',
+      description: 'View and analyze farmer product pricing data',
+      icon: 'https://cdn-icons-png.flaticon.com/512/5436/5436010.png',
+      action: () => navigate('/displayFarmerPrice'),
+      color: 'secondary',
+    },
+    {
+      title: 'Shop Market Price List',
+      description: 'Access current market prices from various shops',
+      icon: 'https://cdn-icons-png.flaticon.com/512/4253/4253750.png',
+      action: () => navigate('/displayShopPrice'),
+      color: 'success',
+    },
+    {
+      title: 'Farmer Payment Details',
+      description: 'Track and manage all farmer payment transactions',
+      icon: 'https://cdn-icons-png.flaticon.com/512/1183/1183527.png',
+      action: () => navigate('/farmersList'),
+      color: 'error',
+    },
+  ];
+
   return (
-    <Box display="flex" flexDirection="column" alignItems="center" gap={3} p={4}>
-      {/* Welcome Text */}
-      <Typography 
-          variant="h4" 
+    <Container maxWidth="lg" sx={{ py: 6 }}>
+      {/* Hero Section */}
+      <Box textAlign="center" mb={8}>
+        <Typography 
+          variant="h3" 
+          component="h1"
           sx={{ 
-              fontWeight: 'bold', 
-              color: '#333', 
-              textAlign: 'center', 
-              mb: 2, 
-              fontFamily: 'Roboto, sans-serif',
-              letterSpacing: 1
-          }}
-      >
-          Welcome To Finance Management System
-      </Typography>
-
-      {/* ByProduct Prices Button with Image */}
-      <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
-        <img 
-          src="https://cdn-icons-png.flaticon.com/512/8291/8291727.png" 
-          alt="ByProduct Prices" 
-          width="80" 
-          height="80"
-        />
-        <Button 
-          variant="contained" 
-          color="primary" 
-          onClick={() => navigate('/addByproduct')}
-          sx={{
-            fontSize: '1.2rem', 
-            padding: '12px 24px', 
-            width: '300px', 
-            borderRadius: '12px', 
-            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-            transition: 'all 0.3s',
-            '&:hover': {
-              backgroundColor: '#1565C0',
-              transform: 'scale(1.05)'
-            }
+            fontWeight: 700, 
+            mb: 2,
+            background: 'linear-gradient(45deg, #3f51b5 30%, #2196F3 90%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            letterSpacing: '0.05em',
           }}
         >
-          By Product Prices
-        </Button>
-      </Box>
-
-      {/* Farmer Product Price List Button with Image */}
-      <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
-        <img 
-          src="https://cdn-icons-png.flaticon.com/512/5436/5436010.png" 
-          alt="Farmer Product Price List" 
-          width="80" 
-          height="80"
-        />
-        <Button 
-          variant="contained" 
-          color="secondary" 
-          onClick={() => navigate('/addFarmerPrice')}
-          sx={{
-            fontSize: '1.2rem', 
-            padding: '12px 24px', 
-            width: '300px', 
-            borderRadius: '12px', 
-            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-            transition: 'all 0.3s',
-            '&:hover': {
-              backgroundColor: '#C2185B',
-              transform: 'scale(1.05)'
-            }
+          Finance Management System
+        </Typography>
+        <Typography 
+          variant="h6" 
+          component="h2"
+          sx={{ 
+            color: 'text.secondary', 
+            maxWidth: '700px', 
+            mx: 'auto',
+            lineHeight: 1.6,
           }}
         >
-          Farmer Product Price List
-        </Button>
+          Streamline your financial operations with our comprehensive management solution
+        </Typography>
       </Box>
 
-      {/* Shop Market Price List Button with Image */}
-      <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
-        <img 
-          src="https://cdn-icons-png.flaticon.com/512/4253/4253750.png" 
-          alt="Shop Market Price List" 
-          width="80" 
-          height="80"
-        />
-        <Button 
-          variant="contained" 
-          color="success" 
-          onClick={() => navigate('/addShopPrice')}
-          sx={{
-            fontSize: '1.2rem', 
-            padding: '12px 24px', 
-            width: '300px', 
-            borderRadius: '12px', 
-            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-            transition: 'all 0.3s',
-            '&:hover': {
-              backgroundColor: '#2E7D32',
-              transform: 'scale(1.05)'
-            }
-          }}
-        >
-          Shop Market Price List
-        </Button>
-      </Box>
+      {/* Features Grid */}
+      <Grid container spacing={4}>
+        {features.map((feature, index) => (
+          <Grid item xs={12} sm={6} md={3} key={index}>
+            <FeatureCard elevation={4}>
+              <Box 
+                component="img" 
+                src={feature.icon} 
+                alt={feature.title} 
+                sx={{ 
+                  width: 80, 
+                  height: 80, 
+                  mb: 3,
+                  filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.1))'
+                }} 
+              />
+              <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 600 }}>
+                {feature.title}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                {feature.description}
+              </Typography>
+              <Button 
+                variant="contained" 
+                color={feature.color}
+                onClick={feature.action}
+                sx={{
+                  borderRadius: '12px',
+                  fontWeight: 'bold',
+                  px: 4,
+                  py: 1,
+                  textTransform: 'none',
+                  fontSize: '1rem',
+                }}
+              >
+                Access
+              </Button>
+            </FeatureCard>
+          </Grid>
+        ))}
+      </Grid>
 
-      {/* Farmer Payment Details Button with Image */}
-      <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
-        <img 
-          src="https://cdn-icons-png.flaticon.com/512/1183/1183527.png" 
-          alt="Farmer Payment Details" 
-          width="80" 
-          height="80"
-        />
-        <Button 
+      {/* Call to Action */}
+      <Box textAlign="center" mt={8}>
+        <Typography variant="h5" sx={{ mb: 3, fontWeight: 500 }}>
+          Ready to optimize your financial management?
+        </Typography>
+        <GradientButton 
           variant="contained" 
-          color="error" 
-          onClick={() => navigate('/addFarmerPayment')}
+          size="large"
+          onClick={() => navigate('/adminPage')}
           sx={{
-            fontSize: '1.2rem', 
-            padding: '12px 24px', 
-            width: '300px', 
-            borderRadius: '12px', 
-            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-            transition: 'all 0.3s',
-            '&:hover': {
-              backgroundColor: '#D32F2F',
-              transform: 'scale(1.05)'
-            }
+            fontSize: '1.1rem',
+            px: 6,
           }}
         >
-          Farmer Payment Details
-        </Button>
+          Get Started Now
+        </GradientButton>
       </Box>
-    </Box>
+    </Container>
   );
 }
 

@@ -49,7 +49,7 @@ const addFarmerPrice = async(req,res,next)=>{
 };
 
 //Get by id
-
+/**
 const getById = async(req,res,next)=>{
 
     const FPid = req.params.FPid;
@@ -71,6 +71,30 @@ const getById = async(req,res,next)=>{
     return res.status(200).json({ FproductPrice });
 
 }
+    */
+const getById = async (req, res, next) => {
+    const { id } = req.params; // Get the ObjectId from request parameters
+
+    let userDocument;
+
+    try {
+       
+
+        userDocument = await User.findById(id);
+    } catch (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+
+    // If no document is found
+    if (!userDocument) {
+        return res.status(404).json({ message: "User not found" });
+    }
+
+    // Return the found document
+    return res.status(200).json(userDocument);
+};
+
 
 //Update bill details
 
