@@ -9,7 +9,7 @@ const FarmerPriceListControllers =require("../Controllers/FarmerPriceListControl
 
 router.get("/",FarmerPriceListControllers.getAllFarmerPrices);
 router.post("/",FarmerPriceListControllers.addFarmerPrice);
-router.get("/:pname",FarmerPriceListControllers.getById);
+router.get("/:id",FarmerPriceListControllers.getById);
 router.put("/:FPid",FarmerPriceListControllers.updateFarmerPrices);
 router.delete("/:FPid",FarmerPriceListControllers.deleteFarmerPrices);
 

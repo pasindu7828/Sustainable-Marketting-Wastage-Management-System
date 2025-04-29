@@ -73,34 +73,28 @@ const getById = async(req,res,next)=>{
 }
     */
 const getById = async (req, res, next) => {
-    const { pname } = req.params; // Get product name from request parameters
+    const { id } = req.params; // Get the ObjectId from request parameters
 
-    let farmerPrices;
+    let userDocument;
 
     try {
-        // Fetch the first document (assuming there's only one)
-        farmerPrices = await User.findOne();
+       
+
+        userDocument = await User.findById(id);
     } catch (err) {
         console.error("Database error:", err);
         return res.status(500).json({ message: "Internal server error" });
     }
 
-    // If no data is found
-    if (!farmerPrices) {
-        return res.status(404).json({ message: "Farmer price data not found" });
+    // If no document is found
+    if (!userDocument) {
+        return res.status(404).json({ message: "User not found" });
     }
 
-    // Construct the key dynamically (e.g., "fpApple" for "Apple")
-    const priceKey = `fp${pname}`;
-
-    // Check if the field exists in the document
-    if (!(priceKey in farmerPrices)) {
-        return res.status(404).json({ message: `Price for ${pname} not found` });
-    }
-
-    // Return the corresponding price
-    return res.status(200).json({ price: farmerPrices[priceKey] });
+    // Return the found document
+    return res.status(200).json(userDocument);
 };
+
 
 //Update bill details
 

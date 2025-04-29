@@ -12,13 +12,17 @@ function UpdateFarmerPrice() {
     // Fetch the existing data based on ID
     useEffect(() => {
         const fetchHandler = async () => {
-            await axios
-                .get(`http://localhost:5000/FarmerPrices/${id}`)
-                .then((res) => res.data)
-                .then((data) => setInputs(data.FproductPrice));
+            try {
+                const res = await axios.get(`http://localhost:5000/FarmerPrices/${id}`);
+                console.log("Full response data:", res.data); // ✅ Logs the full response
+                setInputs(res.data); // or setInputs(res.data) based on your structure
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
         };
         fetchHandler();
     }, [id]);
+    
 
     const handleChange = (e) => {
         setInputs((prevState) => ({
