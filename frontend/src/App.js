@@ -1,6 +1,6 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import './App.css';
+import { Routes, Route } from "react-router-dom";
+//import './App.css';
 
 // Routes for the review system (Nimshara)
 import HomeReview from "./pages/HomeReview";
@@ -43,11 +43,11 @@ import MainDashboard from "./Components/MainDashboard";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Navbar />
+    <div>
+    <React.Fragment>
       <Routes>
         {/* Review System Routes */}
-        <Route path="/" element={<HomeReview />} />
+        <Route path="/" element={<MainDashboard />} />
         <Route path="/reviews/create" element={<CreateReview />} />
         <Route path="/reviews/admin" element={<Admin />} />
         <Route path="/reviews/details/:id" element={<ShowReview />} />
@@ -84,7 +84,8 @@ const App = () => {
         <Route path="/summaryShopPrices" element={<SummaryTotalShopPrices />} />
         <Route path="/adminPage" element={<MainDashboard />} />
       </Routes>
-    </BrowserRouter>
+    </React.Fragment>
+    </div>
   );
 };
 

@@ -195,7 +195,7 @@ const MainDashboard = () => {
   const appTheme = createTheme(getDesignTokens(darkMode ? 'dark' : 'light'));
 
   const menuItems = [
-    { text: 'Dashboard', icon: <Dashboard />, path: '/adminPage' },
+    { text: 'Reviews', icon: <Dashboard />, path: '/reviews/admin' },
     { text: 'Finance', icon: <AttachMoney />, path: '/FinanceHome' },
     { text: 'Inventory', icon: <Inventory />, path: '/HomeInventoryMain' },
     { text: 'Users', icon: <People />, path: '/users' },
@@ -482,9 +482,9 @@ const MainDashboard = () => {
                 </Button>
               </Paper>
             ) : (
-              <Grid container spacing={3}>
+              <Grid container spacing={2}>
                 {/* Metrics Cards */}
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid xs={1} sm={6} md={3}>
                   <DashboardCard>
                     <CardContent>
                       <Typography variant="subtitle2" color="text.secondary" gutterBottom>
