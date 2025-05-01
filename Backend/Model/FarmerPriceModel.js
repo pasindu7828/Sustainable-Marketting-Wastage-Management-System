@@ -14,7 +14,7 @@ const userSchema = new Schema({
         type:Number,
         required:true,
     },
-    fpGraphes:{
+    fpGrapes:{
         type:Number,
         required:true,
     },
@@ -38,7 +38,7 @@ const userSchema = new Schema({
         type:Number,
         required:true,
     },
-    fpGoava:{
+    fpGuava:{
         type:Number,
         required:true,
     }

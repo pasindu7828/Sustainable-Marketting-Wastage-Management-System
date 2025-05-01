@@ -99,7 +99,7 @@ function DisplayFmPrices() {
                     {farmerproductprices.fpBanana}
                 </StyledTableCell2>
                 <StyledTableCell2>
-                    {farmerproductprices.fpGraphes}
+                    {farmerproductprices.fpGrapes}
                 </StyledTableCell2>
                 <StyledTableCell2>
                     {farmerproductprices.fpWatermelon}
@@ -117,7 +117,7 @@ function DisplayFmPrices() {
                     {farmerproductprices.fpPapaya}
                 </StyledTableCell2>
                 <StyledTableCell2>
-                    {farmerproductprices.fpGoava}
+                    {farmerproductprices.fpGuava}
                 </StyledTableCell2>
 
                 <StyledTableCell>

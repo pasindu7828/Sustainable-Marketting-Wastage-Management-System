@@ -13,7 +13,7 @@ function UpdateFarmerPrice() {
     useEffect(() => {
         const fetchHandler = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/FarmerPrices/${id}`);
+                const res = await axios.get(`http://localhost:5000/FarmerPrices/product/${id}`);
                 console.log("Full response data:", res.data); // ✅ Logs the full response
                 setInputs(res.data); // or setInputs(res.data) based on your structure
             } catch (error) {
@@ -38,13 +38,13 @@ function UpdateFarmerPrice() {
                 fpApple: Number(inputs.fpApple),
                 fpOrange: Number(inputs.fpOrange),
                 fpBanana: Number(inputs.fpBanana),
-                fpGraphes: Number(inputs.fpGraphes),
+                fpGrapes: Number(inputs.fpGrapes),
                 fpWatermelon: Number(inputs.fpWatermelon),
                 fpMango: Number(inputs.fpMango),
                 fpWoodapple: Number(inputs.fpWoodapple),
                 fpPineapple: Number(inputs.fpPineapple),
                 fpPapaya: Number(inputs.fpPapaya),
-                fpGoava: Number(inputs.fpGoava),
+                fpGuava: Number(inputs.fpGuava),
             })
             .then((res) => res.data);
     };
@@ -59,13 +59,13 @@ function UpdateFarmerPrice() {
         { name: "fpApple", label: "Apple" },
         { name: "fpOrange", label: "Orange" },
         { name: "fpBanana", label: "Banana" },
-        { name: "fpGraphes", label: "Graphes" },
+        { name: "fpGrapes", label: "Grapes" },
         { name: "fpWatermelon", label: "Watermelon" },
         { name: "fpMango", label: "Mango" },
         { name: "fpWoodapple", label: "WoodApple" },
         { name: "fpPineapple", label: "Pineapple" },
         { name: "fpPapaya", label: "Papaya" },
-        { name: "fpGoava", label: "Goava" },
+        { name: "fpGuava", label: "Guava" },
     ];
 
     return (
