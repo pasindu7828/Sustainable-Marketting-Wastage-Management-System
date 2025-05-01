@@ -19,6 +19,7 @@ import ReviewModal from "./ReviewModal";
 
 const ReviewSingleCard = ({ review }) => {
   const [showModal, setShowModal] = useState(false);
+console.log("data",review);
 
   return (
     <Card sx={{
@@ -56,7 +57,7 @@ const ReviewSingleCard = ({ review }) => {
           <CardMedia
             component="img"
             height="180"
-            image={`../public/images/${review.photo}`}
+            image={`${review.image}`}
             alt={`${review.name}'s review`}
             sx={{ borderRadius: 2, boxShadow: 1, transition: "transform 0.3s", '&:hover': { transform: "scale(1.05)" } }}
           />

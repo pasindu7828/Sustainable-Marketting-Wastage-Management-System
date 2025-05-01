@@ -44,6 +44,8 @@ const HomeReview = () => {
       .get("http://localhost:5000/reviews")
       .then((response) => {
         setReviews(response.data.data);
+        console.log(response);
+        
         setLoading(false);
       })
       .catch(() => setLoading(false));

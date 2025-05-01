@@ -7,6 +7,9 @@ import { MdOutlineAddBox } from "react-icons/md";
 import ReviewTable from "../Components/HomeR/ReviewTable"; // Updated component name
 import ReviewCard from "../Components/HomeR/ReviewCard"; // Updated component name
 import BackButton from "../Components/BackButton";
+import { ButtonGroup, Button } from "@mui/material";
+import ViewModuleIcon from "@mui/icons-material/ViewModule";
+import ViewComfyIcon from "@mui/icons-material/ViewComfy";
 
 const Admin = () => {
   const [reviews, setReviews] = useState([]);
@@ -40,28 +43,40 @@ const Admin = () => {
 
           <div className="flex items-center gap-x-6">
             {/* View Toggle Buttons */}
-            <div className="flex gap-x-3">
-              <button
-                className={`px-5 py-2 rounded-full font-semibold text-sm uppercase tracking-wide transition-all duration-300 shadow-md ${
-                  showType === "table"
-                    ? "bg-green-600 text-white scale-105"
-                    : "bg-white text-green-700 hover:bg-green-100 border border-green-300"
-                }`}
+            <ButtonGroup variant="contained" color="primary" aria-label="view toggle" sx={{ borderRadius: "25px" }}>
+              <Button
+                startIcon={<ViewModuleIcon />}
                 onClick={() => setShowType("table")}
+                sx={{
+                  backgroundColor: showType === "table" ? "#388e3c" : "#ffffff",
+                  color: showType === "table" ? "#ffffff" : "#388e3c",
+                  "&:hover": {
+                    backgroundColor: showType === "table" ? "#388e3c" : "#e8f5e9",
+                  },
+                  borderRadius: "25px",
+                  boxShadow: showType === "table" ? 3 : 1,
+                  transition: "all 0.3s",
+                }}
               >
                 Table View
-              </button>
-              <button
-                className={`px-5 py-2 rounded-full font-semibold text-sm uppercase tracking-wide transition-all duration-300 shadow-md ${
-                  showType === "card"
-                    ? "bg-green-600 text-white scale-105"
-                    : "bg-white text-green-700 hover:bg-green-100 border border-green-300"
-                }`}
+              </Button>
+              <Button
+                startIcon={<ViewComfyIcon />}
                 onClick={() => setShowType("card")}
+                sx={{
+                  backgroundColor: showType === "card" ? "#388e3c" : "#ffffff",
+                  color: showType === "card" ? "#ffffff" : "#388e3c",
+                  "&:hover": {
+                    backgroundColor: showType === "card" ? "#388e3c" : "#e8f5e9",
+                  },
+                  borderRadius: "25px",
+                  boxShadow: showType === "card" ? 3 : 1,
+                  transition: "all 0.3s",
+                }}
               >
                 Card View
-              </button>
-            </div>
+              </Button>
+            </ButtonGroup>
 
             {/* Add New Review Button */}
             <Link to="/reviews/create">

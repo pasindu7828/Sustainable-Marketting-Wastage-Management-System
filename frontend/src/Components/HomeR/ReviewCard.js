@@ -8,6 +8,8 @@ import ReviewSingleCard from "./ReviewSingleCard";
 import { Grid } from "@mui/material";
 
 const ReviewCard = ({ reviews }) => {
+  console.log("Reviews",reviews);
+  
   return (
     <Grid
       container
@@ -22,11 +24,20 @@ const ReviewCard = ({ reviews }) => {
         },
       }}
     >
-      {reviews.map((item) => (
-        <Grid item key={item._id} xs={12} sm={6} lg={4} xl={3}>
-          <ReviewSingleCard review={item} />
-        </Grid>
-      ))}
+      {reviews.map((item) => {
+  const imageBasePath = "/uploads/reviews/"; // adjust path as needed
+  const updatedItem = {
+    ...item,
+    image: `${imageBasePath}${item.photo}`, // prepend image path
+  };
+
+  return (
+    <Grid item key={item._id} xs={12} sm={6} lg={4} xl={3}>
+      <ReviewSingleCard review={updatedItem} />
+    </Grid>
+  );
+})}
+
     </Grid>
   );
 };

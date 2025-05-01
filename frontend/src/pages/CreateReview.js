@@ -13,6 +13,7 @@ import {
   Button,
   Paper,
   InputLabel,
+  Alert,
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 
@@ -23,6 +24,7 @@ const CreateReview = () => {
   const [reviewText, setReviewText] = useState("");
   const [photo, setPhoto] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -42,27 +44,24 @@ const CreateReview = () => {
 
   const handleSaveReview = () => {
     if (!/^[A-Za-z\s]+$/.test(name)) {
-      enqueueSnackbar("Please enter letters only for Name", {
-        variant: "error",
-      });
+      setErrorMessage("Please enter letters only for Name");
       return;
     }
     if (!emailRegex.test(email)) {
-      enqueueSnackbar("Please enter a valid email address", {
-        variant: "error",
-      });
+      setErrorMessage("Please enter a valid email address");
       return;
     }
     if (rating === 0) {
-      enqueueSnackbar("Please select a rating", { variant: "error" });
+      setErrorMessage("Please select a rating");
       return;
     }
     if (reviewText.trim().length < 10) {
-      enqueueSnackbar("Review must be at least 10 characters long", {
-        variant: "error",
-      });
+      setErrorMessage("Review must be at least 10 characters long");
       return;
     }
+
+    // Clear any existing error message before submitting
+    setErrorMessage("");
 
     const data = new FormData();
     data.append("name", name);
@@ -112,6 +111,12 @@ const CreateReview = () => {
         sx={{ maxWidth: 700, mx: "auto", p: 4, borderRadius: 4 }}
       >
         <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          {errorMessage && (
+            <Alert severity="error" onClose={() => setErrorMessage("")}>
+              {errorMessage}
+            </Alert>
+          )}
+
           {/* Name Input */}
           <Box>
             <InputLabel sx={{ mb: 1, color: "#616161" }}>
