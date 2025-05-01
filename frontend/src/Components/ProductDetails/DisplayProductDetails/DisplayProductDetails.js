@@ -48,11 +48,17 @@ const StyledButton = styled(Button)({
 
 function DisplayProductDetails() {
   const navigate = useNavigate();
+  const [Inventorys, setUsers] = useState();
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    fetchHandler().then((data) => setUsers(data.Inventorys));
+  }, []);
+
   const deleteHandler = async (_id) => {
     try {
       await axios.delete(`http://Localhost:5000/Inventorys/${_id}`);
-      navigate("/");
-      navigate("/DisplayProductDetails");
+      setUsers(prev => prev.filter(item => item._id !== _id)); // live update
     } catch (error) {
       console.error("Error deleting product details:", error);
     }
@@ -79,13 +85,6 @@ function DisplayProductDetails() {
 
     doc.save(`Product_Report_${item.pid}.pdf`);
   };
-
-  const [Inventorys, setUsers] = useState();
-  const [searchTerm, setSearchTerm] = useState('');
-
-  useEffect(() => {
-    fetchHandler().then((data) => setUsers(data.Inventorys));
-  }, []);
 
   const filteredInventorys = Inventorys?.filter((item) => {
     const search = searchTerm.toLowerCase();
@@ -160,4 +159,5 @@ function DisplayProductDetails() {
     </div>
   );
 }
+
 export default DisplayProductDetails;

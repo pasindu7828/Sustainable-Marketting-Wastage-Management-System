@@ -15,11 +15,13 @@ import UpdateProductDetails from "./Components/ProductDetails/UpdateProductDetai
 import AddByProductDetails from "./Components/ByProductDetails/AddByProductDetails";
 import DisplayByProductDetails from "./Components/ByProductDetails/DisplayByProductDetails";
 import UpdateByProductDetails from "./Components/ByProductDetails/UpdateByProductDetails";
+import SummaryChart from "./Components/ByProductDetails/SummaryChart";
 
 // Shop Product Details
 import AddShopProductDetails from "./Components/ShopProductDetails/AddShopProductDetails";
 import DisplayShopProductDetails from "./Components/ShopProductDetails/DisplayShopProductDetails";
 import UpdateShopProductDetails from "./Components/ShopProductDetails/UpdateShopProductDetails";
+import SummaryShopChart from "./Components/ShopProductDetails/SummaryShopChart";
 
 //By Product Price List
 import AddBpp from "./Components/ByproductPrices/AddByPP/AddBpp";
@@ -52,6 +54,9 @@ import SummaryTotalShopPrices from "./Components/Calculations/SummaryTotalShopPr
 
 //Admin Dash Board
 import MainDashboard from "./Components/MainDashboard";
+import TotalFarmerPrices from "./Components/FarmerPriceList/TotalFarmerPrices";
+
+
 
 function App() {
 
@@ -63,7 +68,7 @@ function App() {
       <React.Fragment>
        
        <Routes>
-       <Route path="/" element={<MainDashboard />}/> 
+       <Route path="/" element={<TotalFarmerPrices />}/> 
        <Route path="/HomeInventoryMain" element={<HomeInventoryMain/>}/>
        <Route path="/addproductdetails" element={<AddProduct/>}/>
        <Route path="/DisplayProductDetails" element={<DisplayProductDetails/>}/>
@@ -100,6 +105,11 @@ function App() {
           <Route path="/totalFarmerPayments" element={<TotalFarmerPayments/>}/>
           <Route path="/summaryShopPrices" element={<SummaryTotalShopPrices/>}/>
           <Route path="/adminPage" element={<MainDashboard/>}/>
+
+          <Route path="/byProductSummary" element={<SummaryChart/>}/>
+
+          <Route path="/shopProductSummary" element={<SummaryShopChart/>}/>
+
 
           
 

@@ -69,7 +69,7 @@ function UpdateProductDetails() {
       newErrors.fname = "Product Name must contain only letters.";
     }
 
-    if (!/^[0-9]{10}$/.test(inputs.fnumber)) {
+    if (!/^[0-9]{9}$/.test(inputs.fnumber)) {
       newErrors.fnumber = "Farmer Number must be exactly 10 digits.";
     }
 

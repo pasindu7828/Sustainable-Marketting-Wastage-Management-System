@@ -85,7 +85,8 @@ function AddFarmerPayment() {
             }));
 
             if (data.pname) {
-                fetchPrices("Watermelon");
+                fetchPrices(data.pname);
+                
             }
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -94,16 +95,32 @@ function AddFarmerPayment() {
         }
     };
 
+    
+
     const fetchPrices = async (pname) => {
+        if (!pname) {
+            console.error("Product name is missing");
+            return;
+        }
+    
+        const formattedProduct = `fp${pname.charAt(0).toUpperCase()}${pname.slice(1)}`;
+        const URL = `http://localhost:5000/FarmerPrices/${formattedProduct}`;
+    
         try {
-            const URL = `http://localhost:5000/FarmerPrices/${pname}`;
             const response = await axios.get(URL);
             const data = response.data;
-            setPrice(data.price);
+    
+            if (data && data.price !== undefined) {
+                console.log("Price:", data.price);
+                setPrice(data.price);
+            } else {
+                console.warn("Price not found in response:", data);
+            }
         } catch (error) {
             console.error("Error fetching data:", error);
         }
     };
+    
 
     useEffect(() => {
         if (inputs.quantity && price) {
