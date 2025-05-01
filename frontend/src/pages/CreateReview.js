@@ -27,6 +27,19 @@ const CreateReview = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
+  const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+
+    if (value.length > 0 && !emailRegex.test(value)) {
+      enqueueSnackbar("Please enter a valid email address", {
+        variant: "error",
+      });
+    }
+  };
+
   const handleSaveReview = () => {
     if (!/^[A-Za-z\s]+$/.test(name)) {
       enqueueSnackbar("Please enter letters only for Name", {
@@ -34,7 +47,7 @@ const CreateReview = () => {
       });
       return;
     }
-    if (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(email)) {
+    if (!emailRegex.test(email)) {
       enqueueSnackbar("Please enter a valid email address", {
         variant: "error",
       });
@@ -121,7 +134,7 @@ const CreateReview = () => {
               fullWidth
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
               placeholder="Enter your email"
               variant="outlined"
               sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
