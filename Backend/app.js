@@ -1,33 +1,36 @@
-import express from "express";
-import { PORT, mongoDBURL } from "./config.js";
-import mongoose from "mongoose";
-import reviewRoutes from "./Route/reviewRoutes.js"; // Updated to review routes
-import cors from "cors";
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+
+// Import config values from config.js
+const { PORT, mongoDBURL } = require("./config");
+
+// Import your routes (must be using module.exports inside reviewRoutes.js)
+const reviewRoutes = require("./Route/reviewRoutes");
 
 const app = express();
 
 // Middleware for parsing request body
 app.use(express.json());
 
-// Middleware for handling CORS POLICY
-// Option 1: Allow All Origins with Default of cors(*)
+// Middleware for handling CORS
 app.use(cors());
 
-app.get("/", (request, response) => {
-  console.log(request);
-  return response
-    .status(234)
-    .send("Welcome To E-Farmer Review System MERN Project");
+app.get("/", (req, res) => {
+  console.log(req);
+  res.status(234).send("Welcome To E-Farmer Review System MERN Project");
 });
 
-app.use("/reviews", reviewRoutes); // Updated route prefix
+// Use the review routes
+app.use("/reviews", reviewRoutes);
 
+// Connect to MongoDB
 mongoose
   .connect(mongoDBURL)
   .then(() => {
     console.log("App connected to database");
-    app.listen(5000, () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
   .catch((error) => {
-    console.log(error);
+    console.error("MongoDB connection error:", error);
   });

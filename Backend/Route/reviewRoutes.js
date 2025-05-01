@@ -1,13 +1,14 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   createReview,
   getAllReviews,
   getReviewById,
   updateReview,
   deleteReview,
   testCreateReview,
-} from "../Controllers/reviewController.js";
-import { upload } from "../middleware/requirePhoto.js";
+} = require("../Controllers/reviewController");
+
+const { upload } = require("../middleware/requirePhoto");
 
 const router = express.Router();
 
@@ -29,4 +30,4 @@ router.delete("/:id", deleteReview);
 // Test route for review context
 router.post("/create", testCreateReview);
 
-export default router;
+module.exports = router;
