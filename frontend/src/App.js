@@ -48,6 +48,7 @@ import SummaryTotalShopPrices from "./Components/Calculations/SummaryTotalShopPr
 import MainDashboard from "./Components/MainDashboard";
 import TotalFarmerPrices from "./Components/FarmerPriceList/TotalFarmerPrices";
 
+
 const App = () => {
   return (
     <div>
@@ -75,6 +76,7 @@ const App = () => {
           <Route path="/DisplayShopProductDetails" element={<DisplayShopProductDetails />} />
           <Route path="/DisplayShopProductDetails/:id" element={<UpdateShopProductDetails />} />
           <Route path="/TotalShopPrices" element={<TotalShopPrices />} />
+          <Route path="/FinanceHome" element={<MainHomePage />} />
 
           {/* Price and Payment Routes */}
           <Route path="/addByproduct" element={<AddBpp />} />
