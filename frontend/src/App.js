@@ -49,7 +49,9 @@ import MainDashboard from "./Components/MainDashboard";
 import TotalFarmerPrices from "./Components/FarmerPriceList/TotalFarmerPrices";
 import FarmerPaymentAnalysis from "./Components/FarmerPriceList/FarmerPaymentAnalysis";
 import DailyFinance from "./Components/Calculations/DailyFinance";
+import { createRequire } from 'module';
 
+const require = createRequire(import.meta.url);
 
 const App = () => {
   return (
@@ -58,6 +60,7 @@ const App = () => {
         <Routes>
           {/* Default Page */}
           <Route path="/" element={<MainDashboard />} />
+          <Route path="/reviewDashBoard" element={<HomeReview />} />
 
           {/* Review System Routes */}
           <Route path="/reviews/create" element={<CreateReview />} />
