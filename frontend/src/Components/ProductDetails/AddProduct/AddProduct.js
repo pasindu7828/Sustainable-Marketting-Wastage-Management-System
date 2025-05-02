@@ -47,12 +47,11 @@ function AddProduct() {
     }
 
     if (!/^(\d{12}|\d{10}V)$/.test(inputs.fid)) {
-      newErrors.fid = "Farmer ID must be 10 digits or 9 digits followed by 'V'.";
+      newErrors.fid = "Farmer ID must be 13 digits or 13 digits followed by 'V'.";
     }
     if (!/^[A-Za-z ]+$/.test(inputs.fname)) {
       newErrors.fname = "farmer Name must contain only letters.";
     }
-
 
     if (!/^[0-9]{10}$/.test(inputs.fnumber)) {
       newErrors.fnumber = "Farmer Number must be exactly 10 digits.";
@@ -103,6 +102,11 @@ function AddProduct() {
                 name="pid"
                 value={inputs.pid}
                 onChange={handleChange}
+                onKeyPress={(e) => {
+                  if (!/[0-9]/.test(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
                 fullWidth
                 required
                 variant="outlined"
@@ -133,19 +137,28 @@ function AddProduct() {
               )}
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                label="Farmer ID"
-                type="text"
-                name="fid"
-                value={inputs.fid}
-                onChange={handleChange}
-                fullWidth
-                required
-                variant="outlined"
-                error={!!errors.fid}
-                helperText={errors.fid}
-              />
-            </Grid>
+  <TextField
+    label="Farmer ID"
+    type="text"
+    name="fid"
+    value={inputs.fid}
+    onChange={(e) => {
+      const value = e.target.value.toUpperCase(); // Convert to uppercase
+      if (/^[0-9V]{0,13}$/.test(value)) {
+        setInputs((prevState) => ({
+          ...prevState,
+          fid: value,
+        }));
+      }
+    }}
+    fullWidth
+    required
+    variant="outlined"
+    error={!!errors.fid}
+    helperText={errors.fid}
+  />
+</Grid>
+
             <Grid item xs={12}>
               <TextField
                 label="Farmer Name"
@@ -153,6 +166,11 @@ function AddProduct() {
                 name="fname"
                 value={inputs.fname}
                 onChange={handleChange}
+                onKeyPress={(e) => {
+                  if (!/[a-zA-Z ]/.test(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
                 fullWidth
                 required
                 variant="outlined"
@@ -166,7 +184,12 @@ function AddProduct() {
                 type="text"
                 name="fnumber"
                 value={inputs.fnumber}
-                onChange={handleChange}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (/^\d{0,10}$/.test(value)) {
+                    handleChange(e);
+                  }
+                }}
                 fullWidth
                 required
                 variant="outlined"

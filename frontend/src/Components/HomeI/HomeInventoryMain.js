@@ -1,20 +1,7 @@
 import React from 'react';
-import { 
-  Box, 
-  Typography, 
-  Button, 
-  Card, 
-  CardContent, 
-  Grid,
-  styled,
-  useTheme
-} from '@mui/material';
+import { Box, Typography, Button, Card, CardContent, Grid, styled, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import {
-  PackageCheck,
-  Boxes,
-  ShoppingCart
-} from 'lucide-react'; // ✅ Lucide professional icons
+import { PackageCheck, Boxes, ShoppingCart } from 'lucide-react'; 
 
 const FeatureCard = styled(Card)(({ theme }) => ({
   borderRadius: theme.spacing(3),
@@ -50,58 +37,36 @@ function HomeInventoryMain() {
 
   const features = [
     {
-      title: "Product Details",
-      description: "Manage core product inventory, pricing, and specifications",
+      title: 'Product Details',
+      description: 'Manage core product inventory, pricing, and specifications',
       icon: <PackageCheck size={36} color={theme.palette.primary.main} />,
-      path: "/addproductdetails",
-      color: "primary"
+      path: '/addproductdetails',
+      color: 'primary',
     },
     {
-      title: "ByProduct Details",
-      description: "Handle by-products and secondary inventory items",
+      title: 'ByProduct Details',
+      description: 'Handle by-products and secondary inventory items',
       icon: <Boxes size={36} color={theme.palette.secondary.main} />,
-      path: "/AddByProductDetails",
-      color: "secondary"
+      path: '/AddByProductDetails',
+      color: 'secondary',
     },
     {
-      title: "Shop Product Details",
-      description: "Manage retail shop inventory and point-of-sale items",
+      title: 'Shop Product Details',
+      description: 'Manage retail shop inventory and point-of-sale items',
       icon: <ShoppingCart size={36} color={theme.palette.success.main} />,
-      path: "/AddShopProductDetails",
-      color: "success"
-    }
+      path: '/AddShopProductDetails',
+      color: 'success',
+    },
   ];
 
   return (
-    <Box sx={{ 
-      px: { xs: 2, sm: 4 }, 
-      py: { xs: 4, sm: 6 }, 
-      minHeight: '100vh', 
-      backgroundColor: theme.palette.background.default 
-    }}>
-      
+    <Box sx={{ px: { xs: 2, sm: 4 }, py: { xs: 4, sm: 6 }, minHeight: '100vh', backgroundColor: theme.palette.background.default }}>
       {/* Header Section */}
       <Box sx={{ textAlign: 'center', mb: 8 }}>
-        <Typography 
-          variant="h3" 
-          sx={{ 
-            fontWeight: 800, 
-            mb: 2, 
-            color: theme.palette.text.primary,
-            fontSize: { xs: '2rem', md: '3rem' }
-          }}
-        >
+        <Typography variant="h3" sx={{ fontWeight: 800, mb: 2, color: theme.palette.text.primary, fontSize: { xs: '2rem', md: '3rem' } }}>
           Inventory Management System
         </Typography>
-        <Typography 
-          variant="subtitle1" 
-          sx={{ 
-            color: theme.palette.text.secondary, 
-            maxWidth: 720, 
-            mx: 'auto', 
-            lineHeight: 1.7 
-          }}
-        >
+        <Typography variant="subtitle1" sx={{ color: theme.palette.text.secondary, maxWidth: 720, mx: 'auto', lineHeight: 1.7 }}>
           Comprehensive tools to manage all aspects of your inventory across multiple product categories
         </Typography>
       </Box>
@@ -111,46 +76,14 @@ function HomeInventoryMain() {
         {features.map((feature, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <FeatureCard>
-              <CardContent sx={{ 
-                flexGrow: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center',
-                p: 4
-              }}>
-                <Box sx={{ 
-                  width: 80,
-                  height: 80,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: theme.palette[feature.color].light,
-                  borderRadius: '50%',
-                  mb: 3
-                }}>
+              <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', p: 4 }}>
+                <Box sx={{ width: 80, height: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: theme.palette[feature.color].light, borderRadius: '50%', mb: 3 }}>
                   {feature.icon}
                 </Box>
-                <Typography 
-                  variant="h6" 
-                  sx={{ 
-                    fontWeight: 700, 
-                    mb: 1.5, 
-                    color: theme.palette.text.primary 
-                  }}
-                >
+                <Typography variant="h6" sx={{ fontWeight: 700, mb: 1.5, color: theme.palette.text.primary }}>
                   {feature.title}
                 </Typography>
-                <Typography 
-                  variant="body2" 
-                  sx={{ 
-                    mb: 3, 
-                    color: theme.palette.text.secondary, 
-                    flexGrow: 1,
-                    fontSize: '0.95rem',
-                    lineHeight: 1.6
-                  }}
-                >
+                <Typography variant="body2" sx={{ mb: 3, color: theme.palette.text.secondary, flexGrow: 1, fontSize: '0.95rem', lineHeight: 1.6 }}>
                   {feature.description}
                 </Typography>
                 <FeatureButton
@@ -162,7 +95,7 @@ function HomeInventoryMain() {
                     backgroundColor: theme.palette[feature.color].main,
                     '&:hover': {
                       backgroundColor: theme.palette[feature.color].dark,
-                    }
+                    },
                   }}
                 >
                   Access {feature.title}
@@ -174,22 +107,12 @@ function HomeInventoryMain() {
       </Grid>
 
       {/* Support Section */}
-      <Box sx={{ 
-        mt: 10, 
-        textAlign: 'center' 
-      }}>
-        <Typography 
-          variant="h6" 
-          sx={{ 
-            fontWeight: 500, 
-            color: theme.palette.text.secondary, 
-            mb: 2 
-          }}
-        >
-          Need help with inventory management?
+      <Box sx={{ mt: 10, textAlign: 'center' }}>
+        <Typography variant="h6" sx={{ fontWeight: 500, color: theme.palette.text.secondary, mb: 2 }}>
+          Return to admin Dashboard
         </Typography>
-        <Button 
-          variant="outlined" 
+        <Button
+          variant="outlined"
           color="primary"
           sx={{
             px: 4,
@@ -201,10 +124,11 @@ function HomeInventoryMain() {
             '&:hover': {
               borderColor: theme.palette.primary.dark,
               backgroundColor: theme.palette.primary.light,
-            }
+            },
           }}
+          onClick={() => navigate('/adminPage')}
         >
-          Contact Support
+          Admin Dashboard
         </Button>
       </Box>
     </Box>
