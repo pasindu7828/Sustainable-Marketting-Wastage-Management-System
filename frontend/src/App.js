@@ -47,6 +47,8 @@ import TotalFarmerPayments from "./Components/Calculations/TotalFarmerPayments";
 import SummaryTotalShopPrices from "./Components/Calculations/SummaryTotalShopPrices";
 import MainDashboard from "./Components/MainDashboard";
 import TotalFarmerPrices from "./Components/FarmerPriceList/TotalFarmerPrices";
+import FarmerPaymentAnalysis from "./Components/FarmerPriceList/FarmerPaymentAnalysis";
+import DailyFinance from "./Components/Calculations/DailyFinance";
 
 
 const App = () => {
@@ -102,6 +104,9 @@ const App = () => {
 
           {/* Admin/Dashboard */}
           <Route path="/adminPage" element={<MainDashboard />} />
+          <Route path="/farmerAnalysisPage" element={<FarmerPaymentAnalysis />} />
+          <Route path="/dailyFinanceCal" element={<DailyFinance />} />
+
         </Routes>
       </React.Fragment>
     </div>
