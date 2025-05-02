@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ByProductNav from "../Nav/ShopPriceNav";
 import axios from "axios";
 import {
@@ -10,6 +11,8 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Button,
+  Box,
 } from "@mui/material";
 
 const inventoryURL = "http://localhost:5000/GoodInventorys";
@@ -36,6 +39,12 @@ const fetchFarmerPrices = async () => {
 };
 
 function TotalFarmerPrices() {
+  const navigate = useNavigate(); // Hook to navigate programmatically
+
+  const handleNavigate = () => {
+    navigate("/farmerAnalysisPage"); // Your route to the pie chart page
+  };
+
   const [groupedByDate, setGroupedByDate] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -113,13 +122,32 @@ function TotalFarmerPrices() {
     <div>
       <ByProductNav />
 
-      <Typography
-        variant="h4"
-        gutterBottom
-        sx={{ textAlign: "center", fontWeight: "bold", mt: 2, color: "#2c3e50" }}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          px: 3,
+          mt: 2,
+        }}
       >
-        Farmer Payments (Shop Quantity × Farmer Price)
-      </Typography>
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{ fontWeight: "bold", color: "#2c3e50" }}
+        >
+          Farmer Payments (Shop Quantity × Farmer Price)
+        </Typography>
+
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleNavigate}
+          sx={{ textTransform: "none", fontWeight: "bold" }}
+        >
+          View Analysis
+        </Button>
+      </Box>
 
       <div style={{ overflowX: "auto" }}>
         <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: 3 }}>
