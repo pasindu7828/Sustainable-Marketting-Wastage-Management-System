@@ -56,6 +56,7 @@ const App = () => {
         <Routes>
           {/* Default Page */}
           <Route path="/" element={<MainDashboard />} />
+          <Route path="/reviewDashBoard" element={<HomeReview />} />
 
           {/* Review System Routes */}
           <Route path="/reviews/create" element={<CreateReview />} />
