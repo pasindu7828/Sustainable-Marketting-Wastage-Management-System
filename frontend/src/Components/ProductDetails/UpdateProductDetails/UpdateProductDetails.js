@@ -20,17 +20,15 @@ function UpdateProductDetails() {
     quantity: "",
   });
   const [errors, setErrors] = useState({});
-  const [currentDate, setCurrentDate] = useState(""); // State for system date
+  const [currentDate, setCurrentDate] = useState("");
   const navigate = useNavigate();
   const { id } = useParams();
 
-  // Get the current system date
   useEffect(() => {
     const today = new Date().toLocaleDateString();
     setCurrentDate(today);
   }, []);
 
-  // Fetch data for the given ID when the component mounts
   useEffect(() => {
     const fetchHandler = async () => {
       try {
@@ -43,12 +41,21 @@ function UpdateProductDetails() {
     fetchHandler();
   }, [id]);
 
-  // Handle form input changes
   const handleChange = (e) => {
-    setInputs((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
+    const { name, value } = e.target;
+
+    // Custom restrictions for specific fields
+    if (name === "fid") {
+      if (/^[0-9vV]*$/.test(value) && value.length <= 13) {
+        setInputs((prev) => ({ ...prev, [name]: value }));
+      }
+    } else if (name === "fname" || name === "pname") {
+      if (/^[A-Za-z ]*$/.test(value)) {
+        setInputs((prev) => ({ ...prev, [name]: value }));
+      }
+    } else {
+      setInputs((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const validate = () => {
@@ -62,11 +69,12 @@ function UpdateProductDetails() {
       newErrors.pname = "Product Name must contain only letters.";
     }
 
-    if (!/^(\d{12}|\d{10}V)$/.test(inputs.fid)) {
-      newErrors.fid = "Farmer ID must be 10 digits or 9 digits followed by 'V'.";
+    if (!/^[0-9vV]{0,13}$/.test(inputs.fid)) {
+      newErrors.fid = "Farmer ID must be exactly 13 characters (digits and 'v' only).";
     }
+
     if (!/^[A-Za-z ]+$/.test(inputs.fname)) {
-      newErrors.fname = "Product Name must contain only letters.";
+      newErrors.fname = "Farmer Name must contain only letters.";
     }
 
     if (!/^[0-9]{9}$/.test(inputs.fnumber)) {
@@ -81,7 +89,6 @@ function UpdateProductDetails() {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Send PUT request to update the product details
   const sendRequest = async () => {
     try {
       await axios.put(`http://localhost:5000/Inventorys/${id}`, {
@@ -98,7 +105,6 @@ function UpdateProductDetails() {
     }
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
@@ -113,7 +119,6 @@ function UpdateProductDetails() {
           Update Product Details
         </Typography>
 
-        {/* Display system date */}
         <Typography variant="subtitle1" align="center" color="textSecondary" gutterBottom>
           System Date: {currentDate}
         </Typography>
@@ -122,7 +127,7 @@ function UpdateProductDetails() {
           <Grid container spacing={2}>
             {[{ name: "pid", label: "Product ID", type: "number" },
               { name: "pname", label: "Product Name", type: "text" },
-              { name: "fid", label: "Farmer ID", type: "number" },
+              { name: "fid", label: "Farmer ID", type: "text" },
               { name: "fname", label: "Farmer Name", type: "text" },
               { name: "fnumber", label: "Farmer Number", type: "number" },
               { name: "quantity", label: "Product Quantity (kg)", type: "number" }].map((field) => (
