@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 // Review System Routes (Nimshara)
 import HomeReview from "./pages/HomeReview";
@@ -49,6 +49,11 @@ import MainDashboard from "./Components/MainDashboard";
 import TotalFarmerPrices from "./Components/FarmerPriceList/TotalFarmerPrices";
 import FarmerPaymentAnalysis from "./Components/FarmerPriceList/FarmerPaymentAnalysis";
 import DailyFinance from "./Components/Calculations/DailyFinance";
+import Login from './Components/Login';
+import Register from './Components/Register';
+import Home from './Components/Home';
+import UserList from './Components/UserList';
+import UserEdit from './Components/UserEdit';
 
 
 const App = () => {
@@ -57,7 +62,7 @@ const App = () => {
       <React.Fragment>
         <Routes>
           {/* Default Page */}
-          <Route path="/" element={<MainDashboard />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/reviewDashBoard" element={<HomeReview />} />
 
           {/* Review System Routes */}
@@ -107,6 +112,12 @@ const App = () => {
           <Route path="/adminPage" element={<MainDashboard />} />
           <Route path="/farmerAnalysisPage" element={<FarmerPaymentAnalysis />} />
           <Route path="/dailyFinanceCal" element={<DailyFinance />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/admin-dashboard" element={<MainDashboard />} />
+          <Route path="/users" element={<UserList />} />
+          <Route path="/edit-user/:email" element={<UserEdit />} />
 
         </Routes>
       </React.Fragment>

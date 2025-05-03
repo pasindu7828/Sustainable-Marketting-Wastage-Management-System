@@ -14,6 +14,7 @@ const financeRoutes = require("./Route/FinanceRoute");
 const byproductRoutes = require("./Route/ByproductRoute");
 const farmerPriceRoutes = require("./Route/FarmerPriceRoute");
 const shopPriceRoutes = require("./Route/ShopPriceRoute");
+const userRoutes = require("./Route/UserRoute");
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use("/Farmers", financeRoutes);
 app.use("/ByproductPrices", byproductRoutes);
 app.use("/FarmerPrices", farmerPriceRoutes);
 app.use("/ShopPrices", shopPriceRoutes);
+app.use("/users", userRoutes);
 
 // Connect to MongoDB
 mongoose
