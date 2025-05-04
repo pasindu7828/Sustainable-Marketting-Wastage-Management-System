@@ -4,8 +4,8 @@ const bcrypt = require('bcryptjs');
 // Register a new user
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) {
+    const { name, email, password, phone, address } = req.body;
+    if (!name || !email || !password || !phone || !address) {
       return res.status(400).json({ message: 'All fields are required.' });
     }
     if (email === 'admin@gmail.com') {
@@ -16,7 +16,7 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: 'Email already registered.' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ name, email, password: hashedPassword });
+    const user = new User({ name, email, password: hashedPassword, phone, address });
     await user.save();
     res.status(201).json({ message: 'User registered successfully.' });
   } catch (err) {
@@ -59,7 +59,7 @@ const getAllUsers = async (req, res) => {
     if (adminEmail !== 'admin@gmail.com') {
       return res.status(403).json({ message: 'Forbidden' });
     }
-    const users = await User.find({});
+    const users = await User.find({}, '-password');
     res.status(200).json(users);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -69,7 +69,7 @@ const getAllUsers = async (req, res) => {
 // Get user by id
 const getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.params.id, '-password');
     if (!user) return res.status(404).json({ message: 'User not found' });
     res.status(200).json(user);
   } catch (err) {
@@ -80,10 +80,12 @@ const getUserById = async (req, res) => {
 // Update user (self or admin)
 const updateUser = async (req, res) => {
   try {
-    const { name, password } = req.body;
+    const { name, password, phone, address } = req.body;
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: 'User not found' });
     if (name) user.name = name;
+    if (phone) user.phone = phone;
+    if (address) user.address = address;
     if (password) user.password = await bcrypt.hash(password, 10);
     await user.save();
     res.status(200).json({ message: 'User updated successfully.' });

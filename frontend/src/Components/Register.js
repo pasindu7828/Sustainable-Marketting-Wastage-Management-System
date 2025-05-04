@@ -17,16 +17,82 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
   const navigate = useNavigate();
+
+  // Sri Lankan phone prefixes
+  const validPrefixes = ['070', '071', '072', '073', '074', '075', '076', '078'];
+
+  // Name: Only allow letters and spaces
+  const handleNameChange = (e) => {
+    const value = e.target.value.replace(/[^A-Za-z\s]/g, '');
+    setName(value);
+    if (!/^([A-Za-z\s]+)$/.test(value) || value.trim() === '') {
+      setNameError('Name should only contain letters and spaces');
+    } else {
+      setNameError('');
+    }
+  };
+
+  // Email validation
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+    const emailRegex = /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/;
+    if (!emailRegex.test(value)) {
+      setEmailError('Enter a valid email address');
+    } else {
+      setEmailError('');
+    }
+  };
+
+  // Password validation
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setPassword(value);
+    if (value.length < 6) {
+      setPasswordError('Password must be at least 6 characters');
+    } else {
+      setPasswordError('');
+    }
+  };
+
+  // Phone: Only allow numbers, must be 10 digits, valid prefix
+  const handlePhoneChange = (e) => {
+    let value = e.target.value.replace(/[^0-9]/g, '');
+    if (value.length > 10) value = value.slice(0, 10);
+    setPhone(value);
+    if (!/^[0-9]{10}$/.test(value)) {
+      setPhoneError('Phone number must be 10 digits');
+    } else if (!validPrefixes.some(prefix => value.startsWith(prefix))) {
+      setPhoneError('Phone must start with a valid Sri Lankan prefix');
+    } else {
+      setPhoneError('');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Final validation before submit
+    if (nameError || emailError || passwordError || phoneError) {
+      setError('Please fix the errors above');
+      return;
+    }
+    if (!name || !email || !password || !phone || !address) {
+      setError('All fields are required');
+      return;
+    }
     setError('');
     try {
       const res = await fetch(`${API_BASE_URL}/users/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password })
+        body: JSON.stringify({ name, email, password, phone, address })
       });
       const data = await res.json();
       if (!res.ok) {
@@ -48,45 +114,37 @@ const Register = () => {
         </Box>
         <form onSubmit={handleSubmit}>
           <TextField
-            label="Name"
+            label="Full Name"
             type="text"
             value={name}
-            onChange={e => setName(e.target.value)}
+            onChange={handleNameChange}
             required
             fullWidth
             margin="normal"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PersonOutlineIcon color="action" />
-                </InputAdornment>
-              )
-            }}
+            error={!!nameError}
+            helperText={nameError}
           />
           <TextField
             label="Email"
             type="email"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={handleEmailChange}
             required
             fullWidth
             margin="normal"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <EmailOutlinedIcon color="action" />
-                </InputAdornment>
-              )
-            }}
+            error={!!emailError}
+            helperText={emailError}
           />
           <TextField
             label="Password"
             type={showPassword ? 'text' : 'password'}
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
             required
             fullWidth
             margin="normal"
+            error={!!passwordError}
+            helperText={passwordError}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -101,6 +159,26 @@ const Register = () => {
                 </InputAdornment>
               )
             }}
+          />
+          <TextField
+            label="Phone Number"
+            type="tel"
+            value={phone}
+            onChange={handlePhoneChange}
+            required
+            fullWidth
+            margin="normal"
+            error={!!phoneError}
+            helperText={phoneError}
+          />
+          <TextField
+            label="Address"
+            type="text"
+            value={address}
+            onChange={e => setAddress(e.target.value)}
+            required
+            fullWidth
+            margin="normal"
           />
           {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
           <Button
