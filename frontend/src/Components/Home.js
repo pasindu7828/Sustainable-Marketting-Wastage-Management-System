@@ -10,16 +10,46 @@ import CartPopup from './CartPopup';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const categories = [
-  { name: 'Apples', img: 'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=facearea&w=400&h=400' },
-  { name: 'Oranges', img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=facearea&w=400&h=400' },
-  { name: 'Bananas', img: 'https://images.unsplash.com/photo-1574226516831-e1dff420e8e9?auto=format&fit=facearea&w=400&h=400' },
-  { name: 'Grapes', img: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=facearea&w=400&h=400' },
-  { name: 'Watermelons', img: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=facearea&w=400&h=400' },
-  { name: 'Mangoes', img: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=facearea&w=400&h=400' },
-  { name: 'Wood Apples', img: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=facearea&w=400&h=400' },
-  { name: 'Pineapples', img: 'https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=facearea&w=400&h=400' },
-  { name: 'Papayas', img: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=facearea&w=400&h=400' },
-  { name: 'Guavas', img: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=facearea&w=400&h=400' },
+  { 
+    name: 'Apples', 
+    img: 'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=800&h=800&q=80' 
+  },
+  { 
+    name: 'Oranges', 
+    img: 'https://images.unsplash.com/photo-1557800636-894a64c1696f?auto=format&fit=crop&w=800&h=800&q=80' 
+  },
+  { 
+    name: 'Bananas', 
+    img: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=800&h=800&q=80' 
+  },
+  { 
+    name: 'Grapes', 
+    img: 'https://images.unsplash.com/photo-1518843875459-f738682238a6?auto=format&fit=crop&w=800&h=800&q=80' 
+  },
+  { 
+    name: 'Watermelons', 
+    img: 'https://images.unsplash.com/photo-1582281298055-e25b84a30b0b?auto=format&fit=crop&w=800&h=800&q=80' 
+  },
+  { 
+    name: 'Mango', 
+    img: 'https://th.bing.com/th/id/OIP.zzB-RUq1RlCFutGUbXjOJQHaFF?cb=iwc1&rs=1&pid=ImgDetMain' 
+  },
+  { 
+    name: 'Wood Apples', 
+    img: 'https://th.bing.com/th/id/OIP.mQgiR8j_cfvKo6PROet10gHaE8?cb=iwc1&rs=1&pid=ImgDetMain' 
+  },
+  { 
+    name: 'Pineapples', 
+    img: 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&w=800&h=800&q=80' 
+  },
+  { 
+    name: 'Papayas', 
+    img: 'https://www.foodrepublic.com/img/gallery/how-to-eat-papaya-for-the-uninitiated/l-intro-1684865402.jpg' 
+  },
+  { 
+    name: 'Guavas', 
+    img: 'https://th.bing.com/th/id/R.bdeb897ed821c058503f8f3ba682c4b6?rik=QCbtAUq8l%2fNkBQ&pid=ImgRaw&r=0'
+  },
 ];
 
 const productFieldMap = [
