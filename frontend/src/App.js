@@ -56,6 +56,7 @@ import UserList from './Components/UserList';
 import UserEdit from './Components/UserEdit';
 import UserProfile from './Components/UserProfile';
 import OrderManagement from './Components/OrderManagement';
+import UserOrderReport from './Components/UserOrderReport';
 
 
 const App = () => {
@@ -122,6 +123,7 @@ const App = () => {
           <Route path="/edit-user/:email" element={<UserEdit />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/orders-management" element={<OrderManagement />} />
+          <Route path="/user-orders-report" element={<UserOrderReport />} />
 
         </Routes>
       </React.Fragment>

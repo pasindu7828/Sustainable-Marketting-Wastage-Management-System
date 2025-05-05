@@ -118,6 +118,7 @@ const OrderManagement = () => {
                 <TableCell sx={{ fontWeight: 700, color: '#388e3c', letterSpacing: 1 }}>Email</TableCell>
                 <TableCell sx={{ fontWeight: 700, color: '#388e3c', letterSpacing: 1 }}>Date</TableCell>
                 <TableCell sx={{ fontWeight: 700, color: '#388e3c', letterSpacing: 1 }}>Total</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#388e3c', letterSpacing: 1 }}>Items</TableCell>
                 <TableCell sx={{ fontWeight: 700, color: '#388e3c', letterSpacing: 1 }}>Status</TableCell>
                 <TableCell sx={{ fontWeight: 700, color: '#388e3c', letterSpacing: 1 }}>Actions</TableCell>
               </TableRow>
@@ -135,6 +136,30 @@ const OrderManagement = () => {
                   <TableCell>{order.user?.email || '-'}</TableCell>
                   <TableCell>{new Date(order.createdAt).toLocaleString()}</TableCell>
                   <TableCell>Rs. {order.total}</TableCell>
+                  <TableCell>
+                    <Box>
+                      {order.items && order.items.length > 0 ? (
+                        order.items.map((item, idx) => (
+                          <Box key={item._id || idx} sx={{
+                            mb: 0.5,
+                            p: 1,
+                            borderRadius: 2,
+                            bgcolor: 'rgba(232,248,127,0.18)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'flex-start',
+                          }}>
+                            <Typography variant="body2" sx={{ fontWeight: 700, color: '#388e3c' }}>{item.name}</Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              Qty: {item.quantityKg} | Price: Rs. {item.price} | Subtotal: Rs. {item.subtotal}
+                            </Typography>
+                          </Box>
+                        ))
+                      ) : (
+                        <Typography variant="caption" color="text.secondary">-</Typography>
+                      )}
+                    </Box>
+                  </TableCell>
                   <TableCell>
                     <Chip label={order.status || 'Paid'} color={order.status === 'Paid' ? 'success' : 'success'} size="small" />
                   </TableCell>

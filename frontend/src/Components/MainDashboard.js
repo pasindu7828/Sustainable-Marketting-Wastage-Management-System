@@ -8,7 +8,7 @@ import {
 import {
   Menu as MenuIcon, ChevronLeft, Dashboard, AttachMoney, Inventory, People,
   ShoppingCart, Notifications, Brightness4, Brightness7, Logout, Refresh,
-  ArrowUpward, ArrowDownward
+  ArrowUpward, ArrowDownward, BarChart as BarChartIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Legend, BarChart, Bar } from 'recharts';
@@ -200,6 +200,7 @@ const MainDashboard = () => {
     { text: 'Inventory', icon: <Inventory />, path: '/HomeInventoryMain' },
     { text: 'Users', icon: <People />, path: '/users' },
     { text: 'Payments', icon: <ShoppingCart />, path: '/orders-management' },
+    { text: 'User Order Report', icon: <BarChartIcon />, path: '/user-orders-report' },
   ];
 
   useEffect(() => {
