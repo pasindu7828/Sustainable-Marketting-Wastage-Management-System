@@ -54,6 +54,17 @@ const Home = () => {
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
   const isLoggedIn = !!currentUser;
 
+  // Add refreshInventory function
+  const refreshInventory = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/GoodInventorys');
+      const goods = res.data.GoodInventorys;
+      setGoodInventory(goods && goods.length > 0 ? goods[goods.length - 1] : null);
+    } catch (err) {
+      console.error('Error refreshing inventory:', err);
+    }
+  };
+
   useEffect(() => {
     // Fetch latest shop prices
     axios.get('http://localhost:5000/ShopPrices')
@@ -68,11 +79,7 @@ const Home = () => {
         setInventory(invs && invs.length > 0 ? invs[invs.length - 1] : null);
       });
     // Fetch latest GoodInventorys for shop quantities
-    axios.get('http://localhost:5000/GoodInventorys')
-      .then(res => {
-        const goods = res.data.GoodInventorys;
-        setGoodInventory(goods && goods.length > 0 ? goods[goods.length - 1] : null);
-      });
+    refreshInventory();
   }, []);
 
   // Sync cart to localStorage
@@ -107,6 +114,12 @@ const Home = () => {
         }
       ]);
     }
+  };
+
+  // Handle order placed
+  const handleOrderPlaced = () => {
+    setCart([]);
+    refreshInventory();
   };
 
   // Profile menu handlers
@@ -277,6 +290,7 @@ const Home = () => {
           cart={cart}
           setCart={setCart}
           user={currentUser}
+          onOrderPlaced={handleOrderPlaced}
         />
       </Container>
 

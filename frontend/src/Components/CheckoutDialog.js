@@ -60,16 +60,40 @@ const CheckoutDialog = ({ open, onClose, cart, total, user, onOrderPlaced, onSuc
         quantityKg: item.quantityKg,
         subtotal: item.price * item.quantityKg
       }));
+      
+      // First place the order
       const res = await axios.post('http://localhost:5000/orders', {
         user: form,
         items,
         total
       });
+
+      // Then update inventory quantities
+      for (const item of cart) {
+        const productName = item.name.toLowerCase();
+        const quantityToDeduct = item.quantityKg;
+        
+        // Get current inventory
+        const inventoryRes = await axios.get('http://localhost:5000/GoodInventorys');
+        const latestInventory = inventoryRes.data.GoodInventorys[inventoryRes.data.GoodInventorys.length - 1];
+        
+        // Calculate new quantity
+        const currentQuantity = latestInventory[`shop${productName}`] || 0;
+        const newQuantity = Math.max(0, currentQuantity - quantityToDeduct);
+        
+        // Update inventory
+        await axios.put(`http://localhost:5000/GoodInventorys/${latestInventory._id}`, {
+          ...latestInventory,
+          [`shop${productName}`]: newQuantity
+        });
+      }
+
       setOrderData(res.data);
       setSuccess(true);
       if (onOrderPlaced) onOrderPlaced(res.data);
     } catch (err) {
       setError('Failed to place order. Please try again.');
+      console.error('Order error:', err);
     } finally {
       setLoading(false);
     }
