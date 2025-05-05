@@ -8,6 +8,7 @@ import Navbar from './Navbar';
 import axios from 'axios';
 import CartPopup from './CartPopup';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { keyframes } from '@emotion/react';
 
 const categories = [
   { 
@@ -64,6 +65,38 @@ const productFieldMap = [
   { name: 'Papaya', img: categories[8].img, quantity: 'shoppapaya', price: 'spPapaya' },
   { name: 'Guava', img: categories[9].img, quantity: 'shopguava', price: 'spGoava' },
 ];
+
+// Animated leaf SVG component
+const AnimatedLeaf = ({ style, duration, delay, left, top, size }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 64 64"
+    fill="none"
+    style={{
+      position: 'absolute',
+      left,
+      top,
+      opacity: 0.18,
+      zIndex: 0,
+      ...style,
+      animation: `leafFloat ${duration}s ease-in-out ${delay}s infinite alternate`,
+    }}
+  >
+    <path
+      d="M32 2C18 18 2 32 32 62C62 32 46 18 32 2Z"
+      fill="#81c784"
+      stroke="#388e3c"
+      strokeWidth="2"
+    />
+  </svg>
+);
+
+// Keyframes for floating animation
+const leafFloat = `@keyframes leafFloat {
+  0% { transform: translateY(0) scale(1) rotate(-5deg); }
+  100% { transform: translateY(30px) scale(1.08) rotate(8deg); }
+}`;
 
 const Home = () => {
   const [search, setSearch] = useState('');
@@ -186,204 +219,232 @@ const Home = () => {
   );
 
   return (
-    <Box sx={{ bgcolor: '#fff', minHeight: '100vh' }}>
-      <Navbar 
-        onCartClick={() => setCartOpen(true)} 
-        onSearch={handleSearch}
-      />
-
-      {/* Hero Section */}
-      <Box sx={{ width: '100%', mt: 4, mb: 6 }}>
-        <Container maxWidth="xl">
-          <Paper elevation={0} sx={{ position: 'relative', overflow: 'hidden', borderRadius: 4 }}>
-            <img
-              src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1400&q=80"
-              alt="Fresh fruits and vegetables"
-              style={{ width: '100%', height: 400, objectFit: 'cover', borderRadius: 24 }}
-            />
-            <Box sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', bgcolor: 'rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column', justifyContent: 'center', pl: { xs: 2, md: 10 } }}>
-              <Typography variant="h2" fontWeight={800} color="#fff" sx={{ mb: 2, fontSize: { xs: 32, md: 56 } }}>
-                Fresh from Farm<br />to Your Table
-              </Typography>
-              <Typography variant="h6" color="#fff" sx={{ mb: 3, maxWidth: 500 }}>
-                Supporting local farmers while bringing you the freshest, highest quality fruits and vegetables
-              </Typography>
-            </Box>
-          </Paper>
-        </Container>
-      </Box>
-
-      {/* Menu Categories */}
-      <Container maxWidth="xl" sx={{ mb: 6 }}>
-        <Typography variant="h5" fontWeight={700} sx={{ mb: 2, color: '#222' }}>
-          Our Fresh Produce
-        </Typography>
-        <Typography sx={{ mb: 4, color: '#666' }}>
-          Direct from local farmers to your doorstep
-        </Typography>
-        <Grid container spacing={3} justifyContent="center">
-          {categories.map((cat, idx) => (
-            <Grid item key={idx} xs={6} sm={3} md={1.5} sx={{ textAlign: 'center' }}>
-              <Avatar src={cat.img} alt={cat.name} sx={{ width: 90, height: 90, mx: 'auto', mb: 1, boxShadow: 2 }} />
-              <Typography fontWeight={500}>{cat.name}</Typography>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-
-      {/* Product Cards Section */}
-      <Container maxWidth="xl" sx={{ mb: 8 }}>
-        <Typography variant="h5" fontWeight={700} sx={{ mb: 2, color: '#222' }}>
-          Shop Our Products
-        </Typography>
-        <Grid container spacing={4} alignItems="stretch" justifyContent="center">
-          {filteredProducts.map((product, idx) => {
-            const quantity = goodInventory ? goodInventory[product.quantity] : null;
-            const price = shopPrices ? shopPrices[product.price] : null;
-            const key = product.name;
-            const maxKg = quantity || 0;
-            const selected = selectedKg[key] || 1;
-            return (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={idx} sx={{ display: 'flex', height: '100%' }}>
-                <Card
-                  elevation={0}
-                  sx={{
-                    p: 3,
-                    borderRadius: 5,
-                    textAlign: 'center',
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    boxShadow: '0 2px 16px 0 rgba(76,175,80,0.10)',
-                    transition: 'transform 0.2s, box-shadow 0.2s',
-                    width: '100%',
-                    '&:hover': {
-                      transform: 'translateY(-8px) scale(1.03)',
-                      boxShadow: '0 8px 32px 0 rgba(56,142,60,0.18)',
-                    },
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: 120,
-                      height: 120,
-                      mb: 2,
-                      borderRadius: '50%',
-                      overflow: 'hidden',
-                      boxShadow: 3,
-                      border: '3px solid #e8f5e9',
-                      background: '#fff',
-                    }}
-                  >
-                    <img
-                      src={product.img}
-                      alt={product.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                  </Box>
-                  <CardContent sx={{ flexGrow: 1, width: '100%', p: 0 }}>
-                    <Typography variant="h6" fontWeight={700} sx={{ mb: 1, color: '#388e3c' }}>{product.name}</Typography>
-                    <Typography color="text.secondary" sx={{ mb: 1 }}>
-                      {quantity !== null && quantity !== undefined ? `${quantity} kg available` : 'Out of stock'}
-                    </Typography>
-                    <Typography color="success.main" fontWeight={600} sx={{ mb: 1 }}>
-                      {price !== null && price !== undefined ? `Rs. ${price} / kg` : 'N/A'}
-                    </Typography>
-                  {isLoggedIn && (
-                    <>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 1 }}>
-                      <TextField
-                        type="number"
-                        size="small"
-                        label="Kg"
-                        value={selected}
-                        onChange={e => handleKgInput(key, e.target.value, maxKg)}
-                        inputProps={{ min: 1, max: maxKg, style: { width: 60 } }}
-                        sx={{ width: 80, mr: 1 }}
-                        disabled={!quantity || quantity <= 0}
-                      />
-                      <Button
-                        variant="contained"
-                        color="success"
-                        sx={{ borderRadius: 8, px: 2, fontWeight: 600, textTransform: 'none' }}
-                        onClick={() => handleAddToCart(product, selected, maxKg)}
-                        disabled={!quantity || quantity <= 0}
-                      >
-                        Add to cart
-                      </Button>
-                    </Box>
-                    </>
-                  )}
-                  </CardContent>
-                </Card>
-              </Grid>
-            );
-          })}
-        </Grid>
-        {/* Cart Popup */}
-        <CartPopup
-          open={cartOpen}
-          onClose={() => setCartOpen(false)}
-          cart={cart}
-          setCart={setCart}
-          user={currentUser}
-          onOrderPlaced={handleOrderPlaced}
+    <Box sx={{
+      minHeight: '100vh',
+      position: 'relative',
+      overflow: 'hidden',
+      zIndex: 0,
+      background: 'linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 60%, #fff 100%)',
+    }}>
+      <style>{leafFloat}</style>
+      {/* Animated floating leaves */}
+      <AnimatedLeaf left="5vw" top="8vh" size={64} duration={12} delay={0} />
+      <AnimatedLeaf left="80vw" top="12vh" size={48} duration={10} delay={2} />
+      <AnimatedLeaf left="60vw" top="70vh" size={56} duration={14} delay={1} />
+      <AnimatedLeaf left="20vw" top="60vh" size={40} duration={11} delay={3} />
+      <AnimatedLeaf left="45vw" top="30vh" size={52} duration={13} delay={2.5} />
+      {/* Blurred white overlay for elegance */}
+      <Box sx={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        pointerEvents: 'none',
+        zIndex: 1,
+        background: 'rgba(255,255,255,0.18)',
+        backdropFilter: 'blur(2.5px)',
+      }} />
+      {/* Main content (zIndex: 2) */}
+      <Box sx={{ position: 'relative', zIndex: 2 }}>
+        <Navbar 
+          onCartClick={() => setCartOpen(true)} 
+          onSearch={handleSearch}
         />
-      </Container>
 
-      {/* App Download Section */}
-      <Divider sx={{ my: 6 }} />
-      <Box sx={{ textAlign: 'center', mb: 6 }}>
-        <Typography variant="h4" fontWeight={700} sx={{ mb: 3 }}>
-          For Better Experience Download<br />AgriFlow App
-        </Typography>
-        <Stack direction="row" spacing={3} justifyContent="center" sx={{ mb: 4 }}>
-          <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" style={{ height: 60 }} />
-          <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store" style={{ height: 60 }} />
-        </Stack>
-      </Box>
-
-      {/* Footer */}
-      <Box sx={{ bgcolor: '#222', color: '#fff', py: 6, mt: 6 }}>
-        <Container maxWidth="xl">
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={4}>
-              <Box display="flex" alignItems="center" gap={1} mb={2}>
-                <FaLeaf style={{ color: '#4caf50', fontSize: 32 }} />
-                <Typography variant="h5" fontWeight={700} sx={{ color: '#fff', letterSpacing: 1 }}>
-                  AgriFlow
+        {/* Hero Section */}
+        <Box sx={{ width: '100%', mt: 4, mb: 6 }}>
+          <Container maxWidth="xl">
+            <Paper elevation={0} sx={{ position: 'relative', overflow: 'hidden', borderRadius: 4 }}>
+              <img
+                src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1400&q=80"
+                alt="Fresh fruits and vegetables"
+                style={{ width: '100%', height: 400, objectFit: 'cover', borderRadius: 24 }}
+              />
+              <Box sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', bgcolor: 'rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column', justifyContent: 'center', pl: { xs: 2, md: 10 } }}>
+                <Typography variant="h2" fontWeight={800} color="#fff" sx={{ mb: 2, fontSize: { xs: 32, md: 56 } }}>
+                  Fresh from Farm<br />to Your Table
+                </Typography>
+                <Typography variant="h6" color="#fff" sx={{ mb: 3, maxWidth: 500 }}>
+                  Supporting local farmers while bringing you the freshest, highest quality fruits and vegetables
                 </Typography>
               </Box>
-              <Typography sx={{ color: '#ccc', mb: 2 }}>
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-              </Typography>
-              <Box display="flex" gap={2}>
-                <IconButton sx={{ bgcolor: '#333', color: '#fff' }}><FaFacebookF /></IconButton>
-                <IconButton sx={{ bgcolor: '#333', color: '#fff' }}><FaTwitter /></IconButton>
-                <IconButton sx={{ bgcolor: '#333', color: '#fff' }}><FaLinkedinIn /></IconButton>
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Typography fontWeight={700} sx={{ mb: 2 }}>COMPANY</Typography>
-              <Box display="flex" flexDirection="column" gap={1}>
-                <Link href="#" underline="hover" color="#fff">Home</Link>
-                <Link href="#" underline="hover" color="#fff">About Us</Link>
-                <Link href="#" underline="hover" color="#fff">Delivery</Link>
-                <Link href="#" underline="hover" color="#fff">Privacy Policy</Link>
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Typography fontWeight={700} sx={{ mb: 2 }}>GET IN TOUCH</Typography>
-              <Typography sx={{ color: '#ccc' }}>+94-37-206-2073</Typography>
-              <Typography sx={{ color: '#ccc' }}>Contact@agriflow.com</Typography>
-            </Grid>
-          </Grid>
-          <Divider sx={{ my: 4, borderColor: '#444' }} />
-          <Typography align="center" sx={{ color: '#aaa' }}>
-            Copyright 2025 © AgriFlow.com – All Rights Reserved.
+            </Paper>
+          </Container>
+        </Box>
+
+        {/* Menu Categories */}
+        <Container maxWidth="xl" sx={{ mb: 6 }}>
+          <Typography variant="h5" fontWeight={700} sx={{ mb: 2, color: '#222' }}>
+            Our Fresh Produce
           </Typography>
+          <Typography sx={{ mb: 4, color: '#666' }}>
+            Direct from local farmers to your doorstep
+          </Typography>
+          <Grid container spacing={3} justifyContent="center">
+            {categories.map((cat, idx) => (
+              <Grid item key={idx} xs={6} sm={3} md={1.5} sx={{ textAlign: 'center' }}>
+                <Avatar src={cat.img} alt={cat.name} sx={{ width: 90, height: 90, mx: 'auto', mb: 1, boxShadow: 2 }} />
+                <Typography fontWeight={500}>{cat.name}</Typography>
+              </Grid>
+            ))}
+          </Grid>
         </Container>
+
+        {/* Product Cards Section */}
+        <Container maxWidth="xl" sx={{ mb: 8 }}>
+          <Typography variant="h5" fontWeight={700} sx={{ mb: 2, color: '#222' }}>
+            Shop Our Products
+          </Typography>
+          <Grid container spacing={4} alignItems="stretch" justifyContent="center">
+            {filteredProducts.map((product, idx) => {
+              const quantity = goodInventory ? goodInventory[product.quantity] : null;
+              const price = shopPrices ? shopPrices[product.price] : null;
+              const key = product.name;
+              const maxKg = quantity || 0;
+              const selected = selectedKg[key] || 1;
+              return (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={idx} sx={{ display: 'flex', height: '100%' }}>
+                  <Card
+                    elevation={0}
+                    sx={{
+                      p: 3,
+                      borderRadius: 5,
+                      textAlign: 'center',
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      boxShadow: '0 2px 16px 0 rgba(76,175,80,0.10)',
+                      transition: 'transform 0.2s, box-shadow 0.2s',
+                      width: '100%',
+                      '&:hover': {
+                        transform: 'translateY(-8px) scale(1.03)',
+                        boxShadow: '0 8px 32px 0 rgba(56,142,60,0.18)',
+                      },
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: 120,
+                        height: 120,
+                        mb: 2,
+                        borderRadius: '50%',
+                        overflow: 'hidden',
+                        boxShadow: 3,
+                        border: '3px solid #e8f5e9',
+                        background: '#fff',
+                      }}
+                    >
+                      <img
+                        src={product.img}
+                        alt={product.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    </Box>
+                    <CardContent sx={{ flexGrow: 1, width: '100%', p: 0 }}>
+                      <Typography variant="h6" fontWeight={700} sx={{ mb: 1, color: '#388e3c' }}>{product.name}</Typography>
+                      <Typography color="text.secondary" sx={{ mb: 1 }}>
+                        {quantity !== null && quantity !== undefined ? `${quantity} kg available` : 'Out of stock'}
+                      </Typography>
+                      <Typography color="success.main" fontWeight={600} sx={{ mb: 1 }}>
+                        {price !== null && price !== undefined ? `Rs. ${price} / kg` : 'N/A'}
+                      </Typography>
+                    {isLoggedIn && (
+                      <>
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 1 }}>
+                        <TextField
+                          type="number"
+                          size="small"
+                          label="Kg"
+                          value={selected}
+                          onChange={e => handleKgInput(key, e.target.value, maxKg)}
+                          inputProps={{ min: 1, max: maxKg, style: { width: 60 } }}
+                          sx={{ width: 80, mr: 1 }}
+                          disabled={!quantity || quantity <= 0}
+                        />
+                        <Button
+                          variant="contained"
+                          color="success"
+                          sx={{ borderRadius: 8, px: 2, fontWeight: 600, textTransform: 'none' }}
+                          onClick={() => handleAddToCart(product, selected, maxKg)}
+                          disabled={!quantity || quantity <= 0}
+                        >
+                          Add to cart
+                        </Button>
+                      </Box>
+                      </>
+                    )}
+                    </CardContent>
+                  </Card>
+                </Grid>
+              );
+            })}
+          </Grid>
+          {/* Cart Popup */}
+          <CartPopup
+            open={cartOpen}
+            onClose={() => setCartOpen(false)}
+            cart={cart}
+            setCart={setCart}
+            user={currentUser}
+            onOrderPlaced={handleOrderPlaced}
+          />
+        </Container>
+
+        {/* App Download Section */}
+        <Divider sx={{ my: 6 }} />
+        <Box sx={{ textAlign: 'center', mb: 6 }}>
+          <Typography variant="h4" fontWeight={700} sx={{ mb: 3 }}>
+            For Better Experience Download<br />AgriFlow App
+          </Typography>
+          <Stack direction="row" spacing={3} justifyContent="center" sx={{ mb: 4 }}>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" style={{ height: 60 }} />
+            <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store" style={{ height: 60 }} />
+          </Stack>
+        </Box>
+
+        {/* Footer */}
+        <Box sx={{ bgcolor: '#222', color: '#fff', py: 6, mt: 6 }}>
+          <Container maxWidth="xl">
+            <Grid container spacing={4}>
+              <Grid item xs={12} md={4}>
+                <Box display="flex" alignItems="center" gap={1} mb={2}>
+                  <FaLeaf style={{ color: '#4caf50', fontSize: 32 }} />
+                  <Typography variant="h5" fontWeight={700} sx={{ color: '#fff', letterSpacing: 1 }}>
+                    AgriFlow
+                  </Typography>
+                </Box>
+                <Typography sx={{ color: '#ccc', mb: 2 }}>
+                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+                </Typography>
+                <Box display="flex" gap={2}>
+                  <IconButton sx={{ bgcolor: '#333', color: '#fff' }}><FaFacebookF /></IconButton>
+                  <IconButton sx={{ bgcolor: '#333', color: '#fff' }}><FaTwitter /></IconButton>
+                  <IconButton sx={{ bgcolor: '#333', color: '#fff' }}><FaLinkedinIn /></IconButton>
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Typography fontWeight={700} sx={{ mb: 2 }}>COMPANY</Typography>
+                <Box display="flex" flexDirection="column" gap={1}>
+                  <Link href="#" underline="hover" color="#fff">Home</Link>
+                  <Link href="#" underline="hover" color="#fff">About Us</Link>
+                  <Link href="#" underline="hover" color="#fff">Delivery</Link>
+                  <Link href="#" underline="hover" color="#fff">Privacy Policy</Link>
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Typography fontWeight={700} sx={{ mb: 2 }}>GET IN TOUCH</Typography>
+                <Typography sx={{ color: '#ccc' }}>+94-37-206-2073</Typography>
+                <Typography sx={{ color: '#ccc' }}>Contact@agriflow.com</Typography>
+              </Grid>
+            </Grid>
+            <Divider sx={{ my: 4, borderColor: '#444' }} />
+            <Typography align="center" sx={{ color: '#aaa' }}>
+              Copyright 2025 © AgriFlow.com – All Rights Reserved.
+            </Typography>
+          </Container>
+        </Box>
       </Box>
     </Box>
   );
