@@ -186,9 +186,11 @@ const Navbar = ({ onCartClick }) => {
               <FiSearch size={22} />
             </IconButton>
           </Box>
-          <Box sx={{ position: 'relative' }}>
-            <IconButton
-              color="success"
+          {isLoggedIn ? (
+            <>
+              <Box sx={{ position: 'relative' }}>
+                <IconButton
+                  color="success"
               onClick={() => onCartClick && onCartClick()}
               sx={{ bgcolor: '#e8f5e9', borderRadius: '50%', p: 1, boxShadow: 2 }}
             >
@@ -217,8 +219,7 @@ const Navbar = ({ onCartClick }) => {
               )}
             </IconButton>
           </Box>
-          {isLoggedIn ? (
-            <>
+
               <IconButton onClick={handleAvatarClick} sx={{ p: 0 }}>
                 <Avatar sx={{ bgcolor: '#388e3c', color: '#fff' }}>
                   {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}

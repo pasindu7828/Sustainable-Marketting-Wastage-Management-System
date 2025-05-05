@@ -48,6 +48,7 @@ const Home = () => {
   });
   const [cartOpen, setCartOpen] = useState(false);
   const [selectedKg, setSelectedKg] = useState({});
+  
 
   // Get current user from localStorage
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -238,6 +239,8 @@ const Home = () => {
                     <Typography color="success.main" fontWeight={600} sx={{ mb: 1 }}>
                       {price !== null && price !== undefined ? `Rs. ${price} / kg` : 'N/A'}
                     </Typography>
+                  {isLoggedIn && (
+                    <>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 1 }}>
                       <TextField
                         type="number"
@@ -259,6 +262,8 @@ const Home = () => {
                         Add to cart
                       </Button>
                     </Box>
+                    </>
+                  )}
                   </CardContent>
                 </Card>
               </Grid>
