@@ -15,6 +15,7 @@ const CheckoutDialog = ({ open, onClose, cart, total, user, onOrderPlaced, onSuc
     phone: user?.phone || '',
     address: user?.address || ''
   });
+  const [card, setCard] = useState({ number: '', expiry: '', cvv: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -24,10 +25,30 @@ const CheckoutDialog = ({ open, onClose, cart, total, user, onOrderPlaced, onSuc
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleCardChange = e => {
+    setCard({ ...card, [e.target.name]: e.target.value });
+  };
+
   const handleSubmit = async () => {
     setError('');
     if (!form.name || !form.email || !form.phone) {
       setError('Please fill in all required fields.');
+      return;
+    }
+    if (!card.number || !card.expiry || !card.cvv) {
+      setError('Please enter all card details.');
+      return;
+    }
+    if (card.number.length < 12 || card.number.length > 19 || !/^[0-9]+$/.test(card.number)) {
+      setError('Invalid card number.');
+      return;
+    }
+    if (!/^\d{2}\/\d{2}$/.test(card.expiry)) {
+      setError('Expiry must be MM/YY.');
+      return;
+    }
+    if (card.cvv.length < 3 || card.cvv.length > 4 || !/^[0-9]+$/.test(card.cvv)) {
+      setError('Invalid CVV.');
       return;
     }
     setLoading(true);
@@ -182,6 +203,45 @@ const CheckoutDialog = ({ open, onClose, cart, total, user, onOrderPlaced, onSuc
                 />
               </Grid>
             </Grid>
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="h6" fontWeight={600} mb={2}>
+              Card Details
+            </Typography>
+            <Grid container spacing={2} mb={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Card Number"
+                  name="number"
+                  value={card.number}
+                  onChange={handleCardChange}
+                  fullWidth
+                  required
+                  inputProps={{ maxLength: 19 }}
+                />
+              </Grid>
+              <Grid item xs={6} sm={3}>
+                <TextField
+                  label="Expiry (MM/YY)"
+                  name="expiry"
+                  value={card.expiry}
+                  onChange={handleCardChange}
+                  fullWidth
+                  required
+                  inputProps={{ maxLength: 5 }}
+                />
+              </Grid>
+              <Grid item xs={6} sm={3}>
+                <TextField
+                  label="CVV"
+                  name="cvv"
+                  value={card.cvv}
+                  onChange={handleCardChange}
+                  fullWidth
+                  required
+                  inputProps={{ maxLength: 4 }}
+                />
+              </Grid>
+            </Grid>
             {error && <Typography color="error" mb={2}>{error}</Typography>}
           </>
         )}
@@ -206,7 +266,7 @@ const CheckoutDialog = ({ open, onClose, cart, total, user, onOrderPlaced, onSuc
             onClick={handleSubmit}
             disabled={loading}
           >
-            {loading ? 'Placing Order...' : 'Place Order'}
+            {loading ? 'Processing Payment...' : 'Pay & Place Order'}
           </Button>
         )}
       </DialogActions>

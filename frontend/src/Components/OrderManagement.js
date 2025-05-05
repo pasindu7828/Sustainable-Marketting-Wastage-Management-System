@@ -136,11 +136,11 @@ const OrderManagement = () => {
                   <TableCell>{new Date(order.createdAt).toLocaleString()}</TableCell>
                   <TableCell>Rs. {order.total}</TableCell>
                   <TableCell>
-                    <Chip label={order.status || 'Pending'} color={order.status === 'Paid' ? 'success' : 'warning'} size="small" />
+                    <Chip label={order.status || 'Paid'} color={order.status === 'Paid' ? 'success' : 'success'} size="small" />
                   </TableCell>
                   <TableCell>
                     <Tooltip title="View Details"><IconButton color="success" onClick={() => handleView(order)}><VisibilityIcon /></IconButton></Tooltip>
-                    <Tooltip title="Mark as Paid"><IconButton color="primary" onClick={() => handleMarkPaid(order)} disabled={order.status === 'Paid'}><CheckCircleIcon /></IconButton></Tooltip>
+                    {/* <Tooltip title="Mark as Paid"><IconButton color="primary" onClick={() => handleMarkPaid(order)} disabled={order.status === 'Paid'}><CheckCircleIcon /></IconButton></Tooltip> */}
                     <Tooltip title="Delete"><IconButton color="error" onClick={() => { setDeleteId(order._id); setDeleteOpen(true); }}><DeleteIcon /></IconButton></Tooltip>
                   </TableCell>
                 </TableRow>
@@ -191,7 +191,7 @@ const OrderManagement = () => {
                 </TableBody>
               </Table>
               <Typography fontWeight={700} mt={2} color="#388e3c">Total: Rs. {selectedOrder.total}</Typography>
-              <Typography>Status: <Chip label={selectedOrder.status || 'Pending'} color={selectedOrder.status === 'Paid' ? 'success' : 'warning'} size="small" /></Typography>
+              <Typography>Status: <Chip label={selectedOrder.status || 'Paid'} color={selectedOrder.status === 'Paid' ? 'success' : 'success'} size="small" /></Typography>
             </Box>
           )}
         </DialogContent>
