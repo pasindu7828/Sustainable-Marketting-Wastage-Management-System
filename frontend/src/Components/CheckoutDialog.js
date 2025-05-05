@@ -39,7 +39,7 @@ const CheckoutDialog = ({ open, onClose, cart, total, user, onOrderPlaced, onSuc
         quantityKg: item.quantityKg,
         subtotal: item.price * item.quantityKg
       }));
-      const res = await axios.post('http://localhost:5000/api/orders', {
+      const res = await axios.post('http://localhost:5000/orders', {
         user: form,
         items,
         total

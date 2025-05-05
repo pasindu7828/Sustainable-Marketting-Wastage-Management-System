@@ -38,7 +38,7 @@ app.use("/ByproductPrices", byproductRoutes);
 app.use("/FarmerPrices", farmerPriceRoutes);
 app.use("/ShopPrices", shopPriceRoutes);
 app.use("/users", userRoutes);
-app.use("/api/orders", orderRoutes);
+app.use("/orders", orderRoutes);
 
 // Connect to MongoDB
 mongoose
