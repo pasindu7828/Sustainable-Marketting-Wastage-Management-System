@@ -236,7 +236,7 @@ const Home = () => {
         <Typography variant="h5" fontWeight={700} sx={{ mb: 2, color: '#222' }}>
           Shop Our Products
         </Typography>
-        <Grid container spacing={4} alignItems="stretch">
+        <Grid container spacing={4} alignItems="stretch" justifyContent="center">
           {filteredProducts.map((product, idx) => {
             const quantity = goodInventory ? goodInventory[product.quantity] : null;
             const price = shopPrices ? shopPrices[product.price] : null;
