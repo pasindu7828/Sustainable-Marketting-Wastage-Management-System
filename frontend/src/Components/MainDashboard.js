@@ -3,7 +3,7 @@ import {
   Box, CssBaseline, AppBar, Toolbar, Typography, Drawer, List, ListItem,
   ListItemIcon, ListItemText, Grid, Card, CardContent,
   IconButton, Avatar, Divider, Badge, styled, useTheme, ThemeProvider,
-  createTheme, CircularProgress, Paper, useMediaQuery, Button
+  createTheme, CircularProgress, Paper, useMediaQuery, Button, Link
 } from '@mui/material';
 import {
   Menu as MenuIcon, ChevronLeft, Dashboard, AttachMoney, Inventory, People,
@@ -337,8 +337,13 @@ const MainDashboard = () => {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, fontWeight: 600 }}>
-              GreenLeaf Analytics
+              Admin Dashboard
             </Typography>
+            <Button variant="contained" color="success" sx={{ mr: 1 }}>
+              <Link onClick={() => navigate('/home')} style={{ textDecoration: 'none', color: 'inherit' }}>
+                Home Page
+              </Link>
+            </Button>
             
             <IconButton color="inherit" onClick={toggleDarkMode} sx={{ mr: 1 }}>
               {darkMode ? <Brightness7 /> : <Brightness4 />}

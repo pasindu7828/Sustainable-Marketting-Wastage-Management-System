@@ -11,6 +11,7 @@ const Navbar = ({ onCartClick, onSearch }) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  const isAdmin = currentUser && currentUser.isAdmin;
   const isLoggedIn = !!currentUser;
   const [cartCount, setCartCount] = useState(() => {
     const stored = localStorage.getItem('cart');
@@ -170,6 +171,38 @@ const Navbar = ({ onCartClick, onSearch }) => {
             <></>
           )}
         </Box>
+        {isAdmin && (
+            <Link
+              component="button"
+              underline="none"
+              color="inherit"
+              fontSize={18}
+              fontWeight={500}
+              sx={{
+                px: 2,
+                py: 0.5,
+                borderRadius: 3,
+                transition: 'background 0.2s',
+                background: '#2e7d32',
+                color: '#fff',
+                border: 'none',
+                cursor: 'pointer',
+                fontFamily: `'Poppins', 'Roboto', sans-serif`,
+                '&:hover': { 
+                  background: '#1b5e20',
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 4px 8px rgba(0,0,0,0.2)'
+                },
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                mr: 2
+              }}
+              onClick={() => navigate('/admin-dashboard')}
+            >
+              Admin Dashboard
+            </Link>
+          )}
         <Box display="flex" alignItems="center" gap={2} sx={{ justifyContent: 'center' }}>
           <Box
             sx={{
