@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Dialog, DialogTitle, DialogContent, DialogActions,
   IconButton, Typography, Box, Button, TextField, Divider, Grid, Stack
@@ -8,34 +8,59 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CheckoutDialog from './CheckoutDialog';
 
 const CartPopup = ({ open, onClose, cart, setCart, onCheckout, user }) => {
-  const [checkoutOpen, setCheckoutOpen] = React.useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [quantityErrors, setQuantityErrors] = useState({});
 
   // Calculate total
   const total = cart.reduce((sum, item) => sum + (item.price * item.quantityKg), 0);
 
+  // Validate quantity
+  const validateQuantity = (value, maxKg) => {
+    if (!value) return 'Quantity is required';
+    if (isNaN(value)) return 'Please enter a valid number';
+    if (value < 0.1) return 'Minimum quantity is 0.1 kg';
+    if (value > maxKg) return `Maximum quantity is ${maxKg} kg`;
+    return '';
+  };
+
   // Handle kg change
   const handleKgChange = (idx, value) => {
-    if (value < 1 || value > cart[idx].maxKg) return;
+    const item = cart[idx];
+    const error = validateQuantity(value, item.maxKg);
+    
+    if (error) {
+      setQuantityErrors(prev => ({ ...prev, [idx]: error }));
+      return;
+    }
+
     const newCart = [...cart];
-    newCart[idx].quantityKg = value;
+    newCart[idx].quantityKg = parseFloat(value);
     setCart(newCart);
+    setQuantityErrors(prev => ({ ...prev, [idx]: '' }));
   };
 
   // Remove item
   const handleRemove = (idx) => {
     const newCart = cart.filter((_, i) => i !== idx);
     setCart(newCart);
+    setQuantityErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors[idx];
+      return newErrors;
+    });
   };
 
-  // After successful order, clear cart (do not close dialogs)
-  const handleOrderPlaced = () => {
-    setCart([]);
+  // Check if cart is valid
+  const isCartValid = () => {
+    return cart.every((item, idx) => !validateQuantity(item.quantityKg, item.maxKg));
   };
 
-  // Close both dialogs after success
-  const handleSuccessClose = () => {
-    setCheckoutOpen(false);
-    onClose();
+  // Handle checkout
+  const handleCheckout = () => {
+    if (!isCartValid()) {
+      return;
+    }
+    setCheckoutOpen(true);
   };
 
   return (
@@ -76,8 +101,14 @@ const CartPopup = ({ open, onClose, cart, setCart, onCheckout, user }) => {
                         size="small"
                         label="Kg"
                         value={item.quantityKg}
-                        onChange={e => handleKgChange(idx, Math.max(1, Math.min(item.maxKg, Number(e.target.value))))}
-                        inputProps={{ min: 1, max: item.maxKg, style: { width: 60 } }}
+                        onChange={e => handleKgChange(idx, e.target.value)}
+                        inputProps={{ 
+                          min: 0.1,
+                          max: item.maxKg,
+                          step: 0.1
+                        }}
+                        error={!!quantityErrors[idx]}
+                        helperText={quantityErrors[idx]}
                         sx={{ width: 80 }}
                       />
                       <Typography variant="caption" color="text.secondary">Max: {item.maxKg}kg</Typography>
@@ -107,8 +138,8 @@ const CartPopup = ({ open, onClose, cart, setCart, onCheckout, user }) => {
             size="large"
             fullWidth
             sx={{ borderRadius: 3, fontWeight: 700, fontSize: 18, py: 1.5 }}
-            disabled={cart.length === 0}
-            onClick={() => setCheckoutOpen(true)}
+            disabled={cart.length === 0 || !isCartValid()}
+            onClick={handleCheckout}
           >
             Checkout
           </Button>
@@ -120,8 +151,11 @@ const CartPopup = ({ open, onClose, cart, setCart, onCheckout, user }) => {
         cart={cart}
         total={total}
         user={user}
-        onOrderPlaced={handleOrderPlaced}
-        onSuccessClose={handleSuccessClose}
+        onOrderPlaced={() => {
+          setCart([]);
+          setQuantityErrors({});
+          onClose();
+        }}
       />
     </>
   );

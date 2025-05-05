@@ -20,37 +20,116 @@ const CheckoutDialog = ({ open, onClose, cart, total, user, onOrderPlaced, onSuc
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [orderData, setOrderData] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
+
+  // Validation functions
+  const validateName = (name) => {
+    if (!name.trim()) return 'Name is required';
+    if (name.length < 2) return 'Name must be at least 2 characters';
+    if (!/^[a-zA-Z\s]*$/.test(name)) return 'Name can only contain letters and spaces';
+    return '';
+  };
+
+  const validateEmail = (email) => {
+    if (!email.trim()) return 'Email is required';
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) return 'Please enter a valid email address';
+    return '';
+  };
+
+  const validatePhone = (phone) => {
+    if (!phone.trim()) return 'Phone number is required';
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(phone)) return 'Please enter a valid 10-digit phone number';
+    return '';
+  };
+
+  const validateAddress = (address) => {
+    if (!address.trim()) return 'Address is required';
+    if (address.length < 5) return 'Address must be at least 5 characters';
+    return '';
+  };
+
+  const validateCardNumber = (number) => {
+    if (!number.trim()) return 'Card number is required';
+    const cardRegex = /^[0-9]{16}$/;
+    if (!cardRegex.test(number)) return 'Please enter a valid 16-digit card number';
+    return '';
+  };
+
+  const validateExpiry = (expiry) => {
+    if (!expiry.trim()) return 'Expiry date is required';
+    const expiryRegex = /^(0[1-9]|1[0-2])\/([0-9]{2})$/;
+    if (!expiryRegex.test(expiry)) return 'Please enter expiry in MM/YY format';
+    
+    const [month, year] = expiry.split('/');
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear() % 100;
+    const currentMonth = currentDate.getMonth() + 1;
+    
+    if (parseInt(year) < currentYear || 
+        (parseInt(year) === currentYear && parseInt(month) < currentMonth)) {
+      return 'Card has expired';
+    }
+    return '';
+  };
+
+  const validateCVV = (cvv) => {
+    if (!cvv.trim()) return 'CVV is required';
+    const cvvRegex = /^[0-9]{3,4}$/;
+    if (!cvvRegex.test(cvv)) return 'Please enter a valid 3 or 4-digit CVV';
+    return '';
+  };
+
+  const validateForm = () => {
+    const errors = {
+      name: validateName(form.name),
+      email: validateEmail(form.email),
+      phone: validatePhone(form.phone),
+      address: validateAddress(form.address),
+      cardNumber: validateCardNumber(card.number),
+      expiry: validateExpiry(card.expiry),
+      cvv: validateCVV(card.cvv)
+    };
+    setFormErrors(errors);
+    return !Object.values(errors).some(error => error !== '');
+  };
 
   const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+    if (formErrors[name]) {
+      setFormErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   const handleCardChange = e => {
-    setCard({ ...card, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    let formattedValue = value;
+    
+    if (name === 'number') {
+      formattedValue = value.replace(/\D/g, '').slice(0, 16);
+    } else if (name === 'expiry') {
+      formattedValue = value
+        .replace(/\D/g, '')
+        .replace(/^(\d{2})/, '$1/')
+        .slice(0, 5);
+    } else if (name === 'cvv') {
+      formattedValue = value.replace(/\D/g, '').slice(0, 4);
+    }
+    
+    setCard(prev => ({ ...prev, [name]: formattedValue }));
+    if (formErrors[name]) {
+      setFormErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   const handleSubmit = async () => {
-    setError('');
-    if (!form.name || !form.email || !form.phone) {
-      setError('Please fill in all required fields.');
+    if (!validateForm()) {
+      setError('Please correct the errors in the form');
       return;
     }
-    if (!card.number || !card.expiry || !card.cvv) {
-      setError('Please enter all card details.');
-      return;
-    }
-    if (card.number.length < 12 || card.number.length > 19 || !/^[0-9]+$/.test(card.number)) {
-      setError('Invalid card number.');
-      return;
-    }
-    if (!/^\d{2}\/\d{2}$/.test(card.expiry)) {
-      setError('Expiry must be MM/YY.');
-      return;
-    }
-    if (card.cvv.length < 3 || card.cvv.length > 4 || !/^[0-9]+$/.test(card.cvv)) {
-      setError('Invalid CVV.');
-      return;
-    }
+
     setLoading(true);
     try {
       const items = cart.map(item => ({
@@ -111,8 +190,6 @@ const CheckoutDialog = ({ open, onClose, cart, total, user, onOrderPlaced, onSuc
     setOrderData(null);
     onClose();
   };
-
-
 
   // PDF receipt generation
   const handleDownloadReceipt = () => {
@@ -195,6 +272,8 @@ const CheckoutDialog = ({ open, onClose, cart, total, user, onOrderPlaced, onSuc
                   onChange={handleChange}
                   fullWidth
                   required
+                  error={!!formErrors.name}
+                  helperText={formErrors.name}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -205,6 +284,8 @@ const CheckoutDialog = ({ open, onClose, cart, total, user, onOrderPlaced, onSuc
                   onChange={handleChange}
                   fullWidth
                   required
+                  error={!!formErrors.email}
+                  helperText={formErrors.email}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -215,6 +296,8 @@ const CheckoutDialog = ({ open, onClose, cart, total, user, onOrderPlaced, onSuc
                   onChange={handleChange}
                   fullWidth
                   required
+                  error={!!formErrors.phone}
+                  helperText={formErrors.phone}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -224,6 +307,9 @@ const CheckoutDialog = ({ open, onClose, cart, total, user, onOrderPlaced, onSuc
                   value={form.address}
                   onChange={handleChange}
                   fullWidth
+                  required
+                  error={!!formErrors.address}
+                  helperText={formErrors.address}
                 />
               </Grid>
             </Grid>
@@ -240,7 +326,8 @@ const CheckoutDialog = ({ open, onClose, cart, total, user, onOrderPlaced, onSuc
                   onChange={handleCardChange}
                   fullWidth
                   required
-                  inputProps={{ maxLength: 19 }}
+                  error={!!formErrors.cardNumber}
+                  helperText={formErrors.cardNumber}
                 />
               </Grid>
               <Grid item xs={6} sm={3}>
@@ -251,7 +338,8 @@ const CheckoutDialog = ({ open, onClose, cart, total, user, onOrderPlaced, onSuc
                   onChange={handleCardChange}
                   fullWidth
                   required
-                  inputProps={{ maxLength: 5 }}
+                  error={!!formErrors.expiry}
+                  helperText={formErrors.expiry}
                 />
               </Grid>
               <Grid item xs={6} sm={3}>
@@ -262,7 +350,8 @@ const CheckoutDialog = ({ open, onClose, cart, total, user, onOrderPlaced, onSuc
                   onChange={handleCardChange}
                   fullWidth
                   required
-                  inputProps={{ maxLength: 4 }}
+                  error={!!formErrors.cvv}
+                  helperText={formErrors.cvv}
                 />
               </Grid>
             </Grid>
