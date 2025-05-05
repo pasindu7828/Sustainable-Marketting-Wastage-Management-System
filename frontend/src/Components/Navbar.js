@@ -6,7 +6,7 @@ import { BsCart2 } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
-const Navbar = ({ onCartClick }) => {
+const Navbar = ({ onCartClick, onSearch }) => {
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -51,6 +51,15 @@ const Navbar = ({ onCartClick }) => {
   const handleViewProfile = () => {
     setAnchorEl(null);
     navigate('/profile');
+  };
+
+  // Handle search input
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearch(value);
+    if (onSearch) {
+      onSearch(value);
+    }
   };
 
   return (
@@ -166,14 +175,13 @@ const Navbar = ({ onCartClick }) => {
               type="text"
               placeholder="Search products..."
               value={search}
-              onChange={e => setSearch(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter') e.preventDefault(); }}
+              onChange={handleSearch}
               style={{
                 border: 'none',
                 outline: 'none',
                 background: 'transparent',
                 fontSize: 16,
-                width: 120,
+                width: 200,
                 color: '#222',
                 padding: '4px 0',
               }}

@@ -175,6 +175,11 @@ const Home = () => {
     navigate('/profile');
   };
 
+  // Handle search from Navbar
+  const handleSearch = (searchTerm) => {
+    setSearch(searchTerm);
+  };
+
   // Filtered product list for search
   const filteredProducts = productFieldMap.filter(product =>
     product.name.toLowerCase().includes(search.toLowerCase())
@@ -182,7 +187,10 @@ const Home = () => {
 
   return (
     <Box sx={{ bgcolor: '#fff', minHeight: '100vh' }}>
-      <Navbar onCartClick={() => setCartOpen(true)} />
+      <Navbar 
+        onCartClick={() => setCartOpen(true)} 
+        onSearch={handleSearch}
+      />
 
       {/* Hero Section */}
       <Box sx={{ width: '100%', mt: 4, mb: 6 }}>
