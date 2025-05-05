@@ -15,6 +15,7 @@ const byproductRoutes = require("./Route/ByproductRoute");
 const farmerPriceRoutes = require("./Route/FarmerPriceRoute");
 const shopPriceRoutes = require("./Route/ShopPriceRoute");
 const userRoutes = require("./Route/UserRoute");
+const orderRoutes = require("./Route/OrderRoute");
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use("/ByproductPrices", byproductRoutes);
 app.use("/FarmerPrices", farmerPriceRoutes);
 app.use("/ShopPrices", shopPriceRoutes);
 app.use("/users", userRoutes);
+app.use("/api/orders", orderRoutes);
 
 // Connect to MongoDB
 mongoose

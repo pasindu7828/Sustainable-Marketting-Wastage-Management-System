@@ -1,16 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Typography, Button, Box, IconButton, Link, Avatar, Menu, MenuItem } from '@mui/material';
 import { FaLeaf } from 'react-icons/fa';
 import { FiSearch } from 'react-icons/fi';
 import { BsCart2 } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
-const Navbar = () => {
+const Navbar = ({ onCartClick }) => {
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
   const isLoggedIn = !!currentUser;
+  const [cartCount, setCartCount] = useState(() => {
+    const stored = localStorage.getItem('cart');
+    return stored ? JSON.parse(stored).length : 0;
+  });
+
+  useEffect(() => {
+    const handler = () => {
+      const stored = localStorage.getItem('cart');
+      setCartCount(stored ? JSON.parse(stored).length : 0);
+    };
+    window.addEventListener('storage', handler);
+    window.addEventListener('cartUpdated', handler);
+    handler();
+    return () => {
+      window.removeEventListener('storage', handler);
+      window.removeEventListener('cartUpdated', handler);
+    };
+  }, []);
 
   const handleAvatarClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -167,7 +186,37 @@ const Navbar = () => {
               <FiSearch size={22} />
             </IconButton>
           </Box>
-          <IconButton><BsCart2 size={24} /></IconButton>
+          <Box sx={{ position: 'relative' }}>
+            <IconButton
+              color="success"
+              onClick={() => onCartClick && onCartClick()}
+              sx={{ bgcolor: '#e8f5e9', borderRadius: '50%', p: 1, boxShadow: 2 }}
+            >
+              <ShoppingCartIcon sx={{ fontSize: 28, color: '#388e3c' }} />
+              {cartCount > 0 && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 2,
+                    right: 2,
+                    bgcolor: '#388e3c',
+                    color: '#fff',
+                    borderRadius: '50%',
+                    width: 20,
+                    height: 20,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 700,
+                    fontSize: 13,
+                    boxShadow: 1,
+                  }}
+                >
+                  {cartCount}
+                </Box>
+              )}
+            </IconButton>
+          </Box>
           {isLoggedIn ? (
             <>
               <IconButton onClick={handleAvatarClick} sx={{ p: 0 }}>

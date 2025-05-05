@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { AppBar, Toolbar, Typography, Button, Box, IconButton, Container, Grid, Avatar, Link, Paper, Stack, Divider, Menu, MenuItem, Card, CardContent } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box, IconButton, Container, Grid, Avatar, Link, Paper, Stack, Divider, Menu, MenuItem, Card, CardContent, TextField } from '@mui/material';
 import { FaLeaf, FaFacebookF, FaTwitter, FaLinkedinIn } from 'react-icons/fa';
 import { FiSearch } from 'react-icons/fi';
 import { BsCart2 } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import axios from 'axios';
+import CartPopup from './CartPopup';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const categories = [
   { name: 'Apples', img: 'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=facearea&w=400&h=400' },
@@ -37,26 +39,74 @@ const Home = () => {
   const [search, setSearch] = useState('');
   const [inventory, setInventory] = useState(null);
   const [shopPrices, setShopPrices] = useState(null);
+  const [goodInventory, setGoodInventory] = useState(null);
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [cart, setCart] = useState(() => {
+    const stored = localStorage.getItem('cart');
+    return stored ? JSON.parse(stored) : [];
+  });
+  const [cartOpen, setCartOpen] = useState(false);
+  const [selectedKg, setSelectedKg] = useState({});
 
   // Get current user from localStorage
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
   const isLoggedIn = !!currentUser;
 
   useEffect(() => {
-    // Fetch latest inventory
+    // Fetch latest shop prices
     axios.get('http://localhost:5000/ShopPrices')
       .then(res => {
         const prices = res.data.ShopPrices;
         setShopPrices(prices && prices.length > 0 ? prices[prices.length - 1] : null);
       });
+    // Fetch latest inventory (still used for other purposes)
     axios.get('http://localhost:5000/Inventorys')
       .then(res => {
         const invs = res.data.Inventorys;
         setInventory(invs && invs.length > 0 ? invs[invs.length - 1] : null);
       });
+    // Fetch latest GoodInventorys for shop quantities
+    axios.get('http://localhost:5000/GoodInventorys')
+      .then(res => {
+        const goods = res.data.GoodInventorys;
+        setGoodInventory(goods && goods.length > 0 ? goods[goods.length - 1] : null);
+      });
   }, []);
+
+  // Sync cart to localStorage
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+    window.dispatchEvent(new Event('cartUpdated'));
+  }, [cart]);
+
+  // Handle kg input change
+  const handleKgInput = (key, value, maxKg) => {
+    setSelectedKg(prev => ({ ...prev, [key]: Math.max(1, Math.min(maxKg, Number(value))) }));
+  };
+
+  // Add to cart
+  const handleAddToCart = (product, quantity, maxKg) => {
+    if (!shopPrices || !goodInventory) return;
+    const existingIdx = cart.findIndex(item => item.name === product.name);
+    if (existingIdx !== -1) {
+      // Update quantity if already in cart
+      const newCart = [...cart];
+      newCart[existingIdx].quantityKg = Math.min(newCart[existingIdx].quantityKg + quantity, maxKg);
+      setCart(newCart);
+    } else {
+      setCart([
+        ...cart,
+        {
+          name: product.name,
+          img: product.img,
+          price: shopPrices[product.price] || 0,
+          quantityKg: quantity,
+          maxKg: maxKg
+        }
+      ]);
+    }
+  };
 
   // Profile menu handlers
   const handleAvatarClick = (event) => {
@@ -88,7 +138,7 @@ const Home = () => {
 
   return (
     <Box sx={{ bgcolor: '#fff', minHeight: '100vh' }}>
-      <Navbar />
+      <Navbar onCartClick={() => setCartOpen(true)} />
 
       {/* Hero Section */}
       <Box sx={{ width: '100%', mt: 4, mb: 6 }}>
@@ -136,8 +186,11 @@ const Home = () => {
         </Typography>
         <Grid container spacing={4} alignItems="stretch">
           {filteredProducts.map((product, idx) => {
-            const quantity = inventory ? inventory[product.quantity] : null;
+            const quantity = goodInventory ? goodInventory[product.quantity] : null;
             const price = shopPrices ? shopPrices[product.price] : null;
+            const key = product.name;
+            const maxKg = quantity || 0;
+            const selected = selectedKg[key] || 1;
             return (
               <Grid item xs={12} sm={6} md={4} lg={3} key={idx} sx={{ display: 'flex', height: '100%' }}>
                 <Card
@@ -185,28 +238,41 @@ const Home = () => {
                     <Typography color="success.main" fontWeight={600} sx={{ mb: 1 }}>
                       {price !== null && price !== undefined ? `Rs. ${price} / kg` : 'N/A'}
                     </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 1 }}>
+                      <TextField
+                        type="number"
+                        size="small"
+                        label="Kg"
+                        value={selected}
+                        onChange={e => handleKgInput(key, e.target.value, maxKg)}
+                        inputProps={{ min: 1, max: maxKg, style: { width: 60 } }}
+                        sx={{ width: 80, mr: 1 }}
+                        disabled={!quantity || quantity <= 0}
+                      />
+                      <Button
+                        variant="contained"
+                        color="success"
+                        sx={{ borderRadius: 8, px: 2, fontWeight: 600, textTransform: 'none' }}
+                        onClick={() => handleAddToCart(product, selected, maxKg)}
+                        disabled={!quantity || quantity <= 0}
+                      >
+                        Add to cart
+                      </Button>
+                    </Box>
                   </CardContent>
-                  <Button
-                    variant="contained"
-                    color="success"
-                    sx={{
-                      borderRadius: 8,
-                      px: 3,
-                      fontWeight: 600,
-                      mt: 2,
-                      boxShadow: '0 2px 8px 0 rgba(76,175,80,0.10)',
-                      textTransform: 'none',
-                    }}
-                    onClick={() => alert('Added to cart! (placeholder)')}
-                    disabled={!quantity || quantity <= 0}
-                  >
-                    Add to cart
-                  </Button>
                 </Card>
               </Grid>
             );
           })}
         </Grid>
+        {/* Cart Popup */}
+        <CartPopup
+          open={cartOpen}
+          onClose={() => setCartOpen(false)}
+          cart={cart}
+          setCart={setCart}
+          user={currentUser}
+        />
       </Container>
 
       {/* App Download Section */}
