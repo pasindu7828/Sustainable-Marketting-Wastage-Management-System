@@ -1,20 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const Order = require('../Model/OrderModel');
+const OrderController = require('../Controllers/OrderController');
 
-// POST /api/orders
-router.post('/', async (req, res) => {
-  try {
-    const { user, items, total } = req.body;
-    if (!user || !items || !total) {
-      return res.status(400).json({ message: 'Missing required fields' });
-    }
-    const order = new Order({ user, items, total });
-    const saved = await order.save();
-    res.status(201).json(saved);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
+// Create order
+router.post('/', OrderController.createOrder);
+// Get all orders
+router.get('/', OrderController.getAllOrders);
+// Get order by ID
+router.get('/:id', OrderController.getOrderById);
+// Delete order
+router.delete('/:id', OrderController.deleteOrder);
+// Update order status
+router.patch('/:id/status', OrderController.updateOrderStatus);
 
 module.exports = router; 
