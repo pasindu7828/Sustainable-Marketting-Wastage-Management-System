@@ -72,16 +72,23 @@ const Navbar = ({ onCartClick, onSearch }) => {
         boxShadow: '0 2px 12px 0 rgba(56,142,60,0.08)',
         borderBottom: '1px solid #eee',
         backdropFilter: 'blur(8px)',
+        fontFamily: `'Poppins', 'Roboto', sans-serif`,
       }}
     >
-      <Toolbar sx={{ justifyContent: 'space-between', px: { xs: 1, md: 6 } }}>
-        <Box display="flex" alignItems="center" gap={1}>
+      <Toolbar sx={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        px: { xs: 1, md: 6 },
+        minHeight: 72,
+        gap: 4,
+      }}>
+        <Box display="flex" alignItems="center" gap={1} sx={{ mr: 4 }}>
           <FaLeaf style={{ color: '#4caf50', fontSize: 32 }} />
-          <Typography variant="h5" fontWeight={700} sx={{ color: '#388e3c', letterSpacing: 1 }}>
+          <Typography variant="h5" fontWeight={700} sx={{ color: '#388e3c', letterSpacing: 1, fontFamily: `'Poppins', 'Roboto', sans-serif` }}>
             AgriFlow
           </Typography>
         </Box>
-        <Box display="flex" alignItems="center" gap={2}>
+        <Box display="flex" alignItems="center" gap={2} sx={{ flexGrow: 1, justifyContent: 'center' }}>
           <Link
             component="button"
             underline="none"
@@ -96,6 +103,7 @@ const Navbar = ({ onCartClick, onSearch }) => {
               background: 'none',
               border: 'none',
               cursor: 'pointer',
+              fontFamily: `'Poppins', 'Roboto', sans-serif`,
               '&:hover': { background: '#e8f5e9', color: '#388e3c' },
             }}
             onClick={() => navigate('/')}
@@ -113,6 +121,7 @@ const Navbar = ({ onCartClick, onSearch }) => {
               py: 0.5,
               borderRadius: 3,
               transition: 'background 0.2s',
+              fontFamily: `'Poppins', 'Roboto', sans-serif`,
               '&:hover': { background: '#e8f5e9', color: '#388e3c' },
             }}
           >
@@ -129,6 +138,7 @@ const Navbar = ({ onCartClick, onSearch }) => {
               py: 0.5,
               borderRadius: 3,
               transition: 'background 0.2s',
+              fontFamily: `'Poppins', 'Roboto', sans-serif`,
               '&:hover': { background: '#e8f5e9', color: '#388e3c' },
             }}
           >
@@ -149,6 +159,7 @@ const Navbar = ({ onCartClick, onSearch }) => {
               background: 'none',
               border: 'none',
               cursor: 'pointer',
+              fontFamily: `'Poppins', 'Roboto', sans-serif`,
               '&:hover': { background: '#e8f5e9', color: '#388e3c' },
             }}
             onClick={() => navigate('/reviewDashBoard')}
@@ -159,7 +170,7 @@ const Navbar = ({ onCartClick, onSearch }) => {
             <></>
           )}
         </Box>
-        <Box display="flex" alignItems="center" gap={2}>
+        <Box display="flex" alignItems="center" gap={2} sx={{ justifyContent: 'center' }}>
           <Box
             sx={{
               display: 'flex',
@@ -169,6 +180,7 @@ const Navbar = ({ onCartClick, onSearch }) => {
               px: 1.5,
               py: 0.5,
               boxShadow: '0 1px 4px 0 rgba(76,175,80,0.06)',
+              fontFamily: `'Poppins', 'Roboto', sans-serif`,
             }}
           >
             <input
@@ -184,6 +196,7 @@ const Navbar = ({ onCartClick, onSearch }) => {
                 width: 200,
                 color: '#222',
                 padding: '4px 0',
+                fontFamily: 'Poppins, Roboto, sans-serif',
               }}
             />
             <IconButton
@@ -199,37 +212,38 @@ const Navbar = ({ onCartClick, onSearch }) => {
               <Box sx={{ position: 'relative' }}>
                 <IconButton
                   color="success"
-              onClick={() => onCartClick && onCartClick()}
-              sx={{ bgcolor: '#e8f5e9', borderRadius: '50%', p: 1, boxShadow: 2 }}
-            >
-              <ShoppingCartIcon sx={{ fontSize: 28, color: '#388e3c' }} />
-              {cartCount > 0 && (
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: 2,
-                    right: 2,
-                    bgcolor: '#388e3c',
-                    color: '#fff',
-                    borderRadius: '50%',
-                    width: 20,
-                    height: 20,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: 700,
-                    fontSize: 13,
-                    boxShadow: 1,
-                  }}
+                  onClick={() => onCartClick && onCartClick()}
+                  sx={{ bgcolor: '#e8f5e9', borderRadius: '50%', p: 1, boxShadow: 2 }}
                 >
-                  {cartCount}
-                </Box>
-              )}
-            </IconButton>
-          </Box>
+                  <ShoppingCartIcon sx={{ fontSize: 28, color: '#388e3c' }} />
+                  {cartCount > 0 && (
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: 2,
+                        right: 2,
+                        bgcolor: '#388e3c',
+                        color: '#fff',
+                        borderRadius: '50%',
+                        width: 20,
+                        height: 20,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 700,
+                        fontSize: 13,
+                        boxShadow: 1,
+                        fontFamily: `'Poppins', 'Roboto', sans-serif`,
+                      }}
+                    >
+                      {cartCount}
+                    </Box>
+                  )}
+                </IconButton>
+              </Box>
 
               <IconButton onClick={handleAvatarClick} sx={{ p: 0 }}>
-                <Avatar sx={{ bgcolor: '#388e3c', color: '#fff' }}>
+                <Avatar sx={{ bgcolor: '#388e3c', color: '#fff', fontFamily: `'Poppins', 'Roboto', sans-serif` }}>
                   {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
                 </Avatar>
               </IconButton>
@@ -239,11 +253,12 @@ const Navbar = ({ onCartClick, onSearch }) => {
                 onClose={handleMenuClose}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                sx={{ fontFamily: `'Poppins', 'Roboto', sans-serif` }}
               >
-                <MenuItem disabled>{currentUser.name || 'User'}</MenuItem>
-                <MenuItem onClick={handleViewProfile}>View Profile</MenuItem>
-                <MenuItem onClick={handleEditProfile}>Edit Profile</MenuItem>
-                <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
+                <MenuItem disabled sx={{ fontFamily: `'Poppins', 'Roboto', sans-serif` }}>{currentUser.name || 'User'}</MenuItem>
+                <MenuItem onClick={handleViewProfile} sx={{ fontFamily: `'Poppins', 'Roboto', sans-serif` }}>View Profile</MenuItem>
+                <MenuItem onClick={handleEditProfile} sx={{ fontFamily: `'Poppins', 'Roboto', sans-serif` }}>Edit Profile</MenuItem>
+                <MenuItem onClick={handleSignOut} sx={{ fontFamily: `'Poppins', 'Roboto', sans-serif` }}>Sign out</MenuItem>
               </Menu>
             </>
           ) : (
@@ -257,6 +272,7 @@ const Navbar = ({ onCartClick, onSearch }) => {
                 color: '#fff',
                 boxShadow: '0 2px 8px 0 rgba(76,175,80,0.10)',
                 textTransform: 'none',
+                fontFamily: `'Poppins', 'Roboto', sans-serif`,
                 '&:hover': { bgcolor: '#2e7031' },
               }}
               onClick={() => navigate('/login')}
