@@ -7,6 +7,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Snackbar from '@mui/material/Snackbar';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
@@ -15,7 +16,10 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [adminAlert, setAdminAlert] = useState(false);
   const navigate = useNavigate();
+
+  const isAdminLogin = window.location.search.includes('admin=true');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,10 +36,19 @@ const Login = () => {
         return;
       }
       localStorage.setItem('currentUser', JSON.stringify(data));
-      if (data.isAdmin) {
-        navigate('/admin-dashboard');
+      if (isAdminLogin) {
+        if (data.isAdmin) {
+          navigate('/admin-dashboard');
+        } else {
+          setAdminAlert(true);
+          localStorage.removeItem('currentUser');
+        }
       } else {
-        navigate('/home');
+        if (data.isAdmin) {
+          navigate('/admin-dashboard');
+        } else {
+          navigate('/home');
+        }
       }
     } catch (err) {
       setError('Network error');
@@ -108,6 +121,13 @@ const Login = () => {
           </Typography>
         </Box>
       </Paper>
+      <Snackbar
+        open={adminAlert}
+        autoHideDuration={3000}
+        onClose={() => setAdminAlert(false)}
+        message="Only can access by admin"
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      />
     </Box>
   );
 };

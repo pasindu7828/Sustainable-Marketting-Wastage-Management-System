@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link } from "react-router-dom";
 import { FaLeaf } from "react-icons/fa";
 import { BiUserCircle } from "react-icons/bi";

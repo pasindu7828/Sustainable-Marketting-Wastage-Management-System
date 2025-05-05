@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -61,7 +62,7 @@ const HomeReview = () => {
             <Typography variant="h5" sx={{ flexGrow: 1, display: "flex", alignItems: "center", gap: 1 }}>
               <FaLeaf /> E-Farmer Reviews
             </Typography>
-            <Button component={Link} to="/reviews/admin" variant="contained" sx={{ bgcolor: "white", color: "primary.main" }}>
+            <Button component={Link} to="/login?admin=true" variant="contained" sx={{ bgcolor: "white", color: "primary.main" }}>
               Admin Dashboard
             </Button>
           </Toolbar>

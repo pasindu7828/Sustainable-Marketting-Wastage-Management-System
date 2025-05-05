@@ -1,21 +1,268 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { AppBar, Toolbar, Typography, Button, Box, IconButton, Container, Grid, Avatar, Link, Paper, Stack, Divider, Menu, MenuItem, Card, CardContent } from '@mui/material';
+import { FaLeaf, FaFacebookF, FaTwitter, FaLinkedinIn } from 'react-icons/fa';
+import { FiSearch } from 'react-icons/fi';
+import { BsCart2 } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
+import Navbar from './Navbar';
+import axios from 'axios';
+
+const categories = [
+  { name: 'Apples', img: 'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=facearea&w=400&h=400' },
+  { name: 'Oranges', img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=facearea&w=400&h=400' },
+  { name: 'Bananas', img: 'https://images.unsplash.com/photo-1574226516831-e1dff420e8e9?auto=format&fit=facearea&w=400&h=400' },
+  { name: 'Grapes', img: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=facearea&w=400&h=400' },
+  { name: 'Watermelons', img: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=facearea&w=400&h=400' },
+  { name: 'Mangoes', img: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=facearea&w=400&h=400' },
+  { name: 'Wood Apples', img: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=facearea&w=400&h=400' },
+  { name: 'Pineapples', img: 'https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=facearea&w=400&h=400' },
+  { name: 'Papayas', img: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=facearea&w=400&h=400' },
+  { name: 'Guavas', img: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=facearea&w=400&h=400' },
+];
+
+const productFieldMap = [
+  { name: 'Apple', img: categories[0].img, quantity: 'shopapple', price: 'spApple' },
+  { name: 'Orange', img: categories[1].img, quantity: 'shoporange', price: 'spOrange' },
+  { name: 'Banana', img: categories[2].img, quantity: 'shopbanana', price: 'spBanana' },
+  { name: 'Grapes', img: categories[3].img, quantity: 'shopgrapes', price: 'spGraphes' },
+  { name: 'Watermelon', img: categories[4].img, quantity: 'shopwatermelon', price: 'spWatermelon' },
+  { name: 'Mango', img: categories[5].img, quantity: 'shopmango', price: 'spMango' },
+  { name: 'Wood Apple', img: categories[6].img, quantity: 'shopwoodapple', price: 'spWoodapple' },
+  { name: 'Pineapple', img: categories[7].img, quantity: 'shoppineapple', price: 'spPineapple' },
+  { name: 'Papaya', img: categories[8].img, quantity: 'shoppapaya', price: 'spPapaya' },
+  { name: 'Guava', img: categories[9].img, quantity: 'shopguava', price: 'spGoava' },
+];
 
 const Home = () => {
+  const [search, setSearch] = useState('');
+  const [inventory, setInventory] = useState(null);
+  const [shopPrices, setShopPrices] = useState(null);
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('currentUser'));
+  const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleLogout = () => {
+  // Get current user from localStorage
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  const isLoggedIn = !!currentUser;
+
+  useEffect(() => {
+    // Fetch latest inventory
+    axios.get('http://localhost:5000/ShopPrices')
+      .then(res => {
+        const prices = res.data.ShopPrices;
+        setShopPrices(prices && prices.length > 0 ? prices[prices.length - 1] : null);
+      });
+    axios.get('http://localhost:5000/Inventorys')
+      .then(res => {
+        const invs = res.data.Inventorys;
+        setInventory(invs && invs.length > 0 ? invs[invs.length - 1] : null);
+      });
+  }, []);
+
+  // Profile menu handlers
+  const handleAvatarClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+  const handleSignOut = () => {
     localStorage.removeItem('currentUser');
-    navigate('/login');
+    setAnchorEl(null);
+    navigate('/');
+  };
+  const handleEditProfile = () => {
+    setAnchorEl(null);
+    if (currentUser && currentUser.email) {
+      navigate(`/edit-user/${currentUser.email}`);
+    }
+  };
+  const handleViewProfile = () => {
+    setAnchorEl(null);
+    navigate('/profile');
   };
 
+  // Filtered product list for search
+  const filteredProducts = productFieldMap.filter(product =>
+    product.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
-    <div style={{ maxWidth: 600, margin: '60px auto', padding: 24, background: '#fff', borderRadius: 8, boxShadow: '0 2px 8px #eee', textAlign: 'center' }}>
-      <h2>Welcome{user && user.name ? `, ${user.name}` : ''}!</h2>
-      <p>This is your home page.</p>
-      <button onClick={handleLogout} style={{ marginTop: 24, padding: 10, background: '#2e7d32', color: '#fff', border: 'none', borderRadius: 4 }}>Logout</button>
-    </div>
+    <Box sx={{ bgcolor: '#fff', minHeight: '100vh' }}>
+      <Navbar />
+
+      {/* Hero Section */}
+      <Box sx={{ width: '100%', mt: 4, mb: 6 }}>
+        <Container maxWidth="xl">
+          <Paper elevation={0} sx={{ position: 'relative', overflow: 'hidden', borderRadius: 4 }}>
+            <img
+              src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1400&q=80"
+              alt="Fresh fruits and vegetables"
+              style={{ width: '100%', height: 400, objectFit: 'cover', borderRadius: 24 }}
+            />
+            <Box sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', bgcolor: 'rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column', justifyContent: 'center', pl: { xs: 2, md: 10 } }}>
+              <Typography variant="h2" fontWeight={800} color="#fff" sx={{ mb: 2, fontSize: { xs: 32, md: 56 } }}>
+                Fresh from Farm<br />to Your Table
+              </Typography>
+              <Typography variant="h6" color="#fff" sx={{ mb: 3, maxWidth: 500 }}>
+                Supporting local farmers while bringing you the freshest, highest quality fruits and vegetables
+              </Typography>
+            </Box>
+          </Paper>
+        </Container>
+      </Box>
+
+      {/* Menu Categories */}
+      <Container maxWidth="xl" sx={{ mb: 6 }}>
+        <Typography variant="h5" fontWeight={700} sx={{ mb: 2, color: '#222' }}>
+          Our Fresh Produce
+        </Typography>
+        <Typography sx={{ mb: 4, color: '#666' }}>
+          Direct from local farmers to your doorstep
+        </Typography>
+        <Grid container spacing={3} justifyContent="center">
+          {categories.map((cat, idx) => (
+            <Grid item key={idx} xs={6} sm={3} md={1.5} sx={{ textAlign: 'center' }}>
+              <Avatar src={cat.img} alt={cat.name} sx={{ width: 90, height: 90, mx: 'auto', mb: 1, boxShadow: 2 }} />
+              <Typography fontWeight={500}>{cat.name}</Typography>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+
+      {/* Product Cards Section */}
+      <Container maxWidth="xl" sx={{ mb: 8 }}>
+        <Typography variant="h5" fontWeight={700} sx={{ mb: 2, color: '#222' }}>
+          Shop Our Products
+        </Typography>
+        <Grid container spacing={4} alignItems="stretch">
+          {filteredProducts.map((product, idx) => {
+            const quantity = inventory ? inventory[product.quantity] : null;
+            const price = shopPrices ? shopPrices[product.price] : null;
+            return (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={idx} sx={{ display: 'flex', height: '100%' }}>
+                <Card
+                  elevation={0}
+                  sx={{
+                    p: 3,
+                    borderRadius: 5,
+                    textAlign: 'center',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    boxShadow: '0 2px 16px 0 rgba(76,175,80,0.10)',
+                    transition: 'transform 0.2s, box-shadow 0.2s',
+                    width: '100%',
+                    '&:hover': {
+                      transform: 'translateY(-8px) scale(1.03)',
+                      boxShadow: '0 8px 32px 0 rgba(56,142,60,0.18)',
+                    },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 120,
+                      height: 120,
+                      mb: 2,
+                      borderRadius: '50%',
+                      overflow: 'hidden',
+                      boxShadow: 3,
+                      border: '3px solid #e8f5e9',
+                      background: '#fff',
+                    }}
+                  >
+                    <img
+                      src={product.img}
+                      alt={product.name}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </Box>
+                  <CardContent sx={{ flexGrow: 1, width: '100%', p: 0 }}>
+                    <Typography variant="h6" fontWeight={700} sx={{ mb: 1, color: '#388e3c' }}>{product.name}</Typography>
+                    <Typography color="text.secondary" sx={{ mb: 1 }}>
+                      {quantity !== null && quantity !== undefined ? `${quantity} kg available` : 'Out of stock'}
+                    </Typography>
+                    <Typography color="success.main" fontWeight={600} sx={{ mb: 1 }}>
+                      {price !== null && price !== undefined ? `Rs. ${price} / kg` : 'N/A'}
+                    </Typography>
+                  </CardContent>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    sx={{
+                      borderRadius: 8,
+                      px: 3,
+                      fontWeight: 600,
+                      mt: 2,
+                      boxShadow: '0 2px 8px 0 rgba(76,175,80,0.10)',
+                      textTransform: 'none',
+                    }}
+                    onClick={() => alert('Added to cart! (placeholder)')}
+                    disabled={!quantity || quantity <= 0}
+                  >
+                    Add to cart
+                  </Button>
+                </Card>
+              </Grid>
+            );
+          })}
+        </Grid>
+      </Container>
+
+      {/* App Download Section */}
+      <Divider sx={{ my: 6 }} />
+      <Box sx={{ textAlign: 'center', mb: 6 }}>
+        <Typography variant="h4" fontWeight={700} sx={{ mb: 3 }}>
+          For Better Experience Download<br />AgriFlow App
+        </Typography>
+        <Stack direction="row" spacing={3} justifyContent="center" sx={{ mb: 4 }}>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" style={{ height: 60 }} />
+          <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store" style={{ height: 60 }} />
+        </Stack>
+      </Box>
+
+      {/* Footer */}
+      <Box sx={{ bgcolor: '#222', color: '#fff', py: 6, mt: 6 }}>
+        <Container maxWidth="xl">
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={4}>
+              <Box display="flex" alignItems="center" gap={1} mb={2}>
+                <FaLeaf style={{ color: '#4caf50', fontSize: 32 }} />
+                <Typography variant="h5" fontWeight={700} sx={{ color: '#fff', letterSpacing: 1 }}>
+                  AgriFlow
+                </Typography>
+              </Box>
+              <Typography sx={{ color: '#ccc', mb: 2 }}>
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+              </Typography>
+              <Box display="flex" gap={2}>
+                <IconButton sx={{ bgcolor: '#333', color: '#fff' }}><FaFacebookF /></IconButton>
+                <IconButton sx={{ bgcolor: '#333', color: '#fff' }}><FaTwitter /></IconButton>
+                <IconButton sx={{ bgcolor: '#333', color: '#fff' }}><FaLinkedinIn /></IconButton>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Typography fontWeight={700} sx={{ mb: 2 }}>COMPANY</Typography>
+              <Box display="flex" flexDirection="column" gap={1}>
+                <Link href="#" underline="hover" color="#fff">Home</Link>
+                <Link href="#" underline="hover" color="#fff">About Us</Link>
+                <Link href="#" underline="hover" color="#fff">Delivery</Link>
+                <Link href="#" underline="hover" color="#fff">Privacy Policy</Link>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Typography fontWeight={700} sx={{ mb: 2 }}>GET IN TOUCH</Typography>
+              <Typography sx={{ color: '#ccc' }}>+94-37-206-2073</Typography>
+              <Typography sx={{ color: '#ccc' }}>Contact@agriflow.com</Typography>
+            </Grid>
+          </Grid>
+          <Divider sx={{ my: 4, borderColor: '#444' }} />
+          <Typography align="center" sx={{ color: '#aaa' }}>
+            Copyright 2025 © AgriFlow.com – All Rights Reserved.
+          </Typography>
+        </Container>
+      </Box>
+    </Box>
   );
 };
 

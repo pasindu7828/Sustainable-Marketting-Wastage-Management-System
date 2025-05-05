@@ -38,6 +38,7 @@ function ViewProductDetails(props) {
         // Fetch product details to get the added date
         axios.get(`http://localhost:5000/Inventorys/${_id}`)
             .then(res => {
+                console.log('Backend product details:', res.data); // Log backend details
                 setAddedDate(res.data.addedDate);  // Assuming the response contains addedDate
             })
             .catch(error => console.error('Error fetching product details:', error));

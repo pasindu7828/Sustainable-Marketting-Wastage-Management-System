@@ -54,6 +54,7 @@ import Register from './Components/Register';
 import Home from './Components/Home';
 import UserList from './Components/UserList';
 import UserEdit from './Components/UserEdit';
+import UserProfile from './Components/UserProfile';
 
 
 const App = () => {
@@ -62,7 +63,7 @@ const App = () => {
       <React.Fragment>
         <Routes>
           {/* Default Page */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/" element={<Home />} />
           <Route path="/reviewDashBoard" element={<HomeReview />} />
 
           {/* Review System Routes */}
@@ -118,6 +119,7 @@ const App = () => {
           <Route path="/admin-dashboard" element={<MainDashboard />} />
           <Route path="/users" element={<UserList />} />
           <Route path="/edit-user/:email" element={<UserEdit />} />
+          <Route path="/profile" element={<UserProfile />} />
 
         </Routes>
       </React.Fragment>

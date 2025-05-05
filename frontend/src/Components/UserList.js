@@ -69,13 +69,15 @@ const UserList = () => {
             <TableRow sx={{ background: 'linear-gradient(90deg, #e8f5e9 0%, #c8e6c9 100%)' }}>
               <TableCell sx={{ fontWeight: 600, color: '#2e7d32' }}>Name</TableCell>
               <TableCell sx={{ fontWeight: 600, color: '#2e7d32' }}>Email</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: '#2e7d32' }}>Phone</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: '#2e7d32' }}>Address</TableCell>
               <TableCell sx={{ fontWeight: 600, color: '#2e7d32' }} align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {users.length === 0 && (
               <TableRow>
-                <TableCell colSpan={3} align="center" sx={{ py: 4 }}>
+                <TableCell colSpan={5} align="center" sx={{ py: 4 }}>
                   <Typography color="text.secondary">No users found.</Typography>
                 </TableCell>
               </TableRow>
@@ -84,15 +86,12 @@ const UserList = () => {
               <TableRow key={user._id} hover>
                 <TableCell>{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
+                <TableCell>{user.phone}</TableCell>
+                <TableCell>{user.address}</TableCell>
                 <TableCell align="center">
                   <Tooltip title="View">
                     <IconButton sx={{ color: '#388e3c' }} onClick={() => alert(`Name: ${user.name}\nEmail: ${user.email}`)}>
                       <VisibilityIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Edit">
-                    <IconButton sx={{ color: '#2e7d32' }} onClick={() => navigate(`/edit-user/${user.email}`)}>
-                      <EditIcon />
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="Delete">
