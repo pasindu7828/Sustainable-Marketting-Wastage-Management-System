@@ -7,6 +7,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import LockIcon from '@mui/icons-material/Lock';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import PaymentIcon from '@mui/icons-material/Payment';
 
 const CheckoutDialog = ({ open, onClose, cart, total, user, onOrderPlaced, onSuccessClose }) => {
   const [form, setForm] = useState({
@@ -214,9 +217,19 @@ const CheckoutDialog = ({ open, onClose, cart, total, user, onOrderPlaced, onSuc
   };
 
   return (
-    <Dialog open={open} onClose={handleDialogClose} maxWidth="sm" fullWidth>
-      <DialogTitle sx={{ bgcolor: '#e8f5e9', color: '#388e3c', fontWeight: 700 }}>
-        Checkout
+    <Dialog open={open} onClose={handleDialogClose} maxWidth="md" fullWidth PaperProps={{
+      sx: {
+        borderRadius: 5,
+        background: 'rgba(255,255,255,0.92)',
+        boxShadow: '0 8px 32px rgba(76,175,80,0.15)',
+        backdropFilter: 'blur(10px)',
+      }
+    }}>
+      <DialogTitle sx={{ bgcolor: '#e8f5e9', color: '#388e3c', fontWeight: 700, borderTopLeftRadius: 20, borderTopRightRadius: 20, fontSize: 24, letterSpacing: 1 }}>
+        <Box display="flex" alignItems="center" gap={1}>
+          <PaymentIcon sx={{ color: '#388e3c', fontSize: 28 }} />
+          Checkout
+        </Box>
         <IconButton
           aria-label="close"
           onClick={handleDialogClose}
@@ -225,7 +238,7 @@ const CheckoutDialog = ({ open, onClose, cart, total, user, onOrderPlaced, onSuc
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      <DialogContent dividers>
+      <DialogContent dividers sx={{ p: 0, bgcolor: 'rgba(255,255,255,0.98)' }}>
         {success ? (
           <Box textAlign="center" py={4}>
             <Typography variant="h5" color="success.main" fontWeight={700} mb={2}>
@@ -242,147 +255,190 @@ const CheckoutDialog = ({ open, onClose, cart, total, user, onOrderPlaced, onSuc
             </Button>
           </Box>
         ) : (
-          <>
-            <Typography variant="h6" fontWeight={600} mb={2}>
-              Order Summary
-            </Typography>
-            <Box mb={2}>
-              {cart.map((item, idx) => (
-                <Grid container key={idx} spacing={1} alignItems="center">
-                  <Grid item xs={6}><Typography>{item.name}</Typography></Grid>
-                  <Grid item xs={3}><Typography>{item.quantityKg} kg</Typography></Grid>
-                  <Grid item xs={3}><Typography>Rs. {item.price * item.quantityKg}</Typography></Grid>
-                </Grid>
-              ))}
-              <Divider sx={{ my: 2 }} />
-              <Box display="flex" justifyContent="space-between">
-                <Typography fontWeight={700}>Total</Typography>
-                <Typography fontWeight={700}>Rs. {total}</Typography>
+          <Grid container spacing={0}>
+            {/* Left: Order Summary */}
+            <Grid item xs={12} md={5} sx={{ bgcolor: '#f1f8e9', p: 0, borderRight: { md: '1px solid #e0e0e0' }, borderTopLeftRadius: 20, borderBottomLeftRadius: 20, display: 'flex', flexDirection: 'column', height: '100%',width:'100%' }}>
+              <Box sx={{
+                p: 4,
+                bgcolor: 'rgba(255,255,255,0.85)',
+                borderRadius: 0,
+                boxShadow: '0 2px 12px rgba(76,175,80,0.07)',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
+                borderTopLeftRadius: 20,
+                borderBottomLeftRadius: 20,
+                borderRight: { md: '1px solid #e0e0e0' },
+              }}>
+                <Typography variant="subtitle2" color="#388e3c" fontWeight={700} mb={1}>
+                  Step 2 of 2: Review & Pay
+                </Typography>
+                <Typography variant="h6" fontWeight={700} mb={2}>
+                  Order Summary
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+                <Box component="table" width="100%" sx={{ borderCollapse: 'separate', borderSpacing: 0 }}>
+                  <Box component="thead">
+                    <Box component="tr">
+                      <Box component="th" sx={{ textAlign: 'left', color: '#388e3c', fontWeight: 700, fontSize: 15, pb: 1 }}>Product</Box>
+                      <Box component="th" sx={{ textAlign: 'center', color: '#388e3c', fontWeight: 700, fontSize: 15, pb: 1 }}>Qty</Box>
+                      <Box component="th" sx={{ textAlign: 'right', color: '#388e3c', fontWeight: 700, fontSize: 15, pb: 1 }}>Price</Box>
+                      <Box component="th" sx={{ textAlign: 'right', color: '#388e3c', fontWeight: 700, fontSize: 15, pb: 1 }}>Subtotal</Box>
+                    </Box>
+                  </Box>
+                  <Box component="tbody">
+                    {cart.map((item, idx) => (
+                      <Box component="tr" key={idx} sx={{ borderBottom: '1px solid #e0e0e0' }}>
+                        <Box component="td" sx={{ py: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Box sx={{ width: 32, height: 32, borderRadius: 1, overflow: 'hidden', boxShadow: 1, bgcolor: '#fff', mr: 1 }}>
+                            <img src={item.img} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          </Box>
+                          <Typography fontWeight={600} fontSize={15}>{item.name}</Typography>
+                        </Box>
+                        <Box component="td" sx={{ textAlign: 'center', fontWeight: 500, fontSize: 15 }}>{item.quantityKg} kg</Box>
+                        <Box component="td" sx={{ textAlign: 'right', fontWeight: 500, fontSize: 15 }}>Rs. {item.price}</Box>
+                        <Box component="td" sx={{ textAlign: 'right', fontWeight: 700, color: '#388e3c', fontSize: 15 }}>Rs. {item.price * item.quantityKg}</Box>
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+                <Divider sx={{ my: 2 }} />
+                <Box display="flex" justifyContent="space-between" mb={1}>
+                  <Typography fontWeight={600}>Subtotal</Typography>
+                  <Typography fontWeight={600}>Rs. {total}</Typography>
+                </Box>
+                <Box display="flex" justifyContent="space-between" mb={1}>
+                  <Typography color="text.secondary">Delivery</Typography>
+                  <Typography color="text.secondary">Free</Typography>
+                </Box>
+                <Box display="flex" justifyContent="space-between" mt={2}>
+                  <Typography fontWeight={700} fontSize={20}>Total</Typography>
+                  <Typography fontWeight={700} fontSize={20} color="#388e3c">Rs. {total}</Typography>
+                </Box>
+                <Box mt={4} display="flex" alignItems="center" gap={1}>
+                  <LockIcon sx={{ color: '#388e3c' }} />
+                  <Typography variant="caption" color="#388e3c">Secure Payment</Typography>
+                </Box>
               </Box>
-            </Box>
-            <Typography variant="h6" fontWeight={600} mb={2}>
-              Your Details
-            </Typography>
-            <Grid container spacing={2} mb={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Name"
-                  name="name"
-                  value={form.name}
-                  onChange={handleChange}
-                  fullWidth
-                  required
-                  error={!!formErrors.name}
-                  helperText={formErrors.name}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Email"
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  fullWidth
-                  required
-                  error={!!formErrors.email}
-                  helperText={formErrors.email}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Phone"
-                  name="phone"
-                  value={form.phone}
-                  onChange={handleChange}
-                  fullWidth
-                  required
-                  error={!!formErrors.phone}
-                  helperText={formErrors.phone}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Address"
-                  name="address"
-                  value={form.address}
-                  onChange={handleChange}
-                  fullWidth
-                  required
-                  error={!!formErrors.address}
-                  helperText={formErrors.address}
-                />
-              </Grid>
             </Grid>
-            <Divider sx={{ my: 2 }} />
-            <Typography variant="h6" fontWeight={600} mb={2}>
-              Card Details
-            </Typography>
-            <Grid container spacing={2} mb={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Card Number"
-                  name="number"
-                  value={card.number}
-                  onChange={handleCardChange}
-                  fullWidth
-                  required
-                  error={!!formErrors.cardNumber}
-                  helperText={formErrors.cardNumber}
-                />
+            {/* Right: User & Payment Details */}
+            <Grid item xs={12} md={7} sx={{ p: 4, borderTopRightRadius: 20, borderBottomRightRadius: 20 }}>
+              <Typography variant="h6" fontWeight={700} mb={2}>
+                Your Details
+              </Typography>
+              <Grid container spacing={2} mb={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Name"
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    fullWidth
+                    required
+                    error={!!formErrors.name}
+                    helperText={formErrors.name}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    fullWidth
+                    required
+                    error={!!formErrors.email}
+                    helperText={formErrors.email}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Phone"
+                    name="phone"
+                    value={form.phone}
+                    onChange={handleChange}
+                    fullWidth
+                    required
+                    error={!!formErrors.phone}
+                    helperText={formErrors.phone}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Address"
+                    name="address"
+                    value={form.address}
+                    onChange={handleChange}
+                    fullWidth
+                    required
+                    error={!!formErrors.address}
+                    helperText={formErrors.address}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={6} sm={3}>
-                <TextField
-                  label="Expiry (MM/YY)"
-                  name="expiry"
-                  value={card.expiry}
-                  onChange={handleCardChange}
-                  fullWidth
-                  required
-                  error={!!formErrors.expiry}
-                  helperText={formErrors.expiry}
-                />
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="h6" fontWeight={700} mb={2}>
+                Card Details
+              </Typography>
+              <Grid container spacing={2} mb={2} alignItems="center">
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Card Number"
+                    name="number"
+                    value={card.number.replace(/(\d{4})(?=\d)/g, '$1 ')}
+                    onChange={handleCardChange}
+                    fullWidth
+                    required
+                    error={!!formErrors.cardNumber}
+                    helperText={formErrors.cardNumber}
+                    InputProps={{
+                      startAdornment: <CreditCardIcon sx={{ color: '#388e3c', mr: 1 }} />,
+                      inputMode: 'numeric',
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={3}>
+                  <TextField
+                    label="Expiry (MM/YY)"
+                    name="expiry"
+                    value={card.expiry}
+                    onChange={handleCardChange}
+                    fullWidth
+                    required
+                    error={!!formErrors.expiry}
+                    helperText={formErrors.expiry}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={3}>
+                  <TextField
+                    label="CVV"
+                    name="cvv"
+                    value={card.cvv}
+                    onChange={handleCardChange}
+                    fullWidth
+                    required
+                    error={!!formErrors.cvv}
+                    helperText={formErrors.cvv}
+                    type="password"
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={6} sm={3}>
-                <TextField
-                  label="CVV"
-                  name="cvv"
-                  value={card.cvv}
-                  onChange={handleCardChange}
-                  fullWidth
-                  required
-                  error={!!formErrors.cvv}
-                  helperText={formErrors.cvv}
-                />
-              </Grid>
+              {error && <Typography color="error" mb={2}>{error}</Typography>}
+              <Button
+                variant="contained"
+                color="success"
+                fullWidth
+                sx={{ borderRadius: 3, fontWeight: 700, fontSize: 18, py: 1.5, mt: 2, boxShadow: '0 2px 8px rgba(76,175,80,0.15)' }}
+                onClick={handleSubmit}
+                disabled={loading}
+              >
+                {loading ? 'Processing Payment...' : 'Pay & Place Order'}
+              </Button>
             </Grid>
-            {error && <Typography color="error" mb={2}>{error}</Typography>}
-          </>
+          </Grid>
         )}
       </DialogContent>
-      <DialogActions sx={{ bgcolor: '#f1f8e9', p: 3 }}>
-        {success ? (
-          <Button
-            variant="contained"
-            color="success"
-            fullWidth
-            sx={{ borderRadius: 3, fontWeight: 700, fontSize: 18, py: 1.5 }}
-            onClick={handleDialogClose}
-          >
-            Close
-          </Button>
-        ) : (
-          <Button
-            variant="contained"
-            color="success"
-            fullWidth
-            sx={{ borderRadius: 3, fontWeight: 700, fontSize: 18, py: 1.5 }}
-            onClick={handleSubmit}
-            disabled={loading}
-          >
-            {loading ? 'Processing Payment...' : 'Pay & Place Order'}
-          </Button>
-        )}
-      </DialogActions>
     </Dialog>
   );
 };
