@@ -58,6 +58,29 @@ import UserProfile from './Components/UserProfile';
 import OrderManagement from './Components/OrderManagement';
 import UserOrderReport from './Components/UserOrderReport';
 
+// ProtectedRoute component
+function ProtectedRoute({ children }) {
+  const user = JSON.parse(localStorage.getItem('currentUser'));
+  if (!user || !user.isAdmin) {
+    Logout();
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+}
+
+function Logout() {
+  localStorage.removeItem('currentUser');
+  return <Navigate to="/login" replace />;
+}
+
+function isLoggedIn(children) { 
+  const user = JSON.parse(localStorage.getItem('currentUser'));
+  if (!user) {
+    Logout();
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+}
 
 const App = () => {
   return (
@@ -65,7 +88,7 @@ const App = () => {
       <React.Fragment>
         <Routes>
           {/* Default Page */}
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={isLoggedIn(<Home />)} />
           <Route path="/reviewDashBoard" element={<HomeReview />} />
 
           {/* Review System Routes */}
@@ -117,8 +140,12 @@ const App = () => {
           <Route path="/dailyFinanceCal" element={<DailyFinance />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/admin-dashboard" element={<MainDashboard />} />
+          <Route path="/home" element={isLoggedIn(<Home />)} />
+          <Route path="/admin-dashboard" element={
+            <ProtectedRoute>
+              <MainDashboard />
+            </ProtectedRoute>
+          } />
           <Route path="/users" element={<UserList />} />
           <Route path="/edit-user/:email" element={<UserEdit />} />
           <Route path="/profile" element={<UserProfile />} />
