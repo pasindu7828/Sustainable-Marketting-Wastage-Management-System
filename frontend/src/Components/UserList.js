@@ -7,6 +7,11 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
@@ -15,6 +20,8 @@ const UserList = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
+  const [viewUser, setViewUser] = useState(null);
+  const [viewOpen, setViewOpen] = useState(false);
 
   const fetchUsers = async () => {
     setError('');
@@ -147,7 +154,7 @@ const UserList = () => {
                 <TableCell>{user.address}</TableCell>
                 <TableCell align="center">
                   <Tooltip title="View">
-                    <IconButton sx={{ color: '#388e3c' }} onClick={() => alert(`Name: ${user.name}\nEmail: ${user.email}`)}>
+                    <IconButton sx={{ color: '#388e3c' }} onClick={() => { setViewUser(user); setViewOpen(true); }}>
                       <VisibilityIcon />
                     </IconButton>
                   </Tooltip>
@@ -162,6 +169,31 @@ const UserList = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Dialog open={viewOpen} onClose={() => setViewOpen(false)} maxWidth="xs" fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 4,
+            background: 'rgba(255,255,255,0.75)',
+            boxShadow: '0 8px 32px 0 rgba(56,142,60,0.15)',
+            backdropFilter: 'blur(16px)',
+          }
+        }}
+      >
+        <DialogTitle sx={{ color: '#388e3c', fontWeight: 700, letterSpacing: 1 }}>User Details</DialogTitle>
+        <DialogContent>
+          {viewUser && (
+            <Box>
+              <Typography fontWeight={600} color="#388e3c">Name: {viewUser.name || '-'}</Typography>
+              <Typography>Email: {viewUser.email || '-'}</Typography>
+              <Typography>Phone: {viewUser.phone || '-'}</Typography>
+              <Typography>Address: {viewUser.address || '-'}</Typography>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setViewOpen(false)} color="success" variant="contained" sx={{ borderRadius: 3, fontWeight: 600 }}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

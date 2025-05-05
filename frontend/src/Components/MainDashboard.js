@@ -199,8 +199,8 @@ const MainDashboard = () => {
     { text: 'Finance', icon: <AttachMoney />, path: '/FinanceHome' },
     { text: 'Inventory', icon: <Inventory />, path: '/HomeInventoryMain' },
     { text: 'Users', icon: <People />, path: '/users' },
-    { text: 'Payments', icon: <ShoppingCart />, path: '/orders-management' },
-    { text: 'User Order Report', icon: <BarChartIcon />, path: '/user-orders-report' },
+    { text: 'Order Management', icon: <ShoppingCart />, path: '/orders-management' },
+    { text: 'User Report', icon: <BarChartIcon />, path: '/user-orders-report' },
   ];
 
   useEffect(() => {
