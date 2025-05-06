@@ -60,7 +60,7 @@ const HomeReview = () => {
         <AppBar position="static" color="primary" elevation={4}>
           <Toolbar>
             <Typography variant="h5" sx={{ flexGrow: 1, display: "flex", alignItems: "center", gap: 1 }}>
-              <FaLeaf /> E-Farmer Reviews
+              <FaLeaf /> AgriFlow
             </Typography>
             <Button component={Link} to="/login?admin=true" variant="contained" sx={{ bgcolor: "white", color: "primary.main" }}>
               Admin Dashboard
@@ -85,10 +85,10 @@ const HomeReview = () => {
         >
           <Container maxWidth="md">
             <Typography variant="h3" gutterBottom sx={{ fontWeight: "bold" }}>
-              Share Your Farming Experience
+              Share Your Shopping Experience
             </Typography>
             <Typography variant="body1" sx={{ mb: 4, fontSize: "1.2rem" }}>
-              Rate and review our e-farmer services. Your feedback helps us grow greener together!
+              Rate and review our shopping services. Your feedback helps us grow greener together!
             </Typography>
             <Button component={Link} to="/reviews/create" variant="contained" size="large" sx={{ bgcolor: "#43a047" }}>
               Add Your Review
