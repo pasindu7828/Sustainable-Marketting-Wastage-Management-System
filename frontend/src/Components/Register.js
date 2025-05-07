@@ -26,7 +26,7 @@ const Register = () => {
   const navigate = useNavigate();
 
   // Sri Lankan phone prefixes
-  const validPrefixes = ['070', '071', '072', '073', '074', '075', '076', '078','077','079','+9470','+9471','+9472','+9473','+9474','+9475','+9476','+9478','+9477','+9479'];
+  const validPrefixes = ['070', '071', '072', '073', '074', '075', '076', '078','077','079','+9470','+9471','+9472','+9473','+9474','+9475','+9476','+9478','+9477','+9479','011'];
 
   // Name: Only allow letters and spaces
   const handleNameChange = (e) => {

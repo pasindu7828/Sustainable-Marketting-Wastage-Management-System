@@ -111,7 +111,7 @@ const Navbar = ({ onCartClick, onSearch }) => {
           >
             Home
           </Link>
-          <Link
+          {/* <Link
             href="#"
             underline="none"
             color="inherit"
@@ -127,8 +127,8 @@ const Navbar = ({ onCartClick, onSearch }) => {
             }}
           >
             Menu
-          </Link>
-          <Link
+          </Link> */}
+          {/* <Link
             href="#"
             underline="none"
             color="inherit"
@@ -144,7 +144,7 @@ const Navbar = ({ onCartClick, onSearch }) => {
             }}
           >
             Contact Us
-          </Link>
+          </Link> */}
           {isLoggedIn ? (
           <Link
             component="button"

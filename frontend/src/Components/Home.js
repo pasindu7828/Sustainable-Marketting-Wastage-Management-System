@@ -416,7 +416,7 @@ const Home = () => {
                   </Typography>
                 </Box>
                 <Typography sx={{ color: '#ccc', mb: 2 }}>
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+                  Your trusted source for fresh produce, directly from local farmers to your table.
                 </Typography>
                 <Box display="flex" gap={2}>
                   <IconButton sx={{ bgcolor: '#333', color: '#fff' }}><FaFacebookF /></IconButton>
@@ -428,9 +428,9 @@ const Home = () => {
                 <Typography fontWeight={700} sx={{ mb: 2 }}>COMPANY</Typography>
                 <Box display="flex" flexDirection="column" gap={1}>
                   <Link href="#" underline="hover" color="#fff">Home</Link>
-                  <Link href="#" underline="hover" color="#fff">About Us</Link>
+                  {/* <Link href="#" underline="hover" color="#fff">About Us</Link>
                   <Link href="#" underline="hover" color="#fff">Delivery</Link>
-                  <Link href="#" underline="hover" color="#fff">Privacy Policy</Link>
+                  <Link href="#" underline="hover" color="#fff">Privacy Policy</Link> */}
                 </Box>
               </Grid>
               <Grid item xs={12} md={4}>
