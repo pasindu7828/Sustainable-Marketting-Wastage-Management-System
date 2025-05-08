@@ -416,7 +416,7 @@ const Home = () => {
                   </Typography>
                 </Box>
                 <Typography sx={{ color: '#ccc', mb: 2 }}>
-                  Your trusted source for fresh produce, directly from local farmers to your table.
+                  AgriFlow is an innovative farm-to-table platform connecting local farmers with consumers, providing fresh fruits while supporting sustainable agriculture practices.
                 </Typography>
                 <Box display="flex" gap={2}>
                   <IconButton sx={{ bgcolor: '#333', color: '#fff' }}><FaFacebookF /></IconButton>
