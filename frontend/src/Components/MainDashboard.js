@@ -498,7 +498,7 @@ const MainDashboard = () => {
                         </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                           <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                            ${metrics.totalRevenue.toLocaleString()}
+                            LKR{metrics.totalRevenue.toLocaleString()}
                           </Typography>
                           <TrendIndicator trend={metrics.growthRate >= 0 ? 'up' : 'down'}>
                             {metrics.growthRate >= 0 ? <ArrowUpward fontSize="small" /> : <ArrowDownward fontSize="small" />}
@@ -519,7 +519,7 @@ const MainDashboard = () => {
                           Avg. Daily Revenue
                         </Typography>
                         <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                          ${metrics.avgDaily.toFixed(2)}
+                          LKR{metrics.avgDaily.toFixed(2)}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
                           {lineChartData.length} days
@@ -535,7 +535,7 @@ const MainDashboard = () => {
                           Peak Day
                         </Typography>
                         <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                          ${metrics.peakDay.toLocaleString()}
+                          LKR{metrics.peakDay.toLocaleString()}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
                           Highest single day

@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
 const ReviewPDF = ({ review }) => (
   <Document>
     <Page size="A4" style={styles.page}>
-      <Text style={styles.header}>E-Farmer Review Details</Text>
+      <Text style={styles.header}>E-Customer Review Details</Text>
 
       <View style={styles.section}>
         <Text style={styles.label}>Reviewer Name:</Text>

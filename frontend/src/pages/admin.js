@@ -39,7 +39,7 @@ const Admin = () => {
         {/* Header Section */}
         <div className="flex justify-between items-center mt-6 mb-10">
           <h1 className="text-4xl font-extrabold text-green-900 bg-green-100 px-6 py-3 rounded-full shadow-md">
-            E-Farmer Reviews Dashboard
+            E-Customer Reviews Dashboard
           </h1>
 
           <div className="flex items-center gap-x-6">
