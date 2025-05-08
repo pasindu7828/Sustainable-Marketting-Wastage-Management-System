@@ -27,7 +27,7 @@ const DeleteReview = () => {
       .then(() => {
         setLoading(false);
         enqueueSnackbar("Review Deleted Successfully", { variant: "success" });
-        navigate("/");
+        navigate("/reviews/admin");
       })
       .catch((error) => {
         setLoading(false);

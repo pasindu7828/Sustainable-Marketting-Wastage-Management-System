@@ -18,7 +18,7 @@ const ReviewModal = ({ review, onClose }) => {
         <Box display="flex" alignItems="center" gap={2} mb={2}>
           <Avatar sx={{ bgcolor: 'green' }}><PersonIcon /></Avatar>
           <Box>
-            <Typography variant="subtitle2" color="textSecondary">Customer Name</Typography>
+            <Typography variant="subtitle2" color="textSecondary">User Name</Typography>
             <Typography variant="h6">{review?.name}</Typography>
           </Box>
         </Box>

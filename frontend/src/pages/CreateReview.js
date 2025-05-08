@@ -102,7 +102,7 @@ const CreateReview = () => {
         align="center"
         sx={{ my: 4, color: "#2e7d32", fontWeight: "bold" }}
       >
-        Share Your E-Farmer Experience
+        Share Your E-Customer Experience
       </Typography>
 
       {loading && <Spinner />}
@@ -121,7 +121,7 @@ const CreateReview = () => {
           {/* Name Input */}
           <Box>
             <InputLabel sx={{ mb: 1, color: "#616161" }}>
-              Farmer Name
+              Customer Name
             </InputLabel>
             <TextField
               fullWidth

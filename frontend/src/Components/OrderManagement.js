@@ -7,6 +7,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import axios from 'axios';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
+
 
 const OrderManagement = () => {
   const [orders, setOrders] = useState([]);
@@ -40,14 +44,14 @@ const OrderManagement = () => {
 
   const handleDelete = async () => {
     if (!deleteId) return;
-    await axios.delete(`http://localhost:5000/orders/${deleteId}`);
+    await axios.delete('http://localhost:5000/orders/${deleteId}');
     setDeleteOpen(false);
     setDeleteId(null);
     fetchOrders();
   };
 
   const handleMarkPaid = async (order) => {
-    await axios.patch(`http://localhost:5000/orders/${order._id}/status`, { status: 'Paid' });
+    await axios.patch('http://localhost:5000/orders/${order._id}/status', { status: 'Paid' });
     fetchOrders();
   };
 
@@ -60,6 +64,37 @@ const OrderManagement = () => {
     );
   });
 
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text('Order Report', 14, 22);
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+  
+    const tableColumn = ["Order ID", "User", "Email", "Date", "Total", "Status"];
+    const tableRows = [];
+  
+    filteredOrders.forEach(order => {
+      const orderData = [
+        order._id.slice(-6),
+        order.user?.name || '-',
+        order.user?.email || '-',
+        new Date(order.createdAt).toLocaleString(),
+        `Rs. ${order.total}`,
+        order.status || 'Paid',
+      ];
+      tableRows.push(orderData);
+    });
+  
+  
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 30,
+    });
+    doc.save('order_report.pdf');
+  };
+  
   return (
     <Box p={3} sx={{
       minHeight: '100vh',
@@ -109,6 +144,20 @@ const OrderManagement = () => {
         p: 2,
         mb: 4,
       }}>
+
+
+<Box mb={2} sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', maxWidth: 1100 }}>
+  <Button
+    variant="contained"
+    color="success"
+    onClick={handleDownloadPDF}
+    sx={{ mb: 2, borderRadius: 3, fontWeight: 600 }}
+  >
+    Download PDF
+  </Button>
+</Box>
+
+
         <TableContainer>
           <Table>
             <TableHead sx={{ bgcolor: 'rgba(232,248,127,0.7)' }}>
@@ -248,4 +297,4 @@ const OrderManagement = () => {
   );
 };
 
-export default OrderManagement; 
+export default OrderManagement;
