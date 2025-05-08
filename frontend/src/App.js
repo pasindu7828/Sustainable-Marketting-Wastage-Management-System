@@ -49,6 +49,8 @@ import MainDashboard from "./Components/MainDashboard";
 import TotalFarmerPrices from "./Components/FarmerPriceList/TotalFarmerPrices";
 import FarmerPaymentAnalysis from "./Components/FarmerPriceList/FarmerPaymentAnalysis";
 import DailyFinance from "./Components/Calculations/DailyFinance";
+
+// User Management and Authentication
 import Login from './Components/Login';
 import Register from './Components/Register';
 import Home from './Components/Home';

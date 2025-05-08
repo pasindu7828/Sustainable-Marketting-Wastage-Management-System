@@ -23,6 +23,7 @@ const Register = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [phoneError, setPhoneError] = useState('');
+  const [passwordStrength, setPasswordStrength] = useState('');
   const navigate = useNavigate();
 
   // Sri Lankan phone prefixes
@@ -51,6 +52,14 @@ const Register = () => {
     }
   };
 
+  // Password strength checker
+  const getPasswordStrength = (value) => {
+    if (value.length < 6) return { label: 'Weak', color: 'error.main' };
+    if (/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/.test(value)) return { label: 'Strong', color: 'success.main' };
+    if (/^(?=.*[A-Za-z])(?=.*\d).{6,}$/.test(value)) return { label: 'Medium', color: 'warning.main' };
+    return { label: 'Weak', color: 'error.main' };
+  };
+
   // Password validation
   const handlePasswordChange = (e) => {
     const value = e.target.value;
@@ -59,6 +68,13 @@ const Register = () => {
       setPasswordError('Password must be at least 6 characters');
     } else {
       setPasswordError('');
+    }
+    // Set password strength
+    if (value) {
+      const { label, color } = getPasswordStrength(value);
+      setPasswordStrength({ label, color });
+    } else {
+      setPasswordStrength('');
     }
   };
 
@@ -160,6 +176,11 @@ const Register = () => {
               )
             }}
           />
+          {password && passwordStrength && (
+            <Typography sx={{ mt: -1, mb: 1, ml: 1, fontWeight: 600 }} color={passwordStrength.color}>
+              Password strength: {passwordStrength.label}
+            </Typography>
+          )}
           <TextField
             label="Phone Number"
             type="tel"
