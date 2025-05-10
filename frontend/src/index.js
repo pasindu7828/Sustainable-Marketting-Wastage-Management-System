@@ -1,15 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client'; 
-import './index.css';
-import App from './App';
-
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
 import { BrowserRouter } from "react-router-dom";
+import { SnackbarProvider } from "notistack";
 
-const root = ReactDOM.createRoot(document.getElementById("root")); 
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <BrowserRouter>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  </BrowserRouter>
+  <React.StrictMode>
+    <BrowserRouter>
+      <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
+        <App />
+      </SnackbarProvider>
+    </BrowserRouter>
+  </React.StrictMode>
 );

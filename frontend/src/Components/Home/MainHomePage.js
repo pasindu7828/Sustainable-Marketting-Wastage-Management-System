@@ -7,11 +7,10 @@ const FeatureCard = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
   borderRadius: '16px',
   textAlign: 'center',
-  height: '100%',
+  width: '100%',
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
+  justifyContent: 'space-between',
   transition: 'transform 0.3s, box-shadow 0.3s',
   '&:hover': {
     transform: 'translateY(-8px)',
@@ -67,13 +66,28 @@ function MainHomePage() {
 
   return (
     <Container maxWidth="lg" sx={{ py: 6 }}>
+      {/* Top-left Dashboard Button */}
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', mb: 2 }}>
+        <Button
+          variant="outlined"
+          onClick={() => navigate('/adminPage')}
+          sx={{
+            textTransform: 'none',
+            borderRadius: '8px',
+            fontWeight: 'bold',
+          }}
+        >
+          Back to Dashboard
+        </Button>
+      </Box>
+
       {/* Hero Section */}
       <Box textAlign="center" mb={8}>
-        <Typography 
-          variant="h3" 
+        <Typography
+          variant="h3"
           component="h1"
-          sx={{ 
-            fontWeight: 700, 
+          sx={{
+            fontWeight: 700,
             mb: 2,
             background: 'linear-gradient(45deg, #3f51b5 30%, #2196F3 90%)',
             WebkitBackgroundClip: 'text',
@@ -83,12 +97,12 @@ function MainHomePage() {
         >
           Finance Management System
         </Typography>
-        <Typography 
-          variant="h6" 
+        <Typography
+          variant="h6"
           component="h2"
-          sx={{ 
-            color: 'text.secondary', 
-            maxWidth: '700px', 
+          sx={{
+            color: 'text.secondary',
+            maxWidth: '700px',
             mx: 'auto',
             lineHeight: 1.6,
           }}
@@ -98,20 +112,20 @@ function MainHomePage() {
       </Box>
 
       {/* Features Grid */}
-      <Grid container spacing={4}>
+      <Grid container spacing={4} justifyContent="center" alignItems="stretch">
         {features.map((feature, index) => (
-          <Grid item xs={12} sm={6} md={3} key={index}>
+          <Grid item xs={12} sm={6} md={5} key={index} sx={{ display: 'flex', justifyContent: 'center' }}>
             <FeatureCard elevation={4}>
-              <Box 
-                component="img" 
-                src={feature.icon} 
-                alt={feature.title} 
-                sx={{ 
-                  width: 80, 
-                  height: 80, 
+              <Box
+                component="img"
+                src={feature.icon}
+                alt={feature.title}
+                sx={{
+                  width: 80,
+                  height: 80,
                   mb: 3,
-                  filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.1))'
-                }} 
+                  filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.1))',
+                }}
               />
               <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 600 }}>
                 {feature.title}
@@ -119,8 +133,8 @@ function MainHomePage() {
               <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
                 {feature.description}
               </Typography>
-              <Button 
-                variant="contained" 
+              <Button
+                variant="contained"
                 color={feature.color}
                 onClick={feature.action}
                 sx={{
@@ -130,6 +144,7 @@ function MainHomePage() {
                   py: 1,
                   textTransform: 'none',
                   fontSize: '1rem',
+                  mt: 'auto',
                 }}
               >
                 Access
@@ -144,16 +159,16 @@ function MainHomePage() {
         <Typography variant="h5" sx={{ mb: 3, fontWeight: 500 }}>
           Ready to optimize your financial management?
         </Typography>
-        <GradientButton 
-          variant="contained" 
+        <GradientButton
+          variant="contained"
           size="large"
-          onClick={() => navigate('/adminPage')}
+          onClick={() => navigate('/dailyFinanceCal')}
           sx={{
             fontSize: '1.1rem',
             px: 6,
           }}
         >
-          Get Started Now
+          View Daily Summary
         </GradientButton>
       </Box>
     </Container>

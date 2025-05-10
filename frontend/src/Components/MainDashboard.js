@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Box, CssBaseline, AppBar, Toolbar, Typography, Drawer, List, ListItem, 
-  ListItemIcon, ListItemText, Grid, Card, CardContent, 
+import {
+  Box, CssBaseline, AppBar, Toolbar, Typography, Drawer, List, ListItem,
+  ListItemIcon, ListItemText, Grid, Card, CardContent,
   IconButton, Avatar, Divider, Badge, styled, useTheme, ThemeProvider,
   createTheme, CircularProgress, Paper, useMediaQuery, Button
 } from '@mui/material';
-import { 
-  Menu as MenuIcon, ChevronLeft, Dashboard, AttachMoney, Inventory, People, 
+import {
+  Menu as MenuIcon, ChevronLeft, Dashboard, AttachMoney, Inventory, People,
   ShoppingCart, Notifications, Brightness4, Brightness7, Logout, Refresh,
   ArrowUpward, ArrowDownward
 } from '@mui/icons-material';
@@ -80,8 +80,8 @@ const getDesignTokens = (mode) => ({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          background: mode === 'light' 
-            ? 'linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%)' 
+          background: mode === 'light'
+            ? 'linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%)'
             : 'linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%)',
         },
       },
@@ -89,12 +89,12 @@ const getDesignTokens = (mode) => ({
     MuiCard: {
       styleOverrides: {
         root: {
-          boxShadow: mode === 'light' 
-            ? '0 2px 10px rgba(0,0,0,0.08)' 
+          boxShadow: mode === 'light'
+            ? '0 2px 10px rgba(0,0,0,0.08)'
             : '0 2px 10px rgba(0,0,0,0.3)',
           '&:hover': {
-            boxShadow: mode === 'light' 
-              ? '0 8px 20px rgba(0,0,0,0.12)' 
+            boxShadow: mode === 'light'
+              ? '0 8px 20px rgba(0,0,0,0.12)'
               : '0 8px 20px rgba(0,0,0,0.4)',
           },
         },
@@ -195,7 +195,7 @@ const MainDashboard = () => {
   const appTheme = createTheme(getDesignTokens(darkMode ? 'dark' : 'light'));
 
   const menuItems = [
-    { text: 'Dashboard', icon: <Dashboard />, path: '/adminPage' },
+    { text: 'Reviews', icon: <Dashboard />, path: '/reviews/admin' },
     { text: 'Finance', icon: <AttachMoney />, path: '/FinanceHome' },
     { text: 'Inventory', icon: <Inventory />, path: '/HomeInventoryMain' },
     { text: 'Users', icon: <People />, path: '/users' },
@@ -205,14 +205,13 @@ const MainDashboard = () => {
   useEffect(() => {
     const today = new Date();
     setCurrentDate(format(today, 'EEEE, MMMM do, yyyy'));
-
     fetchDashboardData();
   }, []);
 
   const fetchDashboardData = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const [goodInventoryResponse, shopPriceResponse] = await Promise.all([
         axios.get(`${API_BASE_URL}/GoodInventorys`),
@@ -324,7 +323,7 @@ const MainDashboard = () => {
     <ThemeProvider theme={appTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        
+
         {/* App Bar */}
         <AppBarStyled position="fixed" open={open}>
           <Toolbar>
@@ -482,240 +481,247 @@ const MainDashboard = () => {
                 </Button>
               </Paper>
             ) : (
-              <Grid container spacing={3}>
-                {/* Metrics Cards */}
-                <Grid item xs={12} sm={6} md={3}>
-                  <DashboardCard>
-                    <CardContent>
-                      <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                        Total Revenue
-                      </Typography>
-                      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                        <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                          ${metrics.totalRevenue.toLocaleString()}
+              <>
+                {/* Metrics Cards Row */}
+                <Grid container spacing={3} sx={{ mb: 3 }}>
+                  <Grid item xs={12} sm={6} md={3}>
+                    <DashboardCard>
+                      <CardContent>
+                        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                          Total Revenue
                         </Typography>
-                        <TrendIndicator trend={metrics.growthRate >= 0 ? 'up' : 'down'}>
-                          {metrics.growthRate >= 0 ? <ArrowUpward fontSize="small" /> : <ArrowDownward fontSize="small" />}
-                          {Math.abs(metrics.growthRate).toFixed(1)}%
-                        </TrendIndicator>
-                      </Box>
-                      <Typography variant="caption" color="text.secondary">
-                        All time
-                      </Typography>
-                    </CardContent>
-                  </DashboardCard>
-                </Grid>
+                        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                          <Typography variant="h4" sx={{ fontWeight: 700 }}>
+                            ${metrics.totalRevenue.toLocaleString()}
+                          </Typography>
+                          <TrendIndicator trend={metrics.growthRate >= 0 ? 'up' : 'down'}>
+                            {metrics.growthRate >= 0 ? <ArrowUpward fontSize="small" /> : <ArrowDownward fontSize="small" />}
+                            {Math.abs(metrics.growthRate).toFixed(1)}%
+                          </TrendIndicator>
+                        </Box>
+                        <Typography variant="caption" color="text.secondary">
+                          All time
+                        </Typography>
+                      </CardContent>
+                    </DashboardCard>
+                  </Grid>
 
-                <Grid item xs={12} sm={6} md={3}>
-                  <DashboardCard>
-                    <CardContent>
-                      <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                        Avg. Daily Revenue
-                      </Typography>
-                      <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                        ${metrics.avgDaily.toFixed(2)}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {lineChartData.length} days
-                      </Typography>
-                    </CardContent>
-                  </DashboardCard>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={3}>
-                  <DashboardCard>
-                    <CardContent>
-                      <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                        Peak Day
-                      </Typography>
-                      <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                        ${metrics.peakDay.toLocaleString()}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        Highest single day
-                      </Typography>
-                    </CardContent>
-                  </DashboardCard>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={3}>
-  <DashboardCard>
-    <CardContent>
-      <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-        Data Points
-      </Typography>
-      <Typography variant="h4" sx={{ fontWeight: 700 }}>
-        {lineChartData.length}
-      </Typography>
-      <Typography variant="caption" color="text.secondary">
-        {lineChartData.length >= 30 ? '30+ days' : `${lineChartData.length} days`}
-      </Typography>
-    </CardContent>
-  </DashboardCard>
-</Grid>
-
-                {/* Line Chart Card */}
-                <Grid item xs={12} md={8}>
-                  <DashboardCard>
-                    <CardContent>
-                      <Box sx={{ 
-                        display: 'flex', 
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        mb: 2
-                      }}>
-                        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                          Revenue Trend
+                  <Grid item xs={12} sm={6} md={3}>
+                    <DashboardCard>
+                      <CardContent>
+                        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                          Avg. Daily Revenue
+                        </Typography>
+                        <Typography variant="h4" sx={{ fontWeight: 700 }}>
+                          ${metrics.avgDaily.toFixed(2)}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
                           {lineChartData.length} days
                         </Typography>
-                      </Box>
-                      <Box sx={{ height: 350 }}>
-                        <ResponsiveContainer width="100%" height="100%">
-                          <LineChart
-                            data={lineChartData}
-                            margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
-                          >
-                            <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
-                            <XAxis 
-                              dataKey="date" 
-                              tick={{ fill: appTheme.palette.text.secondary }}
-                            />
-                            <YAxis 
-                              tick={{ fill: appTheme.palette.text.secondary }}
-                              tickFormatter={(value) => `$${value.toLocaleString()}`}
-                            />
-                            <Tooltip 
-                              formatter={(value) => [`$${Number(value).toLocaleString()}`, 'Revenue']}
-                              labelFormatter={(label) => `Date: ${label}`}
-                              contentStyle={{
-                                background: appTheme.palette.background.paper,
-                                border: `1px solid ${appTheme.palette.divider}`,
-                                borderRadius: appTheme.shape.borderRadius
-                              }}
-                            />
-                            <Legend />
-                            <Line 
-                              type="monotone" 
-                              dataKey="total" 
-                              stroke={appTheme.palette.primary.main} 
-                              strokeWidth={3}
-                              dot={{ r: 4 }}
-                              activeDot={{ r: 6, strokeWidth: 0 }}
-                              name="Revenue"
-                            />
-                          </LineChart>
-                        </ResponsiveContainer>
-                      </Box>
-                    </CardContent>
-                  </DashboardCard>
-                </Grid>
+                      </CardContent>
+                    </DashboardCard>
+                  </Grid>
 
-                {/* Bar Chart Card */}
-                <Grid item xs={12} md={4}>
-                  <DashboardCard>
-                    <CardContent>
-                      <Box sx={{ 
-                        display: 'flex', 
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        mb: 2
-                      }}>
-                        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                          Last 7 Days
+                  <Grid item xs={12} sm={6} md={3}>
+                    <DashboardCard>
+                      <CardContent>
+                        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                          Peak Day
+                        </Typography>
+                        <Typography variant="h4" sx={{ fontWeight: 700 }}>
+                          ${metrics.peakDay.toLocaleString()}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
-                          Daily comparison
+                          Highest single day
                         </Typography>
-                      </Box>
-                      <Box sx={{ height: 350 }}>
-                        <ResponsiveContainer width="100%" height="100%">
-                          <BarChart
-                            data={barChartData}
-                            margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
-                          >
-                            <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
-                            <XAxis 
-                              dataKey="date" 
-                              tick={{ fill: appTheme.palette.text.secondary }}
-                            />
-                            <YAxis 
-                              tick={{ fill: appTheme.palette.text.secondary }}
-                              tickFormatter={(value) => `$${value.toLocaleString()}`}
-                            />
-                            <Tooltip 
-                              formatter={(value) => [`$${Number(value).toLocaleString()}`, 'Revenue']}
-                              labelFormatter={(label) => `Date: ${label}`}
-                              contentStyle={{
-                                background: appTheme.palette.background.paper,
-                                border: `1px solid ${appTheme.palette.divider}`,
-                                borderRadius: appTheme.shape.borderRadius
-                              }}
-                            />
-                            <Legend />
-                            <Bar 
-                              dataKey="total" 
-                              fill={appTheme.palette.primary.main}
-                              name="Revenue"
-                              radius={[4, 4, 0, 0]}
-                            />
-                          </BarChart>
-                        </ResponsiveContainer>
-                      </Box>
-                    </CardContent>
-                  </DashboardCard>
+                      </CardContent>
+                    </DashboardCard>
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} md={3}>
+                    <DashboardCard>
+                      <CardContent>
+                        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                          Data Points
+                        </Typography>
+                        <Typography variant="h4" sx={{ fontWeight: 700 }}>
+                          {lineChartData.length}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {lineChartData.length >= 30 ? '30+ days' : `${lineChartData.length} days`}
+                        </Typography>
+                      </CardContent>
+                    </DashboardCard>
+                  </Grid>
+                </Grid>
+
+                {/* Charts Row */}
+                <Grid container spacing={3}>
+                  {/* Line Chart Card */}
+                  <Grid item xs={12} md={8}>
+                    <DashboardCard>
+                      <CardContent>
+                        <Box sx={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          mb: 2
+                        }}>
+                          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                            Revenue Trend
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {lineChartData.length} days
+                          </Typography>
+                        </Box>
+                        <Box sx={{ height: 350 }}>
+                          <ResponsiveContainer width="100%" height="100%">
+                            <LineChart
+                              data={lineChartData}
+                              margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                            >
+                              <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
+                              <XAxis 
+                                dataKey="date" 
+                                tick={{ fill: appTheme.palette.text.secondary }}
+                              />
+                              <YAxis 
+                                tick={{ fill: appTheme.palette.text.secondary }}
+                                tickFormatter={(value) => `$${value.toLocaleString()}`}
+                              />
+                              <Tooltip 
+                                formatter={(value) => [`$${Number(value).toLocaleString()}`, 'Revenue']}
+                                labelFormatter={(label) => `Date: ${label}`}
+                                contentStyle={{
+                                  background: appTheme.palette.background.paper,
+                                  border: `1px solid ${appTheme.palette.divider}`,
+                                  borderRadius: appTheme.shape.borderRadius
+                                }}
+                              />
+                              <Legend />
+                              <Line 
+                                type="monotone" 
+                                dataKey="total" 
+                                stroke={appTheme.palette.primary.main} 
+                                strokeWidth={3}
+                                dot={{ r: 4 }}
+                                activeDot={{ r: 6, strokeWidth: 0 }}
+                                name="Revenue"
+                              />
+                            </LineChart>
+                          </ResponsiveContainer>
+                        </Box>
+                      </CardContent>
+                    </DashboardCard>
+                  </Grid>
+
+                  {/* Bar Chart Card */}
+                  <Grid item xs={12} md={4}>
+                    <DashboardCard>
+                      <CardContent>
+                        <Box sx={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          mb: 2
+                        }}>
+                          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                            Last 7 Days
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            Daily comparison
+                          </Typography>
+                        </Box>
+                        <Box sx={{ height: 350 }}>
+                          <ResponsiveContainer width="100%" height="100%">
+                            <BarChart
+                              data={barChartData}
+                              margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                            >
+                              <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
+                              <XAxis 
+                                dataKey="date" 
+                                tick={{ fill: appTheme.palette.text.secondary }}
+                              />
+                              <YAxis 
+                                tick={{ fill: appTheme.palette.text.secondary }}
+                                tickFormatter={(value) => `$${value.toLocaleString()}`}
+                              />
+                              <Tooltip 
+                                formatter={(value) => [`$${Number(value).toLocaleString()}`, 'Revenue']}
+                                labelFormatter={(label) => `Date: ${label}`}
+                                contentStyle={{
+                                  background: appTheme.palette.background.paper,
+                                  border: `1px solid ${appTheme.palette.divider}`,
+                                  borderRadius: appTheme.shape.borderRadius
+                                }}
+                              />
+                              <Legend />
+                              <Bar 
+                                dataKey="total" 
+                                fill={appTheme.palette.primary.main}
+                                name="Revenue"
+                                radius={[4, 4, 0, 0]}
+                              />
+                            </BarChart>
+                          </ResponsiveContainer>
+                        </Box>
+                      </CardContent>
+                    </DashboardCard>
+                  </Grid>
                 </Grid>
 
                 {/* Additional Insights Section */}
-                <Grid item xs={12}>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-                    Key Insights
-                  </Typography>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12} md={6}>
-                      <DashboardCard>
-                        <CardContent>
-                          <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
-                            Performance Summary
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary" paragraph>
-                            {metrics.growthRate >= 0 ? (
-                              <>Revenue is up by <strong>{metrics.growthRate.toFixed(1)}%</strong> compared to the previous period.</>
-                            ) : (
-                              <>Revenue is down by <strong>{Math.abs(metrics.growthRate).toFixed(1)}%</strong> compared to the previous period.</>
-                            )}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary" paragraph>
-                            The average transaction value is <strong>${(metrics.totalRevenue / metrics.transactions || 0).toFixed(2)}</strong> across all customers.
-                          </Typography>
-                        </CardContent>
-                      </DashboardCard>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <DashboardCard>
-                        <CardContent>
-                          <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
-                            Recommendations
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary" paragraph>
-                            {metrics.growthRate >= 5 ? (
-                              <>Strong growth observed. Consider expanding inventory to meet increasing demand.</>
-                            ) : metrics.growthRate >= 0 ? (
-                              <>Steady performance. Focus on customer retention strategies.</>
-                            ) : (
-                              <>Revenue decline detected. Analyze recent changes and consider promotional offers.</>
-                            )}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            Next steps: Review inventory levels and customer feedback for optimization opportunities.
-                          </Typography>
-                        </CardContent>
-                      </DashboardCard>
+                <Grid container spacing={3} sx={{ mt: 0 }}>
+                  <Grid item xs={12}>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, mt: 3 }}>
+                      Key Insights
+                    </Typography>
+                    <Grid container spacing={3}>
+                      <Grid item xs={12} md={6}>
+                        <DashboardCard>
+                          <CardContent>
+                            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                              Performance Summary
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" paragraph>
+                              {metrics.growthRate >= 0 ? (
+                                <>Revenue is up by <strong>{metrics.growthRate.toFixed(1)}%</strong> compared to the previous period.</>
+                              ) : (
+                                <>Revenue is down by <strong>{Math.abs(metrics.growthRate).toFixed(1)}%</strong> compared to the previous period.</>
+                              )}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" paragraph>
+                              The average transaction value is <strong>${(metrics.totalRevenue / metrics.transactions || 0).toFixed(2)}</strong> across all customers.
+                            </Typography>
+                          </CardContent>
+                        </DashboardCard>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <DashboardCard>
+                          <CardContent>
+                            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                              Recommendations
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" paragraph>
+                              {metrics.growthRate >= 5 ? (
+                                <>Strong growth observed. Consider expanding inventory to meet increasing demand.</>
+                              ) : metrics.growthRate >= 0 ? (
+                                <>Steady performance. Focus on customer retention strategies.</>
+                              ) : (
+                                <>Revenue decline detected. Analyze recent changes and consider promotional offers.</>
+                              )}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              Next steps: Review inventory levels and customer feedback for optimization opportunities.
+                            </Typography>
+                          </CardContent>
+                        </DashboardCard>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
+              </>
             )}
           </Box>
         </Main>

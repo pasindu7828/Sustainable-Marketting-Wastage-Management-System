@@ -105,6 +105,16 @@ function DisplayByProductDetails() {
       <ByProductNav />
       <h1 style={{ textAlign: 'center', marginTop: '20px' }}>By Product Details Display Page</h1>
 
+      {/* 🔘 Navigation Button to Summary Chart Page */}
+      <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
+        <Link to="/byProductSummary" style={{ textDecoration: 'none' }}>
+          <StyledButton variant="contained" color="primary">
+            View Summary Chart
+          </StyledButton>
+        </Link>
+      </div>
+
+      {/* 🔍 Search Box */}
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
         <input
           type="text"
@@ -121,6 +131,7 @@ function DisplayByProductDetails() {
         />
       </div>
 
+      {/* 📋 Table Display */}
       <StyledTableContainer component={Paper}>
         <Table>
           <StyledTableHead>
@@ -152,28 +163,28 @@ function DisplayByProductDetails() {
                 <StyledTableCell2>{user.Bp4}</StyledTableCell2>
                 <StyledTableCell2>{user.Bp5}</StyledTableCell2>
                 <StyledTableCell2>
-  <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
-    <Link to={`/DisplayByProductDetails/${user._id}`} style={{ textDecoration: 'none' }}>
-      <StyledButton variant="contained" color="info">
-        Update
-      </StyledButton>
-    </Link>
-    <StyledButton
-      variant="contained"
-      color="error"
-      onClick={() => deleteHandler(user._id)}
-    >
-      Delete
-    </StyledButton>
-    <StyledButton
-      variant="contained"
-      color="success"
-      onClick={() => generatePDF(user)}
-    >
-      Generate Report
-    </StyledButton>
-  </div>
-</StyledTableCell2>
+                  <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
+                    <Link to={`/DisplayByProductDetails/${user._id}`} style={{ textDecoration: 'none' }}>
+                      <StyledButton variant="contained" color="info">
+                        Update
+                      </StyledButton>
+                    </Link>
+                    <StyledButton
+                      variant="contained"
+                      color="error"
+                      onClick={() => deleteHandler(user._id)}
+                    >
+                      Delete
+                    </StyledButton>
+                    <StyledButton
+                      variant="contained"
+                      color="success"
+                      onClick={() => generatePDF(user)}
+                    >
+                      Generate Report
+                    </StyledButton>
+                  </div>
+                </StyledTableCell2>
               </TableRow>
             ))}
           </TableBody>

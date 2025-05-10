@@ -3,7 +3,7 @@ import TNav from '../../Nav/TNav';
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TextField } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TextField, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -18,11 +18,12 @@ const StyledTableContainer = styled(TableContainer)({
   margin: '20px auto',
   maxWidth: '1000px',
   borderRadius: '10px',
-  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
+  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+  overflowX: 'auto',
 });
 
 const StyledTableHead = styled(TableHead)({
-  backgroundColor: '#ECF87F'
+  backgroundColor: '#ECF87F',
 });
 
 const StyledTableCell = styled(TableCell)({
@@ -31,28 +32,37 @@ const StyledTableCell = styled(TableCell)({
   fontWeight: 'bold',
   color: 'black',
 });
+
 const StyledTableCell2 = styled(TableCell)({
   textAlign: 'center',
   verticalAlign: 'middle',
   color: 'black',
 });
+
 const StyledButton = styled(Button)({
   borderRadius: '8px',
-  padding: '6px 16px',
-  margin: '4px',
+  padding: '6px 12px',
+  minWidth: '100px',
   fontWeight: 600,
   textTransform: 'none',
-  fontSize: '0.875rem',
-  boxShadow: 'none'
+  fontSize: '0.85rem',
+  boxShadow: 'none',
+  whiteSpace: 'nowrap',
 });
 
 function DisplayProductDetails() {
   const navigate = useNavigate();
+  const [Inventorys, setUsers] = useState();
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    fetchHandler().then((data) => setUsers(data.Inventorys));
+  }, []);
+
   const deleteHandler = async (_id) => {
     try {
       await axios.delete(`http://Localhost:5000/Inventorys/${_id}`);
-      navigate("/");
-      navigate("/DisplayProductDetails");
+      setUsers(prev => prev.filter(item => item._id !== _id));
     } catch (error) {
       console.error("Error deleting product details:", error);
     }
@@ -79,13 +89,6 @@ function DisplayProductDetails() {
 
     doc.save(`Product_Report_${item.pid}.pdf`);
   };
-
-  const [Inventorys, setUsers] = useState();
-  const [searchTerm, setSearchTerm] = useState('');
-
-  useEffect(() => {
-    fetchHandler().then((data) => setUsers(data.Inventorys));
-  }, []);
 
   const filteredInventorys = Inventorys?.filter((item) => {
     const search = searchTerm.toLowerCase();
@@ -140,7 +143,13 @@ function DisplayProductDetails() {
                 <StyledTableCell2>{user.fnumber}</StyledTableCell2>
                 <StyledTableCell2>{user.quantity}</StyledTableCell2>
                 <StyledTableCell>
-                  <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    flexWrap="wrap"
+                    gap={1}
+                  >
                     <Link to={`/DisplayProductDetails/${user._id}`} style={{ textDecoration: 'none' }}>
                       <StyledButton variant="contained" color="info">Update</StyledButton>
                     </Link>
@@ -150,7 +159,7 @@ function DisplayProductDetails() {
                     <StyledButton variant="contained" color="success" onClick={() => generatePDF(user)}>
                       Generate Report
                     </StyledButton>
-                  </div>
+                  </Box>
                 </StyledTableCell>
               </TableRow>
             ))}
@@ -160,4 +169,5 @@ function DisplayProductDetails() {
     </div>
   );
 }
+
 export default DisplayProductDetails;
